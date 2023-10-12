@@ -9,7 +9,7 @@ const productSchema = new Schema(
       required: true,
       unique: true,
     },
-    categoryID: [
+    categoryId: [
       {
         _id: {
           type: Schema.Types.ObjectId,
@@ -30,7 +30,6 @@ const productSchema = new Schema(
       {
         imageURL: {
           type: String,
-          unique: true,
         },
         isMain: {
           type: Boolean,
