@@ -78,7 +78,6 @@ export const deleteCategory = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.categoryId);
     const products = await Product.find({ categoryId: { _id: category._id } });
-    console.log(products);
     for (let product of products) {
       product.categoryId.remove(category._id);
       await product.save();
