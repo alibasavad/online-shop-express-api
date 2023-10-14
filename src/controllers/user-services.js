@@ -73,18 +73,6 @@ export const login = async (req, res, next) => {
   }
 };
 
-export const verify = async (req, res, next) => {
-  try {
-    req.token = req.headers["authorization"].split(" ")[1];
-
-    req.user = jwt.verify(req.token, env.JWT_SECRET);
-
-    next();
-  } catch (error) {
-    res.send(error);
-  }
-};
-
 export const verifyAccount = async (req, res, next) => {
   try {
     const user = await auth(req.body.email, req.body.password);
@@ -133,4 +121,13 @@ const makeSixDigitRandomString = () => {
     randomString += Math.floor(Math.random() * 10).toString();
   }
   return randomString;
+};
+
+export const readAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    res.send(error);
+  }
 };
