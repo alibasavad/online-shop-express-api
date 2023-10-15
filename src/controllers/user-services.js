@@ -68,7 +68,7 @@ export const login = async (req, res, next) => {
     const token = jwt.sign({ user }, env.JWT_SECRET, {
       expiresIn: env.JWT_EXPIRES_IN,
     });
-    res.json(token);
+    res.json({ token: token, expiresIn: env.JWT_EXPIRES_IN });
   } catch (error) {
     res.send(error);
   }
@@ -79,6 +79,7 @@ export const verifyAccount = async (req, res, next) => {
     const user = await auth(req.body.email, req.body.password);
 
     if (user === null) return res.send("email or password is wrong");
+    if (user.isDisable === false) return res.send("You Are Verified");
 
     const check = user.verificationCode === req.body.verificationCode;
 
@@ -91,7 +92,7 @@ export const verifyAccount = async (req, res, next) => {
         expiresIn: env.JWT_EXPIRES_IN,
       });
 
-      res.json(token);
+      res.json({ token: token, expiresIn: env.JWT_EXPIRES_IN });
     } else {
       res.send("Verification code is incorrect");
     }
@@ -105,7 +106,7 @@ export const sendVerificationCode = async (req, res, next) => {
     const user = await auth(req.body.email, req.body.password);
 
     if (user === null) return res.send("email or password is wrong");
-
+    if (user.isDisable === false) return res.send("You Are Verified");
     const verificationCode = makeSixDigitRandomString();
 
     sendEmailConfirmation(verificationCode, user.email);
