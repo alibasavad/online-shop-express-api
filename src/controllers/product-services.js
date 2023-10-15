@@ -1,10 +1,38 @@
 import Category from "../models/category";
+import mongoose from "mongoose";
 import Product from "../models/product";
 import { unlinkSync } from "fs";
 
 export const readAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const products = await Product.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "categoryId._id",
+          foreignField: "_id",
+          as: "categories",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          categories: {
+            _id: 1,
+            name: 1,
+            thumbnail: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+          price: 1,
+          quantity: 1,
+          thumbnail: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
     res.json(products);
   } catch (error) {
     res.send(error);
@@ -13,7 +41,41 @@ export const readAllProducts = async (req, res, next) => {
 
 export const readProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.productId);
+    const product = await Product.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(req.params.productId),
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "categoryId._id",
+          foreignField: "_id",
+          as: "categories",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          images: 1,
+          categories: {
+            _id: 1,
+            name: 1,
+            thumbnail: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+          price: 1,
+          quantity: 1,
+          thumbnail: 1,
+          description: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
     res.json(product);
   } catch (error) {
     res.send(error);

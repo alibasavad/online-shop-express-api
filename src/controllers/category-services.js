@@ -44,14 +44,22 @@ export const readCategoryById = async (req, res, next) => {
         },
       },
       {
-        $group: {
-          _id: "$_id",
-          name: { $first: "$name" },
-          thumbnail: { $first: "$thumbnail" },
-          createdAt: { $first: "$createdAt" },
-          updatedAt: { $first: "$updatedAt" },
-          description: { $first: "$description" },
-          products: { $first: "$products" },
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          products: {
+            _id: 1,
+            name: 1,
+            price: 1,
+            quantity: 1,
+            thumbnail: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+          thumbnail: 1,
+          createdAt: 1,
+          updatedAt: 1,
         },
       },
     ]);
