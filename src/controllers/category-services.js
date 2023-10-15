@@ -50,6 +50,7 @@ export const readCategoryById = async (req, res, next) => {
           thumbnail: { $first: "$thumbnail" },
           createdAt: { $first: "$createdAt" },
           updatedAt: { $first: "$updatedAt" },
+          description: { $first: "$description" },
           products: { $first: "$products" },
         },
       },
@@ -66,6 +67,7 @@ export const createCategory = async (req, res, next) => {
     const newCategory = new Category({
       name: req.body.name,
       thumbnail: "imageURL created by multer service...",
+      description: req.body.description,
     });
     let category = await newCategory.save();
     res.json(category);
@@ -96,10 +98,14 @@ export const updateCategory = async (req, res, next) => {
     const category = await Category.findById(req.params.categoryId);
     let thumbnail = req.file ? req.file.filename : category.thumbnail;
     let name = req.body.name ? req.body.name : category.name;
+    let description = req.body.description
+      ? req.body.description
+      : category.description;
     await category.updateOne(
       {
         name: name,
         thumbnail: thumbnail,
+        description: description,
       },
       { new: true, useFindAndModify: false }
     );

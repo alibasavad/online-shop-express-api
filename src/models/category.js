@@ -12,6 +12,9 @@ const categorySchema = new Schema(
     thumbnail: {
       type: String,
     },
+    description: {
+      type: String,
+    },
   },
   {
     timestamps: true,
