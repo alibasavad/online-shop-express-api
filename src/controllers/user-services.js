@@ -87,7 +87,11 @@ export const verifyAccount = async (req, res, next) => {
 
       user.save();
 
-      res.send("User Verificated Successfully");
+      const token = jwt.sign({ user }, env.JWT_SECRET, {
+        expiresIn: env.JWT_EXPIRES_IN,
+      });
+
+      res.json(token);
     } else {
       res.send("Verification code is incorrect");
     }
