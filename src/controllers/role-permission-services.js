@@ -132,7 +132,6 @@ export const checkPermission = async (req, res, next) => {
     req.user = jwt.verify(req.token, env.JWT_SECRET).user;
 
     const permission = req.route.path.slice(1) + "." + req.method.toLowerCase();
-    console.log(permission);
 
     const role = await Role.findOne({ name: req.user.role });
 

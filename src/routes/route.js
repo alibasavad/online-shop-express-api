@@ -37,6 +37,11 @@ const routes = (app) => {
     .delete(rolePermission.checkPermission, rolePermission.deleteRole)
     .put(rolePermission.checkPermission, rolePermission.updateRole);
 
+  app
+    .route("/profile")
+    .get(rolePermission.checkPermission, user.readProfile)
+    .put(rolePermission.checkPermission, user.updateProfile);
+
   app.route("/verify").post(user.verifyAccount);
 
   app.route("/verification-code").post(user.sendVerificationCode);
