@@ -68,6 +68,10 @@ router
   .get(rolePermission.checkPermission, user.readProfile)
   .patch(rolePermission.checkPermission, user.updateProfile);
 
+router
+  .route("/profile/change_password")
+  .patch(rolePermission.checkPermission, user.changePassword);
+
 router.route("/verify").post(user.verifyAccount);
 
 router.route("/verification_code").post(user.sendVerificationCode);

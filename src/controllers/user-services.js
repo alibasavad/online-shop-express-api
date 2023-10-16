@@ -156,14 +156,7 @@ export const readProfile = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
-    if (req.body.password !== undefined) {
-      if (req.body.password.length < 8) {
-        return res.send("password must contain 8 or more characters");
-      }
-    }
-
     const user = await User.findById(req.user._id);
-    if (user.isDisable === true) return res.send("verify your account");
 
     let firstName = req.body.firstName ? req.body.firstName : user.firstName;
 
@@ -173,46 +166,14 @@ export const updateProfile = async (req, res, next) => {
       ? req.body.phoneNumber
       : user.phoneNumber;
 
-    let email = req.body.email ? req.body.email : user.email;
-
-    if (!validator.isEmail(email)) {
-      return res.send("invalid email");
-    }
-
-    let password = req.body.password
-      ? await Bcrypt.hash(req.body.password, 10)
-      : user.password;
-
     await user.updateOne(
       {
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
-        email: email,
-        password: password,
       },
       { new: true, useFindAndModify: false }
     );
-
-    if (req.body.email !== undefined || req.body.password !== undefined) {
-      user.verificationCode = makeSixDigitRandomString();
-      user.isDisable = true;
-      await user.save();
-      sendEmailConfirmation(user.verificationCode, user.email);
-
-      const updatedUser = await User.findById(user._id).select([
-        "firstName",
-        "lastName",
-        "email",
-        "phoneNumber",
-        "createdAt",
-      ]);
-
-      return res.json({
-        user_info: updatedUser,
-        messsage: "Your account need verification check your email",
-      });
-    }
 
     const updatedUser = await User.findById(user._id).select([
       "firstName",
@@ -223,6 +184,26 @@ export const updateProfile = async (req, res, next) => {
     ]);
 
     res.json(updatedUser);
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+export const changePassword = async (req, res, next) => {
+  try {
+    const user = await auth(req.user.email, req.body.currentPass);
+    if (user === null) return res.send("Current password is wrong");
+
+    if (req.body.newPass !== req.body.newPassRepeat)
+      return res.send("newPassRepeat is incorrect");
+
+    if (req.body.newPass.length < 8) {
+      return res.send("password must contain 8 or more characters");
+    }
+    user.password = await Bcrypt.hash(req.body.newPass, 10);
+    user.save();
+
+    res.send("Password changed successfully");
   } catch (error) {
     res.send(error);
   }
