@@ -37,7 +37,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/permission",
+							"raw": "127.0.0.1:8000/api/v1/permissions",
 							"host": [
 								"127",
 								"0",
@@ -46,7 +46,9 @@
 							],
 							"port": "8000",
 							"path": [
-								"permission"
+								"api",
+								"v1",
+								"permissions"
 							]
 						}
 					},
@@ -68,7 +70,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/role",
+							"raw": "127.0.0.1:8000/api/v1/roles",
 							"host": [
 								"127",
 								"0",
@@ -77,7 +79,9 @@
 							],
 							"port": "8000",
 							"path": [
-								"role"
+								"api",
+								"v1",
+								"roles"
 							]
 						}
 					},
@@ -108,7 +112,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/role",
+							"raw": "127.0.0.1:8000/api/v1/role",
 							"host": [
 								"127",
 								"0",
@@ -117,6 +121,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"role"
 							]
 						}
@@ -151,7 +157,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/role/652af5031b62fc3c59fea492",
+							"raw": "127.0.0.1:8000/api/v1/role/652af5031b62fc3c59fea492",
 							"host": [
 								"127",
 								"0",
@@ -160,6 +166,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"role",
 								"652af5031b62fc3c59fea492"
 							]
@@ -180,7 +188,7 @@
 								}
 							]
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -192,7 +200,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/role/652af5031b62fc3c59fea492",
+							"raw": "127.0.0.1:8000/api/v1/role/652d56dc3f04efd409b3e692",
 							"host": [
 								"127",
 								"0",
@@ -201,8 +209,10 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"role",
-								"652af5031b62fc3c59fea492"
+								"652d56dc3f04efd409b3e692"
 							]
 						}
 					},
@@ -233,7 +243,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/role/652af5031b62fc3c59fea492",
+							"raw": "127.0.0.1:8000/api/v1/role/652d56dc3f04efd409b3e692",
 							"host": [
 								"127",
 								"0",
@@ -242,8 +252,10 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"role",
-								"652af5031b62fc3c59fea492"
+								"652d56dc3f04efd409b3e692"
 							]
 						}
 					},
@@ -262,7 +274,7 @@
 								}
 							]
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -274,7 +286,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/change-user-role",
+							"raw": "127.0.0.1:8000/api/v1/change_user_role",
 							"host": [
 								"127",
 								"0",
@@ -283,7 +295,9 @@
 							],
 							"port": "8000",
 							"path": [
-								"change-user-role"
+								"api",
+								"v1",
+								"change_user_role"
 							]
 						}
 					},
@@ -300,7 +314,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/category/",
+							"raw": "127.0.0.1:8000/api/v1/categories",
 							"host": [
 								"127",
 								"0",
@@ -309,8 +323,9 @@
 							],
 							"port": "8000",
 							"path": [
-								"category",
-								""
+								"api",
+								"v1",
+								"categories"
 							]
 						}
 					},
@@ -322,7 +337,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/category/6527164e370e0ccef394e674",
+							"raw": "127.0.0.1:8000/api/v1/category/6527164e370e0ccef394e674",
 							"host": [
 								"127",
 								"0",
@@ -331,6 +346,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"category",
 								"6527164e370e0ccef394e674"
 							]
@@ -351,11 +368,11 @@
 								}
 							]
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"C2 updated\"\r\n}",
+							"raw": "{\r\n    \"name\" : \"C2 updated3\",\r\n    \"description\" : \"New Category Name As C2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -363,7 +380,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/category/65281d160744c59eaecece1a",
+							"raw": "127.0.0.1:8000/api/v1/category/6527164e370e0ccef394e674",
 							"host": [
 								"127",
 								"0",
@@ -372,8 +389,10 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"category",
-								"65281d160744c59eaecece1a"
+								"6527164e370e0ccef394e674"
 							]
 						}
 					},
@@ -404,7 +423,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/category/65281d160744c59eaecece1a",
+							"raw": "127.0.0.1:8000/api/v1/category/652d567a3f04efd409b3e5df",
 							"host": [
 								"127",
 								"0",
@@ -413,8 +432,10 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"category",
-								"65281d160744c59eaecece1a"
+								"652d567a3f04efd409b3e5df"
 							]
 						}
 					},
@@ -437,7 +458,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"New Category\"\r\n}",
+							"raw": "{\r\n    \"name\": \"New C2\",\r\n    \"description\": \"New Category Name As C\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -445,7 +466,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/category/",
+							"raw": "127.0.0.1:8000/api/v1/category/",
 							"host": [
 								"127",
 								"0",
@@ -454,6 +475,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"category",
 								""
 							]
@@ -472,7 +495,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/product/652827c858bd852e5995d89d",
+							"raw": "127.0.0.1:8000/api/v1/product/652827c858bd852e5995d89d",
 							"host": [
 								"127",
 								"0",
@@ -481,6 +504,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"product",
 								"652827c858bd852e5995d89d"
 							]
@@ -494,7 +519,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/product",
+							"raw": "127.0.0.1:8000/api/v1/products",
 							"host": [
 								"127",
 								"0",
@@ -503,7 +528,9 @@
 							],
 							"port": "8000",
 							"path": [
-								"product"
+								"api",
+								"v1",
+								"products"
 							]
 						}
 					},
@@ -526,7 +553,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"New Product\",\r\n    \"categoryId\": [\r\n        {\r\n            \"_id\": \"6527164e370e0ccef394e674\"\r\n        },\r\n        {\r\n            \"_id\": \"65271664370e0ccef394e676\"\r\n        },\r\n        {\r\n            \"_id\": \"65271666370e0ccef394e678\"\r\n        }\r\n    ],\r\n    \"price\": 2000,\r\n    \"quantity\": 100,\r\n    \"description\": \"new product for testing\"\r\n}",
+							"raw": "{\r\n    \"name\": \"New 11\",\r\n    \"categoryId\": [\r\n        {\r\n            \"_id\": \"6527164e370e0ccef394e674\"\r\n        },\r\n        {\r\n            \"_id\": \"65271664370e0ccef394e676\"\r\n        },\r\n        {\r\n            \"_id\": \"65271666370e0ccef394e678\"\r\n        }\r\n    ],\r\n    \"price\": 2000,\r\n    \"quantity\": 100,\r\n    \"description\": \"new product for testing\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -534,7 +561,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/product",
+							"raw": "127.0.0.1:8000/api/v1/product",
 							"host": [
 								"127",
 								"0",
@@ -543,6 +570,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"product"
 							]
 						}
@@ -562,7 +591,7 @@
 								}
 							]
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -574,7 +603,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/product/6528106e70cb5777a7a9aab8",
+							"raw": "127.0.0.1:8000/api/v1/product/6528106e70cb5777a7a9aab8",
 							"host": [
 								"127",
 								"0",
@@ -583,6 +612,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"product",
 								"6528106e70cb5777a7a9aab8"
 							]
@@ -606,7 +637,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/product/6528108870cb5777a7a9aac5",
+							"raw": "127.0.0.1:8000/api/v1/product/652827c858bd852e5995d89d",
 							"host": [
 								"127",
 								"0",
@@ -615,8 +646,10 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"product",
-								"6528108870cb5777a7a9aac5"
+								"652827c858bd852e5995d89d"
 							]
 						}
 					},
@@ -634,7 +667,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Reza\",\r\n    \"lastName\": \"Ahmadi\",\r\n    \"email\": \"rezaahmadi@gmail.com\",\r\n    \"phoneNumber\": \"09380001112\",\r\n    \"password\" : \"12345678\"\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Reza\",\r\n    \"lastName\": \"Ahmadi\",\r\n    \"email\": \"rezaahmadi@sail.com\",\r\n    \"phoneNumber\": \"09380101112\",\r\n    \"password\" : \"12345678\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -642,7 +675,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/register/",
+							"raw": "127.0.0.1:8000/api/v1/register/",
 							"host": [
 								"127",
 								"0",
@@ -651,6 +684,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"register",
 								""
 							]
@@ -673,7 +708,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/login",
+							"raw": "127.0.0.1:8000/api/v1/login",
 							"host": [
 								"127",
 								"0",
@@ -682,6 +717,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"login"
 							]
 						}
@@ -703,7 +740,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/verification-code",
+							"raw": "127.0.0.1:8000/api/v1/verification_code",
 							"host": [
 								"127",
 								"0",
@@ -712,7 +749,9 @@
 							],
 							"port": "8000",
 							"path": [
-								"verification-code"
+								"api",
+								"v1",
+								"verification_code"
 							]
 						}
 					},
@@ -733,7 +772,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/verify",
+							"raw": "127.0.0.1:8000/api/v1/verify",
 							"host": [
 								"127",
 								"0",
@@ -742,6 +781,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"verify"
 							]
 						}
@@ -755,7 +796,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"alibasavad138193@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+							"raw": "{\r\n    \"email\": \"alibasavqwad138193@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -763,7 +804,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/disable-account",
+							"raw": "127.0.0.1:8000/api/v1/disable_account",
 							"host": [
 								"127",
 								"0",
@@ -772,7 +813,9 @@
 							],
 							"port": "8000",
 							"path": [
-								"disable-account"
+								"api",
+								"v1",
+								"disable_account"
 							]
 						}
 					},
@@ -806,7 +849,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/all-users",
+							"raw": "127.0.0.1:8000/api/v1/users",
 							"host": [
 								"127",
 								"0",
@@ -815,7 +858,9 @@
 							],
 							"port": "8000",
 							"path": [
-								"all-users"
+								"api",
+								"v1",
+								"users"
 							]
 						}
 					},
@@ -849,7 +894,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/profile",
+							"raw": "127.0.0.1:8000/api/v1/profile",
 							"host": [
 								"127",
 								"0",
@@ -858,6 +903,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"profile"
 							]
 						}
@@ -877,11 +924,11 @@
 								}
 							]
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\" : \"Mahdi\",\r\n    \"lastName\" : \"Jokar\",\r\n    \"email\" : \"rezaahmadi2@gmail.com\",\r\n    \"phoneNumber\" : \"09382790111\",\r\n    \"password\" : \"12345678\"\r\n\r\n}",
+							"raw": "{\r\n    \"firstName\" : \"Mahdi\",\r\n    \"lastName\" : \"Jokar\",\r\n    \"phoneNumber\" : \"09382790111\"\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -889,7 +936,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/profile",
+							"raw": "127.0.0.1:8000/api/v1/profile",
 							"host": [
 								"127",
 								"0",
@@ -898,6 +945,8 @@
 							],
 							"port": "8000",
 							"path": [
+								"api",
+								"v1",
 								"profile"
 							]
 						}
