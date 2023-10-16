@@ -44,7 +44,7 @@ export const readProductById = async (req, res, next) => {
     const product = await Product.aggregate([
       {
         $match: {
-          _id: new mongoose.Types.ObjectId(req.params.productId),
+          _id: new mongoose.Types.ObjectId(req.params.Id),
         },
       },
       {
@@ -110,7 +110,7 @@ export const createProduct = async (req, res, next) => {
 
 export const deleteProduct = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.productId);
+    const product = await Product.findById(req.params.Id);
     // if(product.thumbnail)
     // unlinkSync(`${__dirname}/../../public/image/category/${product.thumbnail}`);
     // for(let image of product.images){
@@ -125,7 +125,7 @@ export const deleteProduct = async (req, res, next) => {
 
 export const updateProduct = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.productId);
+    const product = await Product.findById(req.params.Id);
 
     let name = req.body.name ? req.body.name : product.name;
     let categoryId = req.body.categoryId
@@ -151,7 +151,7 @@ export const updateProduct = async (req, res, next) => {
       },
       { new: true, useFindAndModify: false }
     );
-    const updatedProduct = await Product.findById(req.params.productId);
+    const updatedProduct = await Product.findById(req.params.Id);
 
     res.json(updatedProduct);
   } catch (error) {

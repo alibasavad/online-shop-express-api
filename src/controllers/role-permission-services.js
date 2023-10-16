@@ -62,7 +62,7 @@ export const updateUserRole = async (req, res, next) => {
 
 export const updateRole = async (req, res, next) => {
   try {
-    const role = await Role.findById(req.params.roleId);
+    const role = await Role.findById(req.params.Id);
 
     const uneditableRoles = ["normalUser", "superUser", "limitedUser"];
     if (uneditableRoles.includes(role.name)) {
@@ -80,7 +80,7 @@ export const updateRole = async (req, res, next) => {
       },
       { new: true, useFindAndModify: false }
     );
-    const updatedRole = await Role.findById(req.params.roleId);
+    const updatedRole = await Role.findById(req.params.Id);
     res.json(updatedRole);
   } catch (error) {
     res.send(error);
@@ -89,7 +89,7 @@ export const updateRole = async (req, res, next) => {
 
 export const readRoleById = async (req, res, next) => {
   try {
-    const role = await Role.findById(req.params.roleId);
+    const role = await Role.findById(req.params.Id);
     res.json(role);
   } catch (error) {
     res.send(error);
@@ -98,7 +98,7 @@ export const readRoleById = async (req, res, next) => {
 
 export const deleteRole = async (req, res, next) => {
   try {
-    const role = await Role.findById(req.params.roleId);
+    const role = await Role.findById(req.params.Id);
     const indelibleRoles = [
       "normalUser",
       "superUser",

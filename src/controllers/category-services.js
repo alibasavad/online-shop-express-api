@@ -32,7 +32,7 @@ export const readCategoryById = async (req, res, next) => {
     const category = await Category.aggregate([
       {
         $match: {
-          _id: new mongoose.Types.ObjectId(req.params.categoryId),
+          _id: new mongoose.Types.ObjectId(req.params.Id),
         },
       },
       {
@@ -86,7 +86,7 @@ export const createCategory = async (req, res, next) => {
 
 export const deleteCategory = async (req, res, next) => {
   try {
-    const category = await Category.findById(req.params.categoryId);
+    const category = await Category.findById(req.params.Id);
     const products = await Product.find({ categoryId: { _id: category._id } });
     for (let product of products) {
       product.categoryId.remove(category._id);
@@ -103,7 +103,7 @@ export const deleteCategory = async (req, res, next) => {
 
 export const updateCategory = async (req, res, next) => {
   try {
-    const category = await Category.findById(req.params.categoryId);
+    const category = await Category.findById(req.params.Id);
     let thumbnail = req.file ? req.file.filename : category.thumbnail;
     let name = req.body.name ? req.body.name : category.name;
     let description = req.body.description
@@ -117,7 +117,7 @@ export const updateCategory = async (req, res, next) => {
       },
       { new: true, useFindAndModify: false }
     );
-    const updatedCategory = await Category.findById(req.params.categoryId);
+    const updatedCategory = await Category.findById(req.params.Id);
 
     res.json(updatedCategory);
   } catch (error) {
