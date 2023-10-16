@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import routes from "./src/routes/route";
 import env from "./src/configs/env.json";
 
 const express = require("express");
+const errorHandler = require("./src/handlers/error-handler");
+const routes = require("./src/routes/route");
 
 const app = express();
 
@@ -24,7 +25,9 @@ app.get("/", (req, res) => {
   res.send("Hello_World_...");
 });
 
-routes(app);
+app.use("/api/v1/", routes);
+
+app.use(errorHandler.notFound);
 
 app.listen(env.PORT, () => {
   console.log(`\x1B[35mServer listening on port: ${env.PORT}`);

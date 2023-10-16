@@ -5,69 +5,77 @@ import * as rolePermission from "../controllers/role-permission-services";
 
 const express = require("express");
 
-const routes = (app) => {
-  app.route("/categories").get(category.readAllCategories);
+const router = express.Router();
 
-  app
-    .route("/category")
-    .post(rolePermission.checkPermission, category.createCategory);
+// __________________________Category Services_________________________________
 
-  app
-    .route("/category/:Id")
-    .get(category.readCategoryById)
-    .delete(rolePermission.checkPermission, category.deleteCategory)
-    .patch(rolePermission.checkPermission, category.updateCategory);
+router.route("/categories").get(category.readAllCategories);
 
-  app.route("/products").get(product.readAllProducts);
+router
+  .route("/category")
+  .post(rolePermission.checkPermission, category.createCategory);
 
-  app
-    .route("/product")
-    .post(rolePermission.checkPermission, product.createProduct);
+router
+  .route("/category/:Id")
+  .get(category.readCategoryById)
+  .delete(rolePermission.checkPermission, category.deleteCategory)
+  .patch(rolePermission.checkPermission, category.updateCategory);
 
-  app
-    .route("/product/:Id")
-    .get(product.readProductById)
-    .delete(rolePermission.checkPermission, product.deleteProduct)
-    .patch(rolePermission.checkPermission, product.updateProduct);
+// __________________________Product Services_________________________________
 
-  app
-    .route("/roles")
-    .get(rolePermission.checkPermission, rolePermission.readAllRoles);
+router.route("/products").get(product.readAllProducts);
 
-  app
-    .route("/role")
-    .post(rolePermission.checkPermission, rolePermission.createRole);
+router
+  .route("/product")
+  .post(rolePermission.checkPermission, product.createProduct);
 
-  app
-    .route("/role/:Id")
-    .get(rolePermission.checkPermission, rolePermission.readRoleById)
-    .delete(rolePermission.checkPermission, rolePermission.deleteRole)
-    .patch(rolePermission.checkPermission, rolePermission.updateRole);
+router
+  .route("/product/:Id")
+  .get(product.readProductById)
+  .delete(rolePermission.checkPermission, product.deleteProduct)
+  .patch(rolePermission.checkPermission, product.updateProduct);
 
-  app
-    .route("/profile")
-    .get(rolePermission.checkPermission, user.readProfile)
-    .patch(rolePermission.checkPermission, user.updateProfile);
+// __________________________RolePermission Services_________________________________
 
-  app.route("/verify").post(user.verifyAccount);
+router
+  .route("/roles")
+  .get(rolePermission.checkPermission, rolePermission.readAllRoles);
 
-  app.route("/verification_code").post(user.sendVerificationCode);
+router
+  .route("/role")
+  .post(rolePermission.checkPermission, rolePermission.createRole);
 
-  app.route("/register").post(user.register);
+router
+  .route("/role/:Id")
+  .get(rolePermission.checkPermission, rolePermission.readRoleById)
+  .delete(rolePermission.checkPermission, rolePermission.deleteRole)
+  .patch(rolePermission.checkPermission, rolePermission.updateRole);
 
-  app.route("/disable_account").post(user.disableAccount);
+router
+  .route("/permissions")
+  .get(rolePermission.checkPermission, rolePermission.readAllPermissions);
 
-  app.route("/login").post(user.login);
+router.route("/users").get(rolePermission.checkPermission, user.readAllUsers);
 
-  app
-    .route("/permissions")
-    .get(rolePermission.checkPermission, rolePermission.readAllPermissions);
+router
+  .route("/change_user_role")
+  .patch(rolePermission.checkPermission, rolePermission.updateUserRole);
 
-  app.route("/users").get(rolePermission.checkPermission, user.readAllUsers);
+// __________________________User Services_________________________________
 
-  app
-    .route("/change_user_role")
-    .put(rolePermission.checkPermission, rolePermission.updateUserRole);
-};
+router
+  .route("/profile")
+  .get(rolePermission.checkPermission, user.readProfile)
+  .patch(rolePermission.checkPermission, user.updateProfile);
 
-export default routes;
+router.route("/verify").post(user.verifyAccount);
+
+router.route("/verification_code").post(user.sendVerificationCode);
+
+router.route("/register").post(user.register);
+
+router.route("/disable_account").post(user.disableAccount);
+
+router.route("/login").post(user.login);
+
+module.exports = router;
