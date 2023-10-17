@@ -58,8 +58,12 @@ router
 router.route("/users").get(rolePermission.checkPermission, user.readAllUsers);
 
 router
-  .route("/change_user_role")
-  .patch(rolePermission.checkPermission, rolePermission.updateUserRole);
+  .route("/user_role/change")
+  .patch(rolePermission.checkPermission, rolePermission.changeUserRole);
+
+router
+  .route("/user_role/add")
+  .patch(rolePermission.checkPermission, rolePermission.addUserRole);
 
 // __________________________User Services_________________________________
 

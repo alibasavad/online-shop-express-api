@@ -46,8 +46,8 @@ const userSchema = new Schema(
       expiresAt: { type: Number },
     },
     role: {
-      type: String,
-      default: "normalUser",
+      type: [String],
+      default: ["normalUser"],
     },
   },
   {

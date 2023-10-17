@@ -40,7 +40,7 @@ export const createRole = async (req, res, next) => {
   }
 };
 
-export const updateUserRole = async (req, res, next) => {
+export const changeUserRole = async (req, res, next) => {
   try {
     const user = await User.findById(req.body.userId);
 
@@ -50,7 +50,27 @@ export const updateUserRole = async (req, res, next) => {
       return res.send("incorrect role or userId");
     }
 
-    user.role = role.name;
+    user.role = [role.name];
+
+    let updatedUser = await user.save();
+
+    res.json(updatedUser);
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+export const addUserRole = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.body.userId);
+
+    const role = await Role.findOne({ name: req.body.role });
+
+    if (role === null || user === null) {
+      return res.send("incorrect role or userId");
+    }
+
+    user.role.push(role.name);
 
     let updatedUser = await user.save();
 
@@ -133,14 +153,16 @@ export const checkPermission = async (req, res, next) => {
 
     const permission = req.route.path.slice(1) + "." + req.method.toLowerCase();
 
-    const role = await Role.findOne({ name: req.user.role });
+    const userPermissions = [];
 
-    const rolePermissions = [];
-    role.permissions.forEach((permission) => {
-      rolePermissions.push(permission.name);
-    });
+    for (let role of req.user.role) {
+      const checkRole = await Role.findOne({ name: role });
+      checkRole.permissions.forEach((permission) => {
+        userPermissions.push(permission.name);
+      });
+    }
 
-    if (!rolePermissions.includes(permission)) {
+    if (!userPermissions.includes(permission)) {
       return res.send("No Permission");
     }
 
