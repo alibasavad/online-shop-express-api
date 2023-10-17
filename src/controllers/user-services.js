@@ -24,13 +24,16 @@ export const register = async (req, res, next) => {
       phoneNumber: req.body.phoneNumber,
     });
 
-    newUser.verificationCode = makeSixDigitRandomString();
+    newUser.verificationCode.code = makeSixDigitRandomString();
+
+    newUser.verificationCode.expiresAt =
+      Math.floor(Date.now() / 60000) + env.verification_code_expiry_time_MINUTE;
 
     newUser.password = await Bcrypt.hash(req.body.password, 10);
 
     await newUser.save();
 
-    sendEmailConfirmation(newUser.verificationCode, newUser.email);
+    sendEmailConfirmation(newUser.verificationCode.code, newUser.email);
 
     const user = await User.findById(newUser._id).select([
       "firstName",
@@ -92,7 +95,11 @@ export const verifyAccount = async (req, res, next) => {
     if (user === null) return res.send("email or password is wrong");
     if (user.isDisable === false) return res.send("You Are Verified");
 
-    const check = user.verificationCode === req.body.verificationCode;
+    const check = user.verificationCode.code === req.body.verificationCode;
+
+    if (user.verificationCode.expiresAt < Math.floor(Date.now() / 60000)) {
+      return res.send("Verification code is incorrect");
+    }
 
     if (check) {
       user.isDisable = false;
@@ -118,11 +125,25 @@ export const sendVerificationCode = async (req, res, next) => {
 
     if (user === null) return res.send("email or password is wrong");
     if (user.isDisable === false) return res.send("You Are Verified");
+
+    const addTime =
+      env.verification_code_expiry_time_MINUTE -
+      env.send_verification_delay_time_MINUTE;
+
+    if (
+      user.verificationCode.expiresAt >
+      Math.floor(Date.now() / 60000) + addTime
+    )
+      return res.send("wait a few minutes to use this service again");
+
     const verificationCode = makeSixDigitRandomString();
 
     sendEmailConfirmation(verificationCode, user.email);
 
-    user.verificationCode = verificationCode;
+    user.verificationCode.code = verificationCode;
+
+    user.verificationCode.expiresAt =
+      Math.floor(Date.now() / 60000) + env.verification_code_expiry_time_MINUTE;
 
     user.save();
 
@@ -228,16 +249,22 @@ export const resetPassword = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
 
+    const addTiem =
+      env.temporary_password_expiry_time_MINUTE -
+      env.send_temporary_password_delay_time_MINUTE;
+
     if (
       user.passExpiresAt !== null &&
-      Date.now() / 60000 < user.passExpiresAt
+      Math.floor(Date.now() / 60000) + addTiem < user.passExpiresAt
     ) {
-      return res.send("wait a day to use this service again");
+      return res.send("wait a few minutes to use this service again");
     }
 
     const temporaryPass = generatePassword();
 
-    const expiresAt = Math.floor(Date.now() / 60000) + 1440;
+    const expiresAt =
+      Math.floor(Date.now() / 60000) +
+      env.temporary_password_expiry_time_MINUTE;
 
     user.password = await Bcrypt.hash(temporaryPass, 10);
     user.passExpiresAt = expiresAt;

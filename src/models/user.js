@@ -42,7 +42,8 @@ const userSchema = new Schema(
       minLength: 11,
     },
     verificationCode: {
-      type: String,
+      code: { type: String },
+      expiresAt: { type: Number },
     },
     role: {
       type: String,
