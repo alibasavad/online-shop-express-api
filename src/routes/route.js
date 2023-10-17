@@ -72,6 +72,8 @@ router
   .route("/profile/change_password")
   .patch(rolePermission.checkPermission, user.changePassword);
 
+router.route("/forget_password").post(user.resetPassword);
+
 router.route("/verify").post(user.verifyAccount);
 
 router.route("/verification_code").post(user.sendVerificationCode);

@@ -1,7 +1,11 @@
 import User from "../models/user";
 import env from "../configs/env.json";
 import auth from "../middlewares/auth";
-import { sendEmailConfirmation } from "../middlewares/smtp";
+import {
+  sendEmailConfirmation,
+  sendTemporaryPassword,
+} from "../middlewares/smtp";
+import generatePassword from "../middlewares/password-generator";
 
 const validator = require("validator");
 const Bcrypt = require("bcryptjs");
@@ -63,6 +67,13 @@ export const login = async (req, res, next) => {
 
     if (user.isDisable === true) {
       return res.send("please verify your account with your email");
+    }
+
+    if (
+      user.passExpiresAt !== null &&
+      Date.now() / 60000 > user.passExpiresAt
+    ) {
+      return res.send("this password is expired try forget password");
     }
 
     const token = jwt.sign({ user }, env.JWT_SECRET, {
@@ -200,10 +211,44 @@ export const changePassword = async (req, res, next) => {
     if (req.body.newPass.length < 8) {
       return res.send("password must contain 8 or more characters");
     }
+
     user.password = await Bcrypt.hash(req.body.newPass, 10);
+
+    user.passExpiresAt = null;
+
     user.save();
 
     res.send("Password changed successfully");
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+export const resetPassword = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (
+      user.passExpiresAt !== null &&
+      Date.now() / 60000 < user.passExpiresAt
+    ) {
+      return res.send("wait a day to use this service again");
+    }
+
+    const temporaryPass = generatePassword();
+
+    const expiresAt = Math.floor(Date.now() / 60000) + 1440;
+
+    user.password = await Bcrypt.hash(temporaryPass, 10);
+    user.passExpiresAt = expiresAt;
+
+    await user.save();
+
+    sendTemporaryPassword(temporaryPass, user.email);
+
+    res.send(
+      "Your new password sent to your email\nthis password only works for a day\nchange your password in your profile"
+    );
   } catch (error) {
     res.send(error);
   }

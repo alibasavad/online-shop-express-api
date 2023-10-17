@@ -27,6 +27,10 @@ const userSchema = new Schema(
       required: true,
       trim: true,
     },
+    passExpiresAt: {
+      type: Number,
+      default: null,
+    },
     isDisable: {
       type: Boolean,
       default: true,

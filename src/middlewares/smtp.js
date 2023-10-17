@@ -26,3 +26,20 @@ export const sendEmailConfirmation = (confirmationCode, email) => {
     }
   });
 };
+
+export const sendTemporaryPassword = (temporaryPass, email) => {
+  const mailOption = {
+    from: env.EMAIL, // sender address
+    to: email, // list of receivers
+    subject: "New Password", // Subject line
+    text: `This is Your Temporary Password : ${temporaryPass}`, // plain text body
+  };
+
+  transporter.sendMail(mailOption, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Email sent:");
+    }
+  });
+};
