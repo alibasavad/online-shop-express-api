@@ -6,6 +6,7 @@ import {
   sendTemporaryPassword,
 } from "../middlewares/smtp";
 import generatePassword from "../middlewares/password-generator";
+import validation from "../middlewares/data-validation";
 
 const validator = require("validator");
 const Bcrypt = require("bcryptjs");
@@ -13,9 +14,17 @@ const jwt = require("jsonwebtoken");
 
 export const register = async (req, res, next) => {
   try {
-    if (req.body.password.length < 8) {
-      return res.send("password must contain 8 or more characters");
-    }
+    let validateLastName = validation.checkFamilyName(req.body.lastName);
+    if (validateLastName) return res.send(validateLastName);
+
+    let validateFirstName = validation.checkFamilyName(req.body.firstName);
+    if (validateFirstName) return res.send(validateFirstName);
+
+    let validatePhoneNumber = validation.checkPhoneNumber(req.body.phoneNumber);
+    if (validatePhoneNumber) return res.send(validatePhoneNumber);
+
+    let validatePassword = validation.checkPassword(req.body.password);
+    if (validatePassword) return res.send(validatePassword);
 
     let newUser = new User({
       firstName: req.body.firstName,
@@ -198,6 +207,15 @@ export const updateProfile = async (req, res, next) => {
       ? req.body.phoneNumber
       : user.phoneNumber;
 
+    let validateLastName = validation.checkFamilyName(lastName);
+    if (validateLastName) return res.send(validateLastName);
+
+    let validateFirstName = validation.checkFamilyName(firstName);
+    if (validateFirstName) return res.send(validateFirstName);
+
+    let validatePhoneNumber = validation.checkPhoneNumber(phoneNumber);
+    if (validatePhoneNumber) return res.send(validatePhoneNumber);
+
     await user.updateOne(
       {
         firstName: firstName,
@@ -229,9 +247,8 @@ export const changePassword = async (req, res, next) => {
     if (req.body.newPass !== req.body.newPassRepeat)
       return res.send("newPassRepeat is incorrect");
 
-    if (req.body.newPass.length < 8) {
-      return res.send("password must contain 8 or more characters");
-    }
+    let validatePassword = validation.checkPassword(req.body.newPass);
+    if (validatePassword) return res.send(validatePassword);
 
     user.password = await Bcrypt.hash(req.body.newPass, 10);
 

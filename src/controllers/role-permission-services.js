@@ -2,6 +2,7 @@ import Role from "../models/role";
 import Permission from "../models/permission";
 import User from "../models/user";
 import env from "../configs/env.json";
+import validation from "../middlewares/data-validation";
 
 const jwt = require("jsonwebtoken");
 
@@ -25,6 +26,9 @@ export const readAllRoles = async (req, res, next) => {
 
 export const createRole = async (req, res, next) => {
   try {
+    let validateName = validation.checkName(req.body.name);
+    if (validateName) return res.send(validateName);
+
     const newrole = new Role({
       name: req.body.name,
       permissions: req.body.permissions,
@@ -92,6 +96,9 @@ export const updateRole = async (req, res, next) => {
     let permissions = req.body.permissions
       ? req.body.permissions
       : role.permissions;
+
+    let validateName = validation.checkName(name);
+    if (validateName) return res.send(validateName);
 
     await role.updateOne(
       {

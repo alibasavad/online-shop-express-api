@@ -2,6 +2,7 @@ import Category from "../models/category";
 import mongoose from "mongoose";
 import Product from "../models/product";
 import { unlinkSync } from "fs";
+import validation from "../middlewares/data-validation";
 
 export const readAllProducts = async (req, res, next) => {
   try {
@@ -84,6 +85,9 @@ export const readProductById = async (req, res, next) => {
 
 export const createProduct = async (req, res, next) => {
   try {
+    let validateName = validation.checkName(req.body.name);
+    if (validateName) return res.send(validateName);
+
     const newProduct = new Product({
       name: req.body.name,
       categoryId: req.body.categoryId,
@@ -136,6 +140,9 @@ export const updateProduct = async (req, res, next) => {
     let description = req.body.description
       ? req.body.description
       : product.description;
+
+    let validateName = validation.checkName(name);
+    if (validateName) return res.send(validateName);
 
     if (await checkCategoryId(categoryId)) {
       return res.send("invalid Categoryid");

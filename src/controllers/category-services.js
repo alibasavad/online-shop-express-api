@@ -2,6 +2,7 @@ import Category from "../models/category";
 import mongoose from "mongoose";
 import Product from "../models/product";
 import { unlinkSync } from "fs";
+import validation from "../middlewares/data-validation";
 
 // removing a value from array
 Array.prototype.remove = function () {
@@ -72,6 +73,9 @@ export const readCategoryById = async (req, res, next) => {
 
 export const createCategory = async (req, res, next) => {
   try {
+    let validateName = validation.checkName(req.body.name);
+    if (validateName) return res.send(validateName);
+
     const newCategory = new Category({
       name: req.body.name,
       thumbnail: "imageURL created by multer service...",
@@ -104,11 +108,18 @@ export const deleteCategory = async (req, res, next) => {
 export const updateCategory = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.Id);
+
     let thumbnail = req.file ? req.file.filename : category.thumbnail;
+
     let name = req.body.name ? req.body.name : category.name;
+
     let description = req.body.description
       ? req.body.description
       : category.description;
+
+    let validateName = validation.checkName(name);
+    if (validateName) return res.send(validateName);
+
     await category.updateOne(
       {
         name: name,

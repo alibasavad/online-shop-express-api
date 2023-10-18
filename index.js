@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello_World_...");
+  res.send("Under Developement :)...");
 });
 
 app.use("/api/v1/", routes);
