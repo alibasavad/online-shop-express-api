@@ -104,7 +104,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"onlyProducts\",\r\n    \"permissions\": [\r\n        {\r\n            \"name\": \"product.post\"\r\n        },\r\n        {\r\n            \"name\": \"product/:productId.put\"\r\n        },\r\n        {\r\n            \"name\": \"product/:productId.delete\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"onlyProducts3\",\r\n    \"permissions\": [\r\n        \"product.post\",\r\n        \"product/:Id.patch\",\r\n        \"product/:Id.delete\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -192,7 +192,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"onlyProducts updated\",\r\n    \"permissions\": [\r\n        {\r\n            \"name\": \"product.post\"\r\n        },\r\n        {\r\n            \"name\": \"product/:productId.put\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"onlyProducts updated 1\",\r\n    \"permissions\": [\r\n        \"product.post\",\r\n        \"product/:Id.patch\",\r\n        \"product/:Id.delete\",\r\n        \"category.post\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -200,7 +200,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/role/652d56dc3f04efd409b3e692",
+							"raw": "127.0.0.1:8000/api/v1/role/653146b44c818b716b8521f4",
 							"host": [
 								"127",
 								"0",
@@ -212,7 +212,7 @@
 								"api",
 								"v1",
 								"role",
-								"652d56dc3f04efd409b3e692"
+								"653146b44c818b716b8521f4"
 							]
 						}
 					},
@@ -262,7 +262,7 @@
 					"response": []
 				},
 				{
-					"name": "change-user-role",
+					"name": "user-role / change",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -286,7 +286,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/change_user_role",
+							"raw": "127.0.0.1:8000/api/v1/user_role/change",
 							"host": [
 								"127",
 								"0",
@@ -297,7 +297,51 @@
 							"path": [
 								"api",
 								"v1",
-								"change_user_role"
+								"user_role",
+								"change"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-role / add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\" : \"6529a2580bd0bcbcd93d4ae9\" ,\r\n    \"role\" : \"adminUser\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/user_role/add",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"user_role",
+								"add"
 							]
 						}
 					},
@@ -553,7 +597,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"New 11\",\r\n    \"categoryId\": [\r\n        {\r\n            \"_id\": \"6527164e370e0ccef394e674\"\r\n        },\r\n        {\r\n            \"_id\": \"65271664370e0ccef394e676\"\r\n        },\r\n        {\r\n            \"_id\": \"65271666370e0ccef394e678\"\r\n        }\r\n    ],\r\n    \"price\": 2000,\r\n    \"quantity\": 100,\r\n    \"description\": \"new product for testing\"\r\n}",
+							"raw": "{\r\n    \"name\": \"C2\",\r\n    \"categoryId\": [\r\n        \"65280f13ef1ab4dc2118ef43\",\r\n        \"6527164e370e0ccef394e674\",\r\n        \"65271664370e0ccef394e676\"\r\n    ],\r\n    \"price\": 2000,\r\n    \"quantity\": 100,\r\n    \"description\": \"new product for testing\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -595,7 +639,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"New Product\",\r\n    \"categoryId\": [\r\n        {\r\n            \"_id\": \"6527164e370e0ccef394e674\"\r\n        },\r\n        {\r\n            \"_id\": \"65271664370e0ccef394e676\"\r\n        },\r\n        {\r\n            \"_id\": \"65271666370e0ccef394e678\"\r\n        }\r\n    ],\r\n    \"price\": 2000,\r\n    \"quantity\": 100,\r\n    \"description\": \"new product for testing\"\r\n}",
+							"raw": "{\r\n    \"name\": \"shoe2\",\r\n    \"categoryId\": [\r\n        \"65280f13ef1ab4dc2118ef43\",\r\n        \"6527164e370e0ccef394e674\",\r\n        \"65271664370e0ccef394e676\"\r\n    ],\r\n    \"price\": 4000,\r\n    \"quantity\": 100,\r\n    \"description\": \"hahaha\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -603,7 +647,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/product/6528106e70cb5777a7a9aab8",
+							"raw": "127.0.0.1:8000/api/v1/product/653143d295960ff81665a7ae",
 							"host": [
 								"127",
 								"0",
@@ -615,7 +659,7 @@
 								"api",
 								"v1",
 								"product",
-								"6528106e70cb5777a7a9aab8"
+								"653143d295960ff81665a7ae"
 							]
 						}
 					},
@@ -700,7 +744,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"rezaahmadi2@gmail.com\",\r\n    \"password\" : \"12345678\"\r\n}",
+							"raw": "{\r\n    \"email\": \"rezaahmadi@sail.com\",\r\n    \"password\" : \"Pass1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -970,7 +1014,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"currentPass\": \"13811381\",\r\n    \"newPass\": \"12345678\",\r\n    \"newPassRepeat\": \"12345678\"\r\n}",
+							"raw": "{\r\n    \"currentPass\": \"12345678\",\r\n    \"newPass\": \"12345678\",\r\n    \"newPassRepeat\": \"12345678\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

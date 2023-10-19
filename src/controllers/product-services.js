@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import Product from "../models/product";
 import { unlinkSync } from "fs";
 import validation from "../middlewares/data-validation";
+import { mapperCategoryId } from "../middlewares/mapper";
 
 export const readAllProducts = async (req, res, next) => {
   try {
@@ -85,6 +86,8 @@ export const readProductById = async (req, res, next) => {
 
 export const createProduct = async (req, res, next) => {
   try {
+    req.body.categoryId = mapperCategoryId(req.body.categoryId);
+
     let validateName = validation.checkName(req.body.name);
     if (validateName) return res.send(validateName);
 
@@ -133,7 +136,7 @@ export const updateProduct = async (req, res, next) => {
 
     let name = req.body.name ? req.body.name : product.name;
     let categoryId = req.body.categoryId
-      ? req.body.categoryId
+      ? mapperCategoryId(req.body.categoryId)
       : product.categoryId;
     let price = req.body.price ? req.body.price : product.price;
     let quantity = req.body.quantity ? req.body.quantity : product.quantity;

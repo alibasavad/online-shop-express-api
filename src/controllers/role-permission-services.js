@@ -3,6 +3,7 @@ import Permission from "../models/permission";
 import User from "../models/user";
 import env from "../configs/env.json";
 import validation from "../middlewares/data-validation";
+import { mapperPermissions } from "../middlewares/mapper";
 
 const jwt = require("jsonwebtoken");
 
@@ -26,6 +27,8 @@ export const readAllRoles = async (req, res, next) => {
 
 export const createRole = async (req, res, next) => {
   try {
+    req.body.permissions = mapperPermissions(req.body.permissions);
+
     let validateName = validation.checkName(req.body.name);
     if (validateName) return res.send(validateName);
 
@@ -34,7 +37,7 @@ export const createRole = async (req, res, next) => {
       permissions: req.body.permissions,
     });
     for (let permission of newrole.permissions) {
-      let check = Permission.find({ name: permission.name });
+      let check = await Permission.findOne({ name: permission.name });
       if (check === null) return res.send("incorrect permission list");
     }
     const role = await newrole.save();
@@ -86,16 +89,23 @@ export const addUserRole = async (req, res, next) => {
 
 export const updateRole = async (req, res, next) => {
   try {
+    req.body.permissions = mapperPermissions(req.body.permissions);
+
     const role = await Role.findById(req.params.Id);
 
     const uneditableRoles = ["normalUser", "superUser", "limitedUser"];
     if (uneditableRoles.includes(role.name)) {
-      return res.send("this role cant be deleted");
+      return res.send("this role cant be updated");
     }
     let name = req.body.name ? req.body.name : role.name;
     let permissions = req.body.permissions
       ? req.body.permissions
       : role.permissions;
+
+    for (let permission of permissions) {
+      let check = await Permission.findOne({ name: permission.name });
+      if (check === null) return res.send("incorrect permission list");
+    }
 
     let validateName = validation.checkName(name);
     if (validateName) return res.send(validateName);
