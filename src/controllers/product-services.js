@@ -1,9 +1,9 @@
 import Category from "../models/category";
 import mongoose from "mongoose";
 import Product from "../models/product";
-import { unlinkSync } from "fs";
 import validation from "../middlewares/data-validation";
-import { mapperCategoryId } from "../middlewares/mapper";
+import { mapperCategoryId, mapperProductImages } from "../middlewares/mapper";
+import { checkImages, deleteImages } from "../middlewares/uploader";
 
 export const readAllProducts = async (req, res, next) => {
   try {
@@ -86,6 +86,17 @@ export const readProductById = async (req, res, next) => {
 
 export const createProduct = async (req, res, next) => {
   try {
+    if (req.files === undefined || req.files.length === 0)
+      return res.send("files are not uploaded");
+
+    if (checkImages(req.files)) {
+      deleteImages(req.files);
+      return res.send("send valid image files format .png / .jpg ");
+    }
+
+    let images = mapperProductImages(req.files);
+    let thumbnail = images.find(({ isMain }) => isMain === true).imageURL;
+
     req.body.categoryId = mapperCategoryId(req.body.categoryId);
 
     let validateName = validation.checkName(req.body.name);
@@ -96,21 +107,21 @@ export const createProduct = async (req, res, next) => {
       categoryId: req.body.categoryId,
       price: req.body.price,
       quantity: req.body.quantity,
-      images: [
-        { imageURL: "first image", isMain: true },
-        { imageURL: "2 image" },
-        { imageURL: "3 image" },
-        { imageURL: "4 image" },
-      ],
-      thumbnail: "imageURL created by multer service...",
+      images: images,
+      thumbnail: thumbnail,
       description: req.body.description,
     });
+
     if (await checkCategoryId(newProduct.categoryId)) {
+      deleteImages(req.files);
       return res.send("invalid Categoryid");
     }
+
     let product = await newProduct.save();
+
     res.json(product);
   } catch (error) {
+    deleteImages(req.files);
     res.send(error);
   }
 };
@@ -118,11 +129,13 @@ export const createProduct = async (req, res, next) => {
 export const deleteProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.Id);
-    // if(product.thumbnail)
-    // unlinkSync(`${__dirname}/../../public/image/category/${product.thumbnail}`);
-    // for(let image of product.images){
-    // unlinkSync(`${__dirname}/../../public/image/category/${image}`);
-    // }
+    const images = [];
+    for (let image of product.images) {
+      image.path = `${__dirname}/../../public/product/${image.imageURL}`;
+      images.push(image);
+    }
+    deleteImages(images);
+
     product.deleteOne();
     res.send("product deleted successfully");
   } catch (error) {
@@ -165,6 +178,41 @@ export const updateProduct = async (req, res, next) => {
 
     res.json(updatedProduct);
   } catch (error) {
+    res.send(error);
+  }
+};
+
+export const updateProductImages = async (req, res, next) => {
+  try {
+    if (req.files === undefined || req.files.length === 0)
+      return res.send("files are not uploaded");
+
+    if (checkImages(req.files)) {
+      deleteImages(req.files);
+      return res.send("send valid image files format .png / .jpg ");
+    }
+
+    let images = mapperProductImages(req.files);
+    let thumbnail = images.find(({ isMain }) => isMain === true).imageURL;
+
+    let product = await Product.findById(req.params.Id);
+
+    const oldImages = [];
+    for (let image of product.images) {
+      console.log(image);
+      image.path = `${__dirname}/../../public/product/${image.imageURL}`;
+      oldImages.push(image);
+    }
+    deleteImages(oldImages);
+
+    product.images = images;
+    product.thumbnail = thumbnail;
+
+    await product.save();
+
+    res.json(product);
+  } catch (error) {
+    deleteImages(req.files);
     res.send(error);
   }
 };

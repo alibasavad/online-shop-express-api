@@ -18,17 +18,27 @@ export const mapperPermissions = (list) => {
   return mappedList;
 };
 
-// [
-//       "example1" , "example2" , "example3"
-// ]
-// [
-//       {
-//             _id: "example1"
-//       },
-//       {
-//             _id: "example2"
-//       },
-//       {
-//             _id:  "example3"
-//       },
-// ]
+export const mapperProductImages = (list) => {
+  let mappedList = [];
+  let mainImageIsAdded = false;
+
+  for (let image of list) {
+    let imageJson = { imageURL: image.filename, isMain: false };
+
+    if (image.fieldname === "main" && !mainImageIsAdded) {
+      mainImageIsAdded = true;
+      imageJson.isMain = true;
+    }
+
+    mappedList.push(imageJson);
+  }
+
+  if (!mainImageIsAdded) mappedList[0].isMain = true;
+
+  return mappedList;
+};
+
+export const mapperCategoryImages = (list) => {
+  
+  return mappedList;
+};

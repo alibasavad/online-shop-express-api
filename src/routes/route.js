@@ -2,6 +2,7 @@ import * as category from "../controllers/category-services";
 import * as product from "../controllers/product-services";
 import * as user from "../controllers/user-services";
 import * as rolePermission from "../controllers/role-permission-services";
+import * as uploader from "../middlewares/uploader";
 
 const express = require("express");
 
@@ -13,7 +14,11 @@ router.route("/categories").get(category.readAllCategories);
 
 router
   .route("/category")
-  .post(rolePermission.checkPermission, category.createCategory);
+  .post(
+    rolePermission.checkPermission,
+    uploader.uploadCategoryThumbnail,
+    category.createCategory
+  );
 
 router
   .route("/category/:Id")
@@ -21,19 +26,35 @@ router
   .delete(rolePermission.checkPermission, category.deleteCategory)
   .patch(rolePermission.checkPermission, category.updateCategory);
 
+router
+  .route("/category/thumbnail/:Id")
+  .patch(uploader.uploadCategoryThumbnail, category.updateCategoryThumbnail);
+
 // __________________________Product Services_________________________________
 
 router.route("/products").get(product.readAllProducts);
 
 router
   .route("/product")
-  .post(rolePermission.checkPermission, product.createProduct);
+  .post(
+    rolePermission.checkPermission,
+    uploader.uploadProductImage,
+    product.createProduct
+  );
 
 router
   .route("/product/:Id")
   .get(product.readProductById)
   .delete(rolePermission.checkPermission, product.deleteProduct)
   .patch(rolePermission.checkPermission, product.updateProduct);
+
+router
+  .route("/product/images/:Id")
+  .patch(
+    rolePermission.checkPermission,
+    uploader.uploadProductImage,
+    product.updateProductImages
+  );
 
 // __________________________RolePermission Services_________________________________
 

@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import env from "./src/configs/env.json";
+import {
+  uploadCategoryThumbnail,
+  uploadProductThumbnail,
+  uploadProductImage,
+  uploadProduct,
+} from "./src/middlewares/uploader";
 
 const express = require("express");
 const errorHandler = require("./src/handlers/error-handler");
