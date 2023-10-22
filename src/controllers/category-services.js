@@ -4,6 +4,9 @@ import Product from "../models/product";
 import validation from "../middlewares/data-validation";
 import { checkImages, deleteImages } from "../middlewares/uploader";
 import { unlinkSync } from "fs";
+import { AppError } from "../handlers/error-handler";
+
+const Response = require("../handlers/response");
 
 // removing a value from array
 Array.prototype.remove = function () {
@@ -23,15 +26,24 @@ Array.prototype.remove = function () {
 export const readAllCategories = async (req, res, next) => {
   try {
     const categories = await Category.find();
-    res.json(categories);
+
+    Response.normalizer(req, res, {
+      result: categories,
+      message: "fetched data successfully",
+      type: "multi",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
 export const readCategoryById = async (req, res, next) => {
   try {
-    const category = await Category.aggregate([
+    const category = await Category.find({ _id: req.params.Id });
+
+    if (category.length === 0) throw new AppError(300);
+
+    const products = await Category.aggregate([
       {
         $match: {
           _id: new mongoose.Types.ObjectId(req.params.Id),
@@ -47,9 +59,6 @@ export const readCategoryById = async (req, res, next) => {
       },
       {
         $project: {
-          _id: 1,
-          name: 1,
-          description: 1,
           products: {
             _id: 1,
             name: 1,
@@ -59,16 +68,21 @@ export const readCategoryById = async (req, res, next) => {
             createdAt: 1,
             updatedAt: 1,
           },
-          thumbnail: 1,
-          createdAt: 1,
-          updatedAt: 1,
         },
       },
     ]);
 
-    res.json(category);
+    products[0].products.forEach((product) => {
+      category.push(product);
+    });
+
+    Response.normalizer(req, res, {
+      result: category,
+      message: "fetched data successfully",
+      type: "multi",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -76,18 +90,17 @@ export const createCategory = async (req, res, next) => {
   try {
     req.files = [req.file];
 
-    if (req.files === undefined || req.files.length === 0)
-      return res.send("files are not uploaded");
+    if (req.file === undefined) {
+      throw new AppError(301);
+    }
 
     if (checkImages(req.files)) {
-      deleteImages(req.files);
-      return res.send("send valid image files format .png / .jpg ");
+      throw new AppError(302);
     }
 
     let thumbnail = req.file.filename;
 
-    let validateName = validation.checkName(req.body.name);
-    if (validateName) return res.send(validateName);
+    validation.checkName(req.body.name);
 
     const newCategory = new Category({
       name: req.body.name,
@@ -96,10 +109,14 @@ export const createCategory = async (req, res, next) => {
     });
 
     let category = await newCategory.save();
-    res.json(category);
+
+    Response.normalizer(req, res, {
+      result: category,
+      message: "fetched data successfully",
+    });
   } catch (error) {
-    deleteImages(req.files);
-    res.send(error);
+    if (req.file !== undefined) deleteImages(req.files);
+    return next(error);
   }
 };
 
@@ -118,9 +135,13 @@ export const deleteCategory = async (req, res, next) => {
     }
 
     category.deleteOne();
-    res.send("category deleted successfully");
+
+    Response.normalizer(req, res, {
+      result: category,
+      message: "Category Deleted Successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -136,8 +157,7 @@ export const updateCategory = async (req, res, next) => {
       ? req.body.description
       : category.description;
 
-    let validateName = validation.checkName(name);
-    if (validateName) return res.send(validateName);
+    validation.checkName(name);
 
     await category.updateOne(
       {
@@ -149,9 +169,12 @@ export const updateCategory = async (req, res, next) => {
     );
     const updatedCategory = await Category.findById(req.params.Id);
 
-    res.json(updatedCategory);
+    Response.normalizer(req, res, {
+      result: updatedCategory,
+      message: "fetched data successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -159,25 +182,31 @@ export const updateCategoryThumbnail = async (req, res, next) => {
   try {
     req.files = [req.file];
 
-    if (req.files === undefined || req.files.length === 0)
-      return res.send("files are not uploaded");
+    if (req.file === undefined) {
+      throw new AppError(301);
+    }
 
     if (checkImages(req.files)) {
-      deleteImages(req.files);
-      return res.send("send valid image files format .png / .jpg ");
+      throw new AppError(302);
     }
 
     let thumbnail = req.file.filename;
 
     const category = await Category.findById(req.params.Id);
+
     if (category.thumbnail) {
       unlinkSync(`${__dirname}/../../public/category/${category.thumbnail}`);
     }
     category.thumbnail = thumbnail;
+
     await category.save();
-    res.json(category);
+
+    Response.normalizer(req, res, {
+      result: category,
+      message: "fetched data successfully",
+    });
   } catch (error) {
-    deleteImages(req.files);
-    res.send(error);
+    if (req.file !== undefined) deleteImages(req.files);
+    return next(error);
   }
 };

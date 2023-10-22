@@ -3,6 +3,7 @@ import * as product from "../controllers/product-services";
 import * as user from "../controllers/user-services";
 import * as rolePermission from "../controllers/role-permission-services";
 import * as uploader from "../middlewares/uploader";
+import { errorHandler } from "../handlers/error-handler";
 
 const express = require("express");
 
@@ -28,7 +29,11 @@ router
 
 router
   .route("/category/thumbnail/:Id")
-  .patch(uploader.uploadCategoryThumbnail, category.updateCategoryThumbnail);
+  .patch(
+    rolePermission.checkPermission,
+    uploader.uploadCategoryThumbnail,
+    category.updateCategoryThumbnail
+  );
 
 // __________________________Product Services_________________________________
 

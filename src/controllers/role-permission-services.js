@@ -4,24 +4,37 @@ import User from "../models/user";
 import env from "../configs/env.json";
 import validation from "../middlewares/data-validation";
 import { mapperPermissions } from "../middlewares/mapper";
+import { AppError } from "../handlers/error-handler";
+
+const Response = require("../handlers/response");
 
 const jwt = require("jsonwebtoken");
 
 export const readAllPermissions = async (req, res, next) => {
   try {
     const permissions = await Permission.find().select(["name"]);
-    res.json(permissions);
+
+    Response.normalizer(req, res, {
+      result: permissions,
+      message: "fetched data successfully",
+      type: "multi",
+    });
   } catch (error) {
-    res.send(error);
+    next(error);
   }
 };
 
 export const readAllRoles = async (req, res, next) => {
   try {
     const roles = await Role.find().select(["name", "permissions"]);
-    res.json(roles);
+
+    Response.normalizer(req, res, {
+      result: roles,
+      message: "fetched data successfully",
+      type: "multi",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -29,21 +42,26 @@ export const createRole = async (req, res, next) => {
   try {
     req.body.permissions = mapperPermissions(req.body.permissions);
 
-    let validateName = validation.checkName(req.body.name);
-    if (validateName) return res.send(validateName);
+    validation.checkName(req.body.name);
 
     const newrole = new Role({
       name: req.body.name,
       permissions: req.body.permissions,
     });
+
     for (let permission of newrole.permissions) {
       let check = await Permission.findOne({ name: permission.name });
-      if (check === null) return res.send("incorrect permission list");
+      if (check === null) throw new AppError(310);
     }
+
     const role = await newrole.save();
-    res.json(role);
+
+    Response.normalizer(req, res, {
+      result: role,
+      message: "Role Created successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -54,16 +72,19 @@ export const changeUserRole = async (req, res, next) => {
     const role = await Role.findOne({ name: req.body.role });
 
     if (role === null || user === null) {
-      return res.send("incorrect role or userId");
+      throw new AppError(311);
     }
 
     user.role = [role.name];
 
     let updatedUser = await user.save();
 
-    res.json(updatedUser);
+    Response.normalizer(req, res, {
+      result: updatedUser,
+      message: "Users Role Changed successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -74,16 +95,19 @@ export const addUserRole = async (req, res, next) => {
     const role = await Role.findOne({ name: req.body.role });
 
     if (role === null || user === null) {
-      return res.send("incorrect role or userId");
+      throw new AppError(311);
     }
 
     user.role.push(role.name);
 
     let updatedUser = await user.save();
 
-    res.json(updatedUser);
+    Response.normalizer(req, res, {
+      result: updatedUser,
+      message: "Role Added To User successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -95,7 +119,7 @@ export const updateRole = async (req, res, next) => {
 
     const uneditableRoles = ["normalUser", "superUser", "limitedUser"];
     if (uneditableRoles.includes(role.name)) {
-      return res.send("this role cant be updated");
+      throw new AppError(312);
     }
     let name = req.body.name ? req.body.name : role.name;
     let permissions = req.body.permissions
@@ -104,11 +128,10 @@ export const updateRole = async (req, res, next) => {
 
     for (let permission of permissions) {
       let check = await Permission.findOne({ name: permission.name });
-      if (check === null) return res.send("incorrect permission list");
+      if (check === null) throw new AppError(310);
     }
 
-    let validateName = validation.checkName(name);
-    if (validateName) return res.send(validateName);
+    validation.checkName(name);
 
     await role.updateOne(
       {
@@ -118,18 +141,26 @@ export const updateRole = async (req, res, next) => {
       { new: true, useFindAndModify: false }
     );
     const updatedRole = await Role.findById(req.params.Id);
-    res.json(updatedRole);
+
+    Response.normalizer(req, res, {
+      result: updatedRole,
+      message: "Role Updated successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
 export const readRoleById = async (req, res, next) => {
   try {
     const role = await Role.findById(req.params.Id);
-    res.json(role);
+
+    Response.normalizer(req, res, {
+      result: role,
+      message: "fetched data successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -144,25 +175,27 @@ export const deleteRole = async (req, res, next) => {
     ];
 
     if (role === null) {
-      return res.send("incorrect role");
+      throw new AppError(314);
     }
 
     if (indelibleRoles.includes(role.name)) {
-      return res.send("this role cant be deleted");
+      throw new AppError(313);
     }
 
     role.deleteOne();
 
-    res.send("role deleted successfully");
+    Response.normalizer(req, res, {
+      result: role,
+      message: "Role Deleted successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
 export const checkPermission = async (req, res, next) => {
   try {
-    if (req.headers["authorization"] === undefined)
-      return res.send("invalid_token");
+    if (req.headers["authorization"] === undefined) throw new AppError(315);
 
     req.token = req.headers["authorization"].split(" ")[1];
 
@@ -180,11 +213,11 @@ export const checkPermission = async (req, res, next) => {
     }
 
     if (!userPermissions.includes(permission)) {
-      return res.send("No Permission");
+      throw new AppError(316);
     }
 
     next();
   } catch (error) {
-    res.json(error);
+    return next(error);
   }
 };

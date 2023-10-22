@@ -33,6 +33,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/", routes);
 
+app.use(errorHandler.errorHandler);
+
 app.use(errorHandler.notFound);
 
 app.listen(env.PORT, () => {

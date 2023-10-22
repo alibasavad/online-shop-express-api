@@ -37,7 +37,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/permissions",
+							"raw": "127.0.0.1:8000/api/v1/permissions?page=1",
 							"host": [
 								"127",
 								"0",
@@ -49,6 +49,12 @@
 								"api",
 								"v1",
 								"permissions"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -70,7 +76,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/roles",
+							"raw": "127.0.0.1:8000/api/v1/roles?page=1",
 							"host": [
 								"127",
 								"0",
@@ -82,6 +88,12 @@
 								"api",
 								"v1",
 								"roles"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -358,7 +370,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/categories",
+							"raw": "127.0.0.1:8000/api/v1/categories?page=1",
 							"host": [
 								"127",
 								"0",
@@ -370,6 +382,12 @@
 								"api",
 								"v1",
 								"categories"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -381,7 +399,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/category/6527164e370e0ccef394e674",
+							"raw": "127.0.0.1:8000/api/v1/category/6527164e370e0ccef394e674?page=1",
 							"host": [
 								"127",
 								"0",
@@ -394,6 +412,12 @@
 								"v1",
 								"category",
 								"6527164e370e0ccef394e674"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -501,13 +525,24 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"New C2\",\r\n    \"description\": \"New Category Name As C\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "C 03",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "a new category",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Ali/Desktop/ice.png"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "127.0.0.1:8000/api/v1/category/",
@@ -527,6 +562,51 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "update-category-thumbnail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Ali/Desktop/banana.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/category/thumbnail/6533c22479eaa11026d2bd1a",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"thumbnail",
+								"6533c22479eaa11026d2bd1a"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -539,7 +619,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/product/652827c858bd852e5995d89d",
+							"raw": "127.0.0.1:8000/api/v1/product/6528106370cb5777a7a9aab2",
 							"host": [
 								"127",
 								"0",
@@ -551,7 +631,7 @@
 								"api",
 								"v1",
 								"product",
-								"652827c858bd852e5995d89d"
+								"6528106370cb5777a7a9aab2"
 							]
 						}
 					},
@@ -563,7 +643,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/products",
+							"raw": "127.0.0.1:8000/api/v1/products?page=1",
 							"host": [
 								"127",
 								"0",
@@ -575,6 +655,12 @@
 								"api",
 								"v1",
 								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -596,13 +682,58 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"C2\",\r\n    \"categoryId\": [\r\n        \"65280f13ef1ab4dc2118ef43\",\r\n        \"6527164e370e0ccef394e674\",\r\n        \"65271664370e0ccef394e676\"\r\n    ],\r\n    \"price\": 2000,\r\n    \"quantity\": 100,\r\n    \"description\": \"new product for testing\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "P 2",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "New Product",
+									"type": "text"
+								},
+								{
+									"key": "main",
+									"type": "file",
+									"src": "/C:/Users/Ali/Desktop/ice.png"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/C:/Users/Ali/Desktop/banana.png",
+										"/C:/Users/Ali/Desktop/ice.png",
+										"/C:/Users/Ali/Desktop/pp.png"
+									]
+								},
+								{
+									"key": "categoryId[0]",
+									"value": "65280f13ef1ab4dc2118ef43",
+									"type": "text"
+								},
+								{
+									"key": "categoryId[1]",
+									"value": "6527164e370e0ccef394e674",
+									"type": "text"
+								},
+								{
+									"key": "categoryId[2]",
+									"value": "65271664370e0ccef394e676",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "127.0.0.1:8000/api/v1/product",
@@ -694,6 +825,59 @@
 								"v1",
 								"product",
 								"652827c858bd852e5995d89d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-product-images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "main",
+									"type": "file",
+									"src": "/C:/Users/Ali/Desktop/pp.png"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/C:/Users/Ali/Desktop/banana.png",
+										"/C:/Users/Ali/Desktop/ice.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/product/images/6533bcee65d8370f0b86ca00",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"images",
+								"6533bcee65d8370f0b86ca00"
 							]
 						}
 					},
@@ -893,7 +1077,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/users",
+							"raw": "127.0.0.1:8000/api/v1/users?page=1",
 							"host": [
 								"127",
 								"0",
@@ -905,6 +1089,12 @@
 								"api",
 								"v1",
 								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -972,7 +1162,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\" : \"Mahdi\",\r\n    \"lastName\" : \"Jokar\",\r\n    \"phoneNumber\" : \"09382790111\"\r\n\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Mahdi\",\r\n    \"lastName\": \"Jokar\",\r\n    \"phoneNumber\": \"09382790111\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

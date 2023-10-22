@@ -7,24 +7,22 @@ import {
 } from "../middlewares/smtp";
 import generatePassword from "../middlewares/password-generator";
 import validation from "../middlewares/data-validation";
+import { AppError } from "../handlers/error-handler";
 
+const Response = require("../handlers/response");
 const validator = require("validator");
 const Bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 export const register = async (req, res, next) => {
   try {
-    let validateLastName = validation.checkFamilyName(req.body.lastName);
-    if (validateLastName) return res.send(validateLastName);
+    validation.checkFamilyName(req.body.lastName);
 
-    let validateFirstName = validation.checkFamilyName(req.body.firstName);
-    if (validateFirstName) return res.send(validateFirstName);
+    validation.checkFamilyName(req.body.firstName);
 
-    let validatePhoneNumber = validation.checkPhoneNumber(req.body.phoneNumber);
-    if (validatePhoneNumber) return res.send(validatePhoneNumber);
+    validation.checkPhoneNumber(req.body.phoneNumber);
 
-    let validatePassword = validation.checkPassword(req.body.password);
-    if (validatePassword) return res.send(validatePassword);
+    validation.checkPassword(req.body.password);
 
     let newUser = new User({
       firstName: req.body.firstName,
@@ -52,40 +50,45 @@ export const register = async (req, res, next) => {
       "createdAt",
     ]);
 
-    res.json(user);
+    Response.normalizer(req, res, {
+      result: user,
+      message: "User Registerd Successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
 export const disableAccount = async (req, res, next) => {
   try {
     const user = await auth(req.body.email, req.body.password);
-    if (user === null) return res.send("email or password is wrong");
+    if (user === null) throw new AppError(317);
     user.isDisable = true;
     await user.save();
-    res.send(
-      "Your account successfully been disabled , you can enable your account by verifing with your email"
-    );
+
+    Response.normalizer(req, res, {
+      message:
+        "Your account successfully been disabled , you can enable your account by verifing with your email",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
 export const login = async (req, res, next) => {
   try {
     const user = await auth(req.body.email, req.body.password);
-    if (user === null) return res.send("email or password is wrong");
+    if (user === null) throw new AppError(317);
 
     if (user.isDisable === true) {
-      return res.send("please verify your account with your email");
+      throw new AppError(318, "please verify your account with your email");
     }
 
     if (
       user.passExpiresAt !== null &&
       Date.now() / 60000 > user.passExpiresAt
     ) {
-      return res.send("this password is expired try forget password");
+      throw new AppError(317, "this password is expired try forget password");
     }
 
     const token = jwt.sign({ user }, env.JWT_SECRET, {
@@ -93,7 +96,7 @@ export const login = async (req, res, next) => {
     });
     res.json({ token: token, expiresIn: env.JWT_EXPIRES_IN });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -101,13 +104,13 @@ export const verifyAccount = async (req, res, next) => {
   try {
     const user = await auth(req.body.email, req.body.password);
 
-    if (user === null) return res.send("email or password is wrong");
-    if (user.isDisable === false) return res.send("You Are Verified");
+    if (user === null) throw new AppError(317);
+    if (user.isDisable === false) throw new AppError(319);
 
     const check = user.verificationCode.code === req.body.verificationCode;
 
     if (user.verificationCode.expiresAt < Math.floor(Date.now() / 60000)) {
-      return res.send("Verification code is incorrect");
+      throw new AppError(320);
     }
 
     if (check) {
@@ -121,10 +124,10 @@ export const verifyAccount = async (req, res, next) => {
 
       res.json({ token: token, expiresIn: env.JWT_EXPIRES_IN });
     } else {
-      res.send("Verification code is incorrect");
+      throw new AppError(320);
     }
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -132,8 +135,8 @@ export const sendVerificationCode = async (req, res, next) => {
   try {
     const user = await auth(req.body.email, req.body.password);
 
-    if (user === null) return res.send("email or password is wrong");
-    if (user.isDisable === false) return res.send("You Are Verified");
+    if (user === null) throw new AppError(317);
+    if (user.isDisable === false) throw new AppError(319);
 
     const addTime =
       env.verification_code_expiry_time_MINUTE -
@@ -143,7 +146,7 @@ export const sendVerificationCode = async (req, res, next) => {
       user.verificationCode.expiresAt >
       Math.floor(Date.now() / 60000) + addTime
     )
-      return res.send("wait a few minutes to use this service again");
+      throw new AppError(321);
 
     const verificationCode = makeSixDigitRandomString();
 
@@ -156,9 +159,11 @@ export const sendVerificationCode = async (req, res, next) => {
 
     user.save();
 
-    res.send("Verification Code sent to your email");
+    Response.normalizer(req, res, {
+      message: "Verification Code sent to your email",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -173,9 +178,14 @@ const makeSixDigitRandomString = () => {
 export const readAllUsers = async (req, res, next) => {
   try {
     const users = await User.find();
-    res.json(users);
+
+    Response.normalizer(req, res, {
+      result: users,
+      message: "fetched data successfully",
+      type: "multi",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -189,9 +199,12 @@ export const readProfile = async (req, res, next) => {
       "createdAt",
     ]);
 
-    res.json(user);
+    Response.normalizer(req, res, {
+      result: user,
+      message: "fetched data successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -207,14 +220,11 @@ export const updateProfile = async (req, res, next) => {
       ? req.body.phoneNumber
       : user.phoneNumber;
 
-    let validateLastName = validation.checkFamilyName(lastName);
-    if (validateLastName) return res.send(validateLastName);
+    validation.checkFamilyName(lastName);
 
-    let validateFirstName = validation.checkFamilyName(firstName);
-    if (validateFirstName) return res.send(validateFirstName);
+    validation.checkFamilyName(firstName);
 
-    let validatePhoneNumber = validation.checkPhoneNumber(phoneNumber);
-    if (validatePhoneNumber) return res.send(validatePhoneNumber);
+    validation.checkPhoneNumber(phoneNumber);
 
     await user.updateOne(
       {
@@ -233,22 +243,23 @@ export const updateProfile = async (req, res, next) => {
       "createdAt",
     ]);
 
-    res.json(updatedUser);
+    Response.normalizer(req, res, {
+      result: updatedUser,
+      message: "User Updated successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
 export const changePassword = async (req, res, next) => {
   try {
     const user = await auth(req.user.email, req.body.currentPass);
-    if (user === null) return res.send("Current password is wrong");
+    if (user === null) throw new AppError(322);
 
-    if (req.body.newPass !== req.body.newPassRepeat)
-      return res.send("newPassRepeat is incorrect");
+    if (req.body.newPass !== req.body.newPassRepeat) throw new AppError(323);
 
-    let validatePassword = validation.checkPassword(req.body.newPass);
-    if (validatePassword) return res.send(validatePassword);
+    validation.checkPassword(req.body.newPass);
 
     user.password = await Bcrypt.hash(req.body.newPass, 10);
 
@@ -256,9 +267,11 @@ export const changePassword = async (req, res, next) => {
 
     user.save();
 
-    res.send("Password changed successfully");
+    Response.normalizer(req, res, {
+      message: "Password changed successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -274,7 +287,7 @@ export const resetPassword = async (req, res, next) => {
       user.passExpiresAt !== null &&
       Math.floor(Date.now() / 60000) + addTiem < user.passExpiresAt
     ) {
-      return res.send("wait a few minutes to use this service again");
+      throw new AppError(321);
     }
 
     const temporaryPass = generatePassword();
@@ -290,10 +303,11 @@ export const resetPassword = async (req, res, next) => {
 
     sendTemporaryPassword(temporaryPass, user.email);
 
-    res.send(
-      "Your new password sent to your email\nthis password only works for a day\nchange your password in your profile"
-    );
+    Response.normalizer(req, res, {
+      message:
+        "Your new password sent to your email\nthis password only works for a day\nchange your password in your profile",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };

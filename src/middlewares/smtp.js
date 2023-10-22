@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 import env from "../configs/env.json";
+import { AppError } from "../handlers/error-handler";
 
 const transporter = nodemailer.createTransport({
   port: env.SMTP_PORT,
@@ -20,7 +21,7 @@ export const sendEmailConfirmation = (confirmationCode, email) => {
 
   transporter.sendMail(mailOption, (err, info) => {
     if (err) {
-      console.log(err);
+      throw new AppError(324);
     } else {
       console.log("Email sent:");
     }
@@ -37,7 +38,7 @@ export const sendTemporaryPassword = (temporaryPass, email) => {
 
   transporter.sendMail(mailOption, (err, info) => {
     if (err) {
-      console.log(err);
+      throw new AppError(324);
     } else {
       console.log("Email sent:");
     }

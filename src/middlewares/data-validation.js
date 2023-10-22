@@ -1,3 +1,5 @@
+import { AppError } from "../handlers/error-handler";
+
 const validation = {
   checkPassword: (password) => {
     const passwordPattern =
@@ -6,7 +8,7 @@ const validation = {
       "password must contain\nUpper case and Lower case and number\nand be 8 or more charecters\nAnd can not contain space";
     let result = passwordPattern.test(password);
     if (result) return false;
-    else return message;
+    else throw new AppError(307);
   },
 
   checkName: (name) => {
@@ -15,7 +17,7 @@ const validation = {
       "Name must start with alphebet and\ncan only contain alphebet and numbers";
     let result = namePattern.test(name);
     if (result) return false;
-    else return message;
+    else throw new AppError(306);
   },
 
   checkPhoneNumber: (PhoneNumber) => {
@@ -25,7 +27,7 @@ const validation = {
 
     let result = phoneNumberPatttern.test(PhoneNumber);
     if (result) return false;
-    else return message;
+    else throw new AppError(308);
   },
 
   checkFamilyName: (familyName) => {
@@ -35,7 +37,7 @@ const validation = {
 
     let result = familyNamePatttern.test(familyName);
     if (result) return false;
-    else return message;
+    else throw new AppError(309);
   },
 };
 

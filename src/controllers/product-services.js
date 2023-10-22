@@ -4,6 +4,9 @@ import Product from "../models/product";
 import validation from "../middlewares/data-validation";
 import { mapperCategoryId, mapperProductImages } from "../middlewares/mapper";
 import { checkImages, deleteImages } from "../middlewares/uploader";
+import { AppError } from "../handlers/error-handler";
+
+const Response = require("../handlers/response");
 
 export const readAllProducts = async (req, res, next) => {
   try {
@@ -35,9 +38,14 @@ export const readAllProducts = async (req, res, next) => {
         },
       },
     ]);
-    res.json(products);
+
+    Response.normalizer(req, res, {
+      result: products,
+      message: "fetched data successfully",
+      type: "multi",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -78,20 +86,25 @@ export const readProductById = async (req, res, next) => {
         },
       },
     ]);
-    res.json(product);
+
+    if (product.length === 0) throw new AppError(300);
+
+    Response.normalizer(req, res, {
+      result: product,
+      message: "fetched data successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
 export const createProduct = async (req, res, next) => {
   try {
     if (req.files === undefined || req.files.length === 0)
-      return res.send("files are not uploaded");
+      throw new AppError(301);
 
     if (checkImages(req.files)) {
-      deleteImages(req.files);
-      return res.send("send valid image files format .png / .jpg ");
+      throw new AppError(302);
     }
 
     let images = mapperProductImages(req.files);
@@ -99,8 +112,7 @@ export const createProduct = async (req, res, next) => {
 
     req.body.categoryId = mapperCategoryId(req.body.categoryId);
 
-    let validateName = validation.checkName(req.body.name);
-    if (validateName) return res.send(validateName);
+    validation.checkName(req.body.name);
 
     const newProduct = new Product({
       name: req.body.name,
@@ -113,16 +125,19 @@ export const createProduct = async (req, res, next) => {
     });
 
     if (await checkCategoryId(newProduct.categoryId)) {
-      deleteImages(req.files);
-      return res.send("invalid Categoryid");
+      throw new AppError(304);
     }
 
     let product = await newProduct.save();
 
-    res.json(product);
+    Response.normalizer(req, res, {
+      result: product,
+      message: "Product Created Successfully",
+    });
   } catch (error) {
-    deleteImages(req.files);
-    res.send(error);
+    if (!(req.files === undefined || req.files.length === 0))
+      deleteImages(req.files);
+    return next(error);
   }
 };
 
@@ -137,9 +152,13 @@ export const deleteProduct = async (req, res, next) => {
     deleteImages(images);
 
     product.deleteOne();
-    res.send("product deleted successfully");
+
+    Response.normalizer(req, res, {
+      result: product,
+      message: "Product Deleted Successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
@@ -157,11 +176,10 @@ export const updateProduct = async (req, res, next) => {
       ? req.body.description
       : product.description;
 
-    let validateName = validation.checkName(name);
-    if (validateName) return res.send(validateName);
+    validation.checkName(name);
 
     if (await checkCategoryId(categoryId)) {
-      return res.send("invalid Categoryid");
+      throw new AppError(304);
     }
 
     await product.updateOne(
@@ -176,20 +194,22 @@ export const updateProduct = async (req, res, next) => {
     );
     const updatedProduct = await Product.findById(req.params.Id);
 
-    res.json(updatedProduct);
+    Response.normalizer(req, res, {
+      result: updatedProduct,
+      message: "Product Updated Successfully",
+    });
   } catch (error) {
-    res.send(error);
+    return next(error);
   }
 };
 
 export const updateProductImages = async (req, res, next) => {
   try {
     if (req.files === undefined || req.files.length === 0)
-      return res.send("files are not uploaded");
+      throw new AppError(301);
 
     if (checkImages(req.files)) {
-      deleteImages(req.files);
-      return res.send("send valid image files format .png / .jpg ");
+      throw new AppError(302);
     }
 
     let images = mapperProductImages(req.files);
@@ -210,10 +230,14 @@ export const updateProductImages = async (req, res, next) => {
 
     await product.save();
 
-    res.json(product);
+    Response.normalizer(req, res, {
+      result: product,
+      message: "Product Updated Successfully",
+    });
   } catch (error) {
-    deleteImages(req.files);
-    res.send(error);
+    if (!(req.files === undefined || req.files.length === 0))
+      deleteImages(req.files);
+    return next(error);
   }
 };
 
