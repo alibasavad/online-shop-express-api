@@ -25,27 +25,25 @@ export class AppError extends Error {
 }
 
 export const errorHandler = (error, req, res, next) => {
-  // console.log(error.name);
+  if (error.name === "ValidationError") {
+    return errorHandler(new AppError(305, error.message), req, res, next);
+  }
 
-  // if (error.name === "ValidationError") {
-  //   return errorHandler(new AppError(305, error.message), req, res, next);
-  // }
+  if (error.name === "MongoServerError") {
+    return errorHandler(new AppError(303, error.keyValue), req, res, next);
+  }
 
-  // if (error.name === "MongoServerError") {
-  //   return errorHandler(new AppError(303, error.keyValue), req, res, next);
-  // }
+  if (error.name === "BSONError") {
+    return errorHandler(new AppError(300), req, res, next);
+  }
 
-  // if (error.name === "BSONError") {
-  //   return errorHandler(new AppError(300), req, res, next);
-  // }
+  if (error.name === "TypeError") {
+    return errorHandler(new AppError(300), req, res, next);
+  }
 
-  // if (error.name === "TypeError") {
-  //   return errorHandler(new AppError(300), req, res, next);
-  // }
-
-  // if (error.name === "CastError") {
-  //   return errorHandler(new AppError(300), req, res, next);
-  // }
+  if (error.name === "CastError") {
+    return errorHandler(new AppError(300), req, res, next);
+  }
 
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({
