@@ -34,7 +34,7 @@ export const register = async (req, res, next) => {
     newUser.verificationCode.code = makeSixDigitRandomString();
 
     newUser.verificationCode.expiresAt =
-      Math.floor(Date.now() / 60000) + env.verification_code_expiry_time_MINUTE;
+      Math.floor(Date.now() / 60000) + env.VERIFICATION_CODE_EXPIRY_TIME_MINUTE;
 
     newUser.password = await Bcrypt.hash(req.body.password, 10);
 
@@ -139,8 +139,8 @@ export const sendVerificationCode = async (req, res, next) => {
     if (user.isDisable === false) throw new AppError(319);
 
     const addTime =
-      env.verification_code_expiry_time_MINUTE -
-      env.send_verification_delay_time_MINUTE;
+      env.VERIFICATION_CODE_EXPIRY_TIME_MINUTE -
+      env.SEND_VERIFICATION_DELAY_TIME_MINUTE;
 
     if (
       user.verificationCode.expiresAt >
@@ -155,7 +155,7 @@ export const sendVerificationCode = async (req, res, next) => {
     user.verificationCode.code = verificationCode;
 
     user.verificationCode.expiresAt =
-      Math.floor(Date.now() / 60000) + env.verification_code_expiry_time_MINUTE;
+      Math.floor(Date.now() / 60000) + env.VERIFICATION_CODE_EXPIRY_TIME_MINUTE;
 
     user.save();
 
@@ -280,8 +280,8 @@ export const resetPassword = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
 
     const addTiem =
-      env.temporary_password_expiry_time_MINUTE -
-      env.send_temporary_password_delay_time_MINUTE;
+      env.TEMPORARY_PASSWORD_EXPIRY_TIME_MINUTE -
+      env.SEND_TEMPORARY_PASSWORD_DELAY_TIME_MINUTE;
 
     if (
       user.passExpiresAt !== null &&
@@ -294,7 +294,7 @@ export const resetPassword = async (req, res, next) => {
 
     const expiresAt =
       Math.floor(Date.now() / 60000) +
-      env.temporary_password_expiry_time_MINUTE;
+      env.TEMPORARY_PASSWORD_EXPIRY_TIME_MINUTE;
 
     user.password = await Bcrypt.hash(temporaryPass, 10);
     user.passExpiresAt = expiresAt;

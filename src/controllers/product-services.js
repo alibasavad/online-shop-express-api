@@ -12,6 +12,11 @@ export const readAllProducts = async (req, res, next) => {
   try {
     const products = await Product.aggregate([
       {
+        $match: {
+          isDisable: false,
+        },
+      },
+      {
         $lookup: {
           from: "categories",
           localField: "categoryId._id",
@@ -55,6 +60,7 @@ export const readProductById = async (req, res, next) => {
       {
         $match: {
           _id: new mongoose.Types.ObjectId(req.params.Id),
+          isDisable: false,
         },
       },
       {
@@ -124,9 +130,7 @@ export const createProduct = async (req, res, next) => {
       description: req.body.description,
     });
 
-    if (await checkCategoryId(newProduct.categoryId)) {
-      throw new AppError(304);
-    }
+    await checkCategoryId(newProduct.categoryId);
 
     let product = await newProduct.save();
 
@@ -141,21 +145,18 @@ export const createProduct = async (req, res, next) => {
   }
 };
 
-export const deleteProduct = async (req, res, next) => {
+export const disableProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.Id);
-    const images = [];
-    for (let image of product.images) {
-      image.path = `${__dirname}/../../public/product/${image.imageURL}`;
-      images.push(image);
-    }
-    deleteImages(images);
 
-    product.deleteOne();
+    if (product.isDisable === true) throw new AppError(325);
+
+    product.isDisable = true;
+
+    product.save();
 
     Response.normalizer(req, res, {
-      result: product,
-      message: "Product Deleted Successfully",
+      message: "Product Disabled Successfully",
     });
   } catch (error) {
     return next(error);
@@ -178,9 +179,7 @@ export const updateProduct = async (req, res, next) => {
 
     validation.checkName(name);
 
-    if (await checkCategoryId(categoryId)) {
-      throw new AppError(304);
-    }
+    await checkCategoryId(categoryId);
 
     await product.updateOne(
       {
@@ -241,12 +240,98 @@ export const updateProductImages = async (req, res, next) => {
   }
 };
 
+export const deleteProductImages = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.Id);
+
+    const images = [];
+    for (let image of product.images) {
+      image.path = `${__dirname}/../../public/product/${image.imageURL}`;
+      images.push(image);
+    }
+    deleteImages(images);
+
+    product.images = undefined;
+    product.save();
+
+    Response.normalizer(req, res, {
+      message: "Product Images Deleted Successfully",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const enableProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.Id);
+
+    if (product.isDisable === false) throw new AppError(326);
+
+    product.isDisable = false;
+
+    product.save();
+
+    Response.normalizer(req, res, {
+      result: product,
+      message: "Product Deleted Successfully",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const readDisabledProducts = async (req, res, next) => {
+  try {
+    const products = await Product.aggregate([
+      {
+        $match: {
+          isDisable: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "categoryId._id",
+          foreignField: "_id",
+          as: "categories",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          categories: {
+            _id: 1,
+            name: 1,
+            thumbnail: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+          price: 1,
+          quantity: 1,
+          thumbnail: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
+
+    Response.normalizer(req, res, {
+      result: products,
+      message: "fetched data successfully",
+      type: "multi/pagination",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const checkCategoryId = async (categoryIds) => {
   for (let category of categoryIds) {
     let check = await Category.findById(category);
-    if (check === null) {
-      return true;
+    if (check === null || check.isDisable === true) {
+      throw new AppError(304);
     }
   }
-  return false;
 };

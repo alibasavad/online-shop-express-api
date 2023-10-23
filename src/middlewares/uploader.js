@@ -2,7 +2,6 @@ import multer from "multer";
 import env from "../configs/env.json";
 import { unlinkSync } from "fs";
 
-
 const productImageStorage = multer.diskStorage({
   // upload directory
   destination: `${__dirname}/../../public/product`,
@@ -22,13 +21,13 @@ const categoryThumbnailStorage = multer.diskStorage({
 export const uploadProductImage = multer({
   //upload service
   storage: productImageStorage,
-  limits: { fileSize: 1000000 * env.max_image_size_MEGEBYTE },
+  limits: { fileSize: 1000000 * env.MAX_IMAGE_SIZE_MEGEBYTE },
 }).any();
 
 export const uploadCategoryThumbnail = multer({
   //upload service
   storage: categoryThumbnailStorage,
-  limits: { fileSize: 1000000 * env.max_thumbnail_size_MEGEBYTE },
+  limits: { fileSize: 1000000 * env.MAX_THUMBNAIL_SIZE_MEGEBYTE },
 }).single("image");
 
 export const checkImages = (list) => {
@@ -45,5 +44,3 @@ export const deleteImages = (images) => {
     unlinkSync(image.path);
   }
 };
-
-

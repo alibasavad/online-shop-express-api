@@ -37,7 +37,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/permissions?page=1",
+							"raw": "127.0.0.1:8000/api/v1/permissions?page=1&size=10",
 							"host": [
 								"127",
 								"0",
@@ -54,6 +54,10 @@
 								{
 									"key": "page",
 									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
 								}
 							]
 						}
@@ -204,7 +208,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"onlyProducts updated 1\",\r\n    \"permissions\": [\r\n        \"product.post\",\r\n        \"product/:Id.patch\",\r\n        \"product/:Id.delete\",\r\n        \"category.post\"\r\n    ]\r\n}",
+							"raw": "{\r\n    \"permissions\": [\r\n        \"product.post\",\r\n        \"product/:Id.patch\",\r\n        \"product/:Id.delete\",\r\n        \"category.post\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -212,7 +216,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/role/653146b44c818b716b8521f4",
+							"raw": "127.0.0.1:8000/api/v1/role/6536d2128e35df9f3147a43c",
 							"host": [
 								"127",
 								"0",
@@ -224,14 +228,14 @@
 								"api",
 								"v1",
 								"role",
-								"653146b44c818b716b8521f4"
+								"6536d2128e35df9f3147a43c"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "delete-role",
+					"name": "disable-role",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -358,6 +362,49 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "read-disable-roles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/disable-roles?page=1&size=2",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"disable-roles"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -467,7 +514,7 @@
 					"response": []
 				},
 				{
-					"name": "delete-category",
+					"name": "disable-category",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -491,7 +538,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/category/652d567a3f04efd409b3e5df",
+							"raw": "127.0.0.1:8000/api/v1/category/653680915b54be8eb91c59fe",
 							"host": [
 								"127",
 								"0",
@@ -503,7 +550,7 @@
 								"api",
 								"v1",
 								"category",
-								"652d567a3f04efd409b3e5df"
+								"653680915b54be8eb91c59fe"
 							]
 						}
 					},
@@ -603,6 +650,115 @@
 								"category",
 								"thumbnail",
 								"6533c22479eaa11026d2bd1a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read-disable-categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/disable-categories?page=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"disable-categories"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "enable-category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/category/enable/653680915b54be8eb91c59fe",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"enable",
+								"653680915b54be8eb91c59fe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-category-thumbnail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Ali/Desktop/banana.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/category/thumbnail/653680915b54be8eb91c59fe",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"thumbnail",
+								"653680915b54be8eb91c59fe"
 							]
 						}
 					},
@@ -878,6 +1034,114 @@
 								"product",
 								"images",
 								"6533bcee65d8370f0b86ca00"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read-disable-product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/disable-products?page=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"disable-products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "enable-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"shoe2\",\r\n    \"categoryId\": [\r\n        \"65280f13ef1ab4dc2118ef43\",\r\n        \"6527164e370e0ccef394e674\",\r\n        \"65271664370e0ccef394e676\"\r\n    ],\r\n    \"price\": 4000,\r\n    \"quantity\": 100,\r\n    \"description\": \"hahaha\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/product/enable/65368cd0fe5b2c3280e86fcb",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"enable",
+								"65368cd0fe5b2c3280e86fcb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-product-images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/product/images/65368cd0fe5b2c3280e86fcb",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"images",
+								"65368cd0fe5b2c3280e86fcb"
 							]
 						}
 					},

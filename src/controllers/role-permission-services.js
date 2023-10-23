@@ -26,7 +26,24 @@ export const readAllPermissions = async (req, res, next) => {
 
 export const readAllRoles = async (req, res, next) => {
   try {
-    const roles = await Role.find().select(["name", "permissions"]);
+    const roles = await Role.aggregate([
+      {
+        $match: {
+          isDisable: false,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          permissions: {
+            name: 1,
+          },
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
 
     Response.normalizer(req, res, {
       result: roles,
@@ -71,7 +88,7 @@ export const changeUserRole = async (req, res, next) => {
 
     const role = await Role.findOne({ name: req.body.role });
 
-    if (role === null || user === null) {
+    if (role === null || user === null || role.isDisable === true) {
       throw new AppError(311);
     }
 
@@ -94,7 +111,7 @@ export const addUserRole = async (req, res, next) => {
 
     const role = await Role.findOne({ name: req.body.role });
 
-    if (role === null || user === null) {
+    if (role === null || user === null || role.isDisable === true) {
       throw new AppError(311);
     }
 
@@ -121,7 +138,6 @@ export const updateRole = async (req, res, next) => {
     if (uneditableRoles.includes(role.name)) {
       throw new AppError(312);
     }
-    let name = req.body.name ? req.body.name : role.name;
     let permissions = req.body.permissions
       ? req.body.permissions
       : role.permissions;
@@ -131,11 +147,8 @@ export const updateRole = async (req, res, next) => {
       if (check === null) throw new AppError(310);
     }
 
-    validation.checkName(name);
-
     await role.updateOne(
       {
-        name: name,
         permissions: permissions,
       },
       { new: true, useFindAndModify: false }
@@ -155,6 +168,8 @@ export const readRoleById = async (req, res, next) => {
   try {
     const role = await Role.findById(req.params.Id);
 
+    if (role.isDisable === true) throw new AppError(300);
+
     Response.normalizer(req, res, {
       result: role,
       message: "fetched data successfully",
@@ -164,7 +179,7 @@ export const readRoleById = async (req, res, next) => {
   }
 };
 
-export const deleteRole = async (req, res, next) => {
+export const disableRole = async (req, res, next) => {
   try {
     const role = await Role.findById(req.params.Id);
     const indelibleRoles = [
@@ -173,6 +188,9 @@ export const deleteRole = async (req, res, next) => {
       "limitedUser",
       "adminUser",
     ];
+    if (role.isDisable === true) {
+      throw new AppError(325);
+    }
 
     if (role === null) {
       throw new AppError(314);
@@ -182,11 +200,12 @@ export const deleteRole = async (req, res, next) => {
       throw new AppError(313);
     }
 
-    role.deleteOne();
+    role.isDisable = true;
+    await role.save();
 
     Response.normalizer(req, res, {
       result: role,
-      message: "Role Deleted successfully",
+      message: "Role Disabled successfully",
     });
   } catch (error) {
     return next(error);
@@ -199,7 +218,11 @@ export const checkPermission = async (req, res, next) => {
 
     req.token = req.headers["authorization"].split(" ")[1];
 
-    req.user = jwt.verify(req.token, env.JWT_SECRET).user;
+    let tokenId = jwt.verify(req.token, env.JWT_SECRET).user._id;
+
+    req.user = await User.findById(tokenId);
+
+    if (req.user.isDisable === true) throw new AppError(327);
 
     const permission = req.route.path.slice(1) + "." + req.method.toLowerCase();
 
@@ -207,9 +230,12 @@ export const checkPermission = async (req, res, next) => {
 
     for (let role of req.user.role) {
       const checkRole = await Role.findOne({ name: role });
-      checkRole.permissions.forEach((permission) => {
-        userPermissions.push(permission.name);
-      });
+
+      if (checkRole.isDisable === false) {
+        checkRole.permissions.forEach((permission) => {
+          userPermissions.push(permission.name);
+        });
+      }
     }
 
     if (!userPermissions.includes(permission)) {
@@ -217,6 +243,57 @@ export const checkPermission = async (req, res, next) => {
     }
 
     next();
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const readDisabledRoles = async (req, res, next) => {
+  try {
+    const roles = await Role.aggregate([
+      {
+        $match: {
+          isDisable: true,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          permissions: {
+            name: 1,
+          },
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
+
+    Response.normalizer(req, res, {
+      result: roles,
+      message: "fetched data successfully",
+      type: "multi/pagination",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const enableRole = async (req, res, next) => {
+  try {
+    const role = await Role.findById(req.params.Id);
+
+    if (role.isDisable === false) {
+      throw new AppError(326);
+    }
+
+    role.isDisable = false;
+    await role.save();
+
+    Response.normalizer(req, res, {
+      result: role,
+      message: "Role Enabled Successfully",
+    });
   } catch (error) {
     return next(error);
   }

@@ -25,7 +25,23 @@ Array.prototype.remove = function () {
 
 export const readAllCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.aggregate([
+      {
+        $match: {
+          isDisable: false,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          thumbnail: 1,
+          description: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
 
     Response.normalizer(req, res, {
       result: categories,
@@ -39,7 +55,24 @@ export const readAllCategories = async (req, res, next) => {
 
 export const readCategoryById = async (req, res, next) => {
   try {
-    const category = await Category.find({ _id: req.params.Id });
+    const category = await Category.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(req.params.Id),
+          isDisable: false,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          thumbnail: 1,
+          description: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
 
     if (category.length === 0) throw new AppError(300);
 
@@ -120,9 +153,12 @@ export const createCategory = async (req, res, next) => {
   }
 };
 
-export const deleteCategory = async (req, res, next) => {
+export const disableCategory = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.Id);
+
+    if (category.isDisable === true) throw new AppError(325);
+
     const products = await Product.find({ categoryId: { _id: category._id } });
 
     for (let product of products) {
@@ -130,15 +166,12 @@ export const deleteCategory = async (req, res, next) => {
       await product.save();
     }
 
-    if (category.thumbnail) {
-      unlinkSync(`${__dirname}/../../public/category/${category.thumbnail}`);
-    }
+    category.isDisable = true;
 
-    category.deleteOne();
+    category.save();
 
     Response.normalizer(req, res, {
-      result: category,
-      message: "Category Deleted Successfully",
+      message: "Category Disabled Successfully",
     });
   } catch (error) {
     return next(error);
@@ -207,6 +240,75 @@ export const updateCategoryThumbnail = async (req, res, next) => {
     });
   } catch (error) {
     if (req.file !== undefined) deleteImages(req.files);
+    return next(error);
+  }
+};
+
+export const deleteCategoryThumbnail = async (req, res, next) => {
+  try {
+    const category = await Category.findById(req.params.Id);
+
+    if (category.thumbnail) {
+      unlinkSync(`${__dirname}/../../public/category/${category.thumbnail}`);
+    }
+
+    category.thumbnail = undefined;
+
+    category.save();
+
+    Response.normalizer(req, res, {
+      message: "Category Thumbnail Deleted Successfully",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const enableCategory = async (req, res, next) => {
+  try {
+    const category = await Category.findById(req.params.Id);
+
+    if (category.isDisable === false) throw new AppError(326);
+
+    category.isDisable = false;
+
+    category.save();
+
+    Response.normalizer(req, res, {
+      result: category,
+      message: "Category Deleted Successfully",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const readDisabledCategories = async (req, res, next) => {
+  try {
+    const categories = await Category.aggregate([
+      {
+        $match: {
+          isDisable: true,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          thumbnail: 1,
+          description: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
+
+    Response.normalizer(req, res, {
+      result: categories,
+      message: "fetched data successfully",
+      type: "multi/pagination",
+    });
+  } catch (error) {
     return next(error);
   }
 };

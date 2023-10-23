@@ -9,6 +9,7 @@ const roleSchema = new Schema(
       required: true,
       unique: true,
     },
+
     permissions: [
       {
         name: {
@@ -17,6 +18,11 @@ const roleSchema = new Schema(
         },
       },
     ],
+
+    isDisable: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
