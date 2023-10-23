@@ -17,7 +17,7 @@ export const readAllPermissions = async (req, res, next) => {
     Response.normalizer(req, res, {
       result: permissions,
       message: "fetched data successfully",
-      type: "multi",
+      type: "multi/pagination",
     });
   } catch (error) {
     next(error);
@@ -31,7 +31,7 @@ export const readAllRoles = async (req, res, next) => {
     Response.normalizer(req, res, {
       result: roles,
       message: "fetched data successfully",
-      type: "multi",
+      type: "multi/pagination",
     });
   } catch (error) {
     return next(error);

@@ -42,7 +42,7 @@ export const readAllProducts = async (req, res, next) => {
     Response.normalizer(req, res, {
       result: products,
       message: "fetched data successfully",
-      type: "multi",
+      type: "multi/pagination",
     });
   } catch (error) {
     return next(error);

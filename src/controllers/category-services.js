@@ -30,7 +30,7 @@ export const readAllCategories = async (req, res, next) => {
     Response.normalizer(req, res, {
       result: categories,
       message: "fetched data successfully",
-      type: "multi",
+      type: "multi/pagination",
     });
   } catch (error) {
     return next(error);
@@ -79,7 +79,7 @@ export const readCategoryById = async (req, res, next) => {
     Response.normalizer(req, res, {
       result: category,
       message: "fetched data successfully",
-      type: "multi",
+      type: "multi/pagination",
     });
   } catch (error) {
     return next(error);
