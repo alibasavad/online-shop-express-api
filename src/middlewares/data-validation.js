@@ -1,7 +1,7 @@
 import { AppError } from "../handlers/error-handler";
 
 const validation = {
-  checkPassword: (password) => {
+  password: (password) => {
     const passwordPattern =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.{8,})(?!.*[ ])/g;
     const message =
@@ -11,7 +11,7 @@ const validation = {
     else throw new AppError(307);
   },
 
-  checkName: (name) => {
+  alphaNumeric: (name) => {
     const namePattern = /^[a-zA-Z](\w|[ ])*$/g;
     const message =
       "Name must start with alphebet and\ncan only contain alphebet and numbers";
@@ -20,7 +20,7 @@ const validation = {
     else throw new AppError(306);
   },
 
-  checkPhoneNumber: (PhoneNumber) => {
+  phoneNumber: (PhoneNumber) => {
     const phoneNumberPatttern = /^09\d{9}$/g;
     const message =
       "PhoneNumber Must start with 09 and must contain 11 numbers";
@@ -30,7 +30,7 @@ const validation = {
     else throw new AppError(308);
   },
 
-  checkFamilyName: (familyName) => {
+  alpha: (familyName) => {
     const familyNamePatttern = /^[a-zA-Z][a-zA-Z ]+$/g;
     const message =
       "First and Last name must contain only alphebet and space\nand must start with alphebet";

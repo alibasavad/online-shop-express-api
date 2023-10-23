@@ -118,7 +118,7 @@ export const createProduct = async (req, res, next) => {
 
     req.body.categoryId = mapperCategoryId(req.body.categoryId);
 
-    validation.checkName(req.body.name);
+    validation.alphaNumeric(req.body.name);
 
     const newProduct = new Product({
       name: req.body.name,
@@ -177,7 +177,7 @@ export const updateProduct = async (req, res, next) => {
       ? req.body.description
       : product.description;
 
-    validation.checkName(name);
+    validation.alphaNumeric(name);
 
     await checkCategoryId(categoryId);
 

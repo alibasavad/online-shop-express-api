@@ -16,13 +16,13 @@ const jwt = require("jsonwebtoken");
 
 export const register = async (req, res, next) => {
   try {
-    validation.checkFamilyName(req.body.lastName);
+    validation.alpha(req.body.lastName);
 
-    validation.checkFamilyName(req.body.firstName);
+    validation.alpha(req.body.firstName);
 
-    validation.checkPhoneNumber(req.body.phoneNumber);
+    validation.phoneNumber(req.body.phoneNumber);
 
-    validation.checkPassword(req.body.password);
+    validation.password(req.body.password);
 
     let newUser = new User({
       firstName: req.body.firstName,
@@ -220,11 +220,11 @@ export const updateProfile = async (req, res, next) => {
       ? req.body.phoneNumber
       : user.phoneNumber;
 
-    validation.checkFamilyName(lastName);
+    validation.alpha(lastName);
 
-    validation.checkFamilyName(firstName);
+    validation.alpha(firstName);
 
-    validation.checkPhoneNumber(phoneNumber);
+    validation.phoneNumber(phoneNumber);
 
     await user.updateOne(
       {
@@ -259,7 +259,7 @@ export const changePassword = async (req, res, next) => {
 
     if (req.body.newPass !== req.body.newPassRepeat) throw new AppError(323);
 
-    validation.checkPassword(req.body.newPass);
+    validation.password(req.body.newPass);
 
     user.password = await Bcrypt.hash(req.body.newPass, 10);
 

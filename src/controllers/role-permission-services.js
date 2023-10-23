@@ -59,7 +59,7 @@ export const createRole = async (req, res, next) => {
   try {
     req.body.permissions = mapperPermissions(req.body.permissions);
 
-    validation.checkName(req.body.name);
+    validation.alphaNumeric(req.body.name);
 
     const newrole = new Role({
       name: req.body.name,

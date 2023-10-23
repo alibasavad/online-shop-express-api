@@ -133,7 +133,7 @@ export const createCategory = async (req, res, next) => {
 
     let thumbnail = req.file.filename;
 
-    validation.checkName(req.body.name);
+    validation.alphaNumeric(req.body.name);
 
     const newCategory = new Category({
       name: req.body.name,
@@ -190,7 +190,7 @@ export const updateCategory = async (req, res, next) => {
       ? req.body.description
       : category.description;
 
-    validation.checkName(name);
+    validation.alphaNumeric(name);
 
     await category.updateOne(
       {
