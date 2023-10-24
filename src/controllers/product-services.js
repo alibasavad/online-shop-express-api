@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import Product from "../models/product";
 import validation from "../middlewares/data-validation";
 import { mapperCategoryId, mapperProductImages } from "../middlewares/mapper";
-import { checkImages, deleteImages } from "../middlewares/uploader";
+import { deleteImages } from "../middlewares/uploader";
 import { AppError } from "../handlers/error-handler";
 
 const Response = require("../handlers/response");
@@ -106,14 +106,7 @@ export const readProductById = async (req, res, next) => {
 
 export const createProduct = async (req, res, next) => {
   try {
-    if (req.files === undefined || req.files.length === 0)
-      throw new AppError(301);
-
-    if (checkImages(req.files)) {
-      throw new AppError(302);
-    }
-
-    let images = mapperProductImages(req.files);
+    let images = mapperProductImages(req.body.images);
     let thumbnail = images.find(({ isMain }) => isMain === true).imageURL;
 
     req.body.categoryId = mapperCategoryId(req.body.categoryId);
@@ -139,8 +132,6 @@ export const createProduct = async (req, res, next) => {
       messageCode: 106,
     });
   } catch (error) {
-    if (!(req.files === undefined || req.files.length === 0))
-      deleteImages(req.files);
     return next(error);
   }
 };
@@ -204,14 +195,7 @@ export const updateProduct = async (req, res, next) => {
 
 export const updateProductImages = async (req, res, next) => {
   try {
-    if (req.files === undefined || req.files.length === 0)
-      throw new AppError(301);
-
-    if (checkImages(req.files)) {
-      throw new AppError(302);
-    }
-
-    let images = mapperProductImages(req.files);
+    let images = mapperProductImages(req.body.images);
     let thumbnail = images.find(({ isMain }) => isMain === true).imageURL;
 
     let product = await Product.findById(req.params.Id);
@@ -234,8 +218,6 @@ export const updateProductImages = async (req, res, next) => {
       messageCode: 108,
     });
   } catch (error) {
-    if (!(req.files === undefined || req.files.length === 0))
-      deleteImages(req.files);
     return next(error);
   }
 };

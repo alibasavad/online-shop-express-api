@@ -29,4 +29,5 @@ export const messageCodes = {
   127: "PhoneNumber Must start with 09 and must contain 11 numbers",
   128: "First and Last name must contain only alphebet and space\nand must start with alphebet",
   129: "Email Sent",
+  130: "File Uploaded Successfully",
 };

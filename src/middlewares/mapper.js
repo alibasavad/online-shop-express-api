@@ -23,9 +23,9 @@ export const mapperProductImages = (list) => {
   let mainImageIsAdded = false;
 
   for (let image of list) {
-    let imageJson = { imageURL: image.filename, isMain: false };
+    let imageJson = { imageURL: image, isMain: false };
 
-    if (image.fieldname === "main" && !mainImageIsAdded) {
+    if (!mainImageIsAdded) {
       mainImageIsAdded = true;
       imageJson.isMain = true;
     }
@@ -33,12 +33,5 @@ export const mapperProductImages = (list) => {
     mappedList.push(imageJson);
   }
 
-  if (!mainImageIsAdded) mappedList[0].isMain = true;
-
-  return mappedList;
-};
-
-export const mapperCategoryImages = (list) => {
-  
   return mappedList;
 };

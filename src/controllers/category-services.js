@@ -2,7 +2,6 @@ import Category from "../models/category";
 import mongoose from "mongoose";
 import Product from "../models/product";
 import validation from "../middlewares/data-validation";
-import { checkImages, deleteImages } from "../middlewares/uploader";
 import { unlinkSync } from "fs";
 import { AppError } from "../handlers/error-handler";
 
@@ -121,23 +120,11 @@ export const readCategoryById = async (req, res, next) => {
 
 export const createCategory = async (req, res, next) => {
   try {
-    req.files = [req.file];
-
-    if (req.file === undefined) {
-      throw new AppError(301);
-    }
-
-    if (checkImages(req.files)) {
-      throw new AppError(302);
-    }
-
-    let thumbnail = req.file.filename;
-
     validation.alphaNumeric(req.body.name);
 
     const newCategory = new Category({
       name: req.body.name,
-      thumbnail: thumbnail,
+      thumbnail: req.body.thumbnail,
       description: req.body.description,
     });
 
@@ -148,7 +135,6 @@ export const createCategory = async (req, res, next) => {
       messageCode: 101,
     });
   } catch (error) {
-    if (req.file !== undefined) deleteImages(req.files);
     return next(error);
   }
 };
@@ -213,17 +199,7 @@ export const updateCategory = async (req, res, next) => {
 
 export const updateCategoryThumbnail = async (req, res, next) => {
   try {
-    req.files = [req.file];
-
-    if (req.file === undefined) {
-      throw new AppError(301);
-    }
-
-    if (checkImages(req.files)) {
-      throw new AppError(302);
-    }
-
-    let thumbnail = req.file.filename;
+    let thumbnail = req.body.thumbnail;
 
     const category = await Category.findById(req.params.Id);
 
@@ -239,7 +215,6 @@ export const updateCategoryThumbnail = async (req, res, next) => {
       messageCode: 103,
     });
   } catch (error) {
-    if (req.file !== undefined) deleteImages(req.files);
     return next(error);
   }
 };

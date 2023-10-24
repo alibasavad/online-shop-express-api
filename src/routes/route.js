@@ -14,11 +14,9 @@ router.route("/categories").get(category.readAllCategories);
 
 router
   .route("/category")
-  .post(
-    rolePermission.checkPermission,
-    uploader.uploadCategoryThumbnail,
-    category.createCategory
-  );
+  .post(rolePermission.checkPermission, category.createCategory);
+
+router.route("/category/thumbnail").post(uploader.uploadCategoryThumbnail);
 
 router
   .route("/category/:Id")
@@ -28,11 +26,7 @@ router
 
 router
   .route("/category/thumbnail/:Id")
-  .patch(
-    rolePermission.checkPermission,
-    uploader.uploadCategoryThumbnail,
-    category.updateCategoryThumbnail
-  )
+  .patch(rolePermission.checkPermission, category.updateCategoryThumbnail)
   .delete(rolePermission.checkPermission, category.deleteCategoryThumbnail);
 
 router
@@ -49,11 +43,9 @@ router.route("/products").get(product.readAllProducts);
 
 router
   .route("/product")
-  .post(
-    rolePermission.checkPermission,
-    uploader.uploadProductImage,
-    product.createProduct
-  );
+  .post(rolePermission.checkPermission, product.createProduct);
+
+router.route("/product/images").post(uploader.uploadProductImages);
 
 router
   .route("/product/:Id")
@@ -63,11 +55,7 @@ router
 
 router
   .route("/product/images/:Id")
-  .patch(
-    rolePermission.checkPermission,
-    uploader.uploadProductImage,
-    product.updateProductImages
-  )
+  .patch(rolePermission.checkPermission, product.updateProductImages)
   .delete(rolePermission.checkPermission, product.deleteProductImages);
 
 router
