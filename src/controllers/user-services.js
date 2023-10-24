@@ -52,7 +52,7 @@ export const register = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: user,
-      message: "User Registerd Successfully",
+      messageCode: 117,
     });
   } catch (error) {
     return next(error);
@@ -67,8 +67,7 @@ export const disableAccount = async (req, res, next) => {
     await user.save();
 
     Response.normalizer(req, res, {
-      message:
-        "Your account successfully been disabled , you can enable your account by verifing with your email",
+      messageCode: 118,
     });
   } catch (error) {
     return next(error);
@@ -81,14 +80,14 @@ export const login = async (req, res, next) => {
     if (user === null) throw new AppError(317);
 
     if (user.isDisable === true) {
-      throw new AppError(318, "please verify your account with your email");
+      throw new AppError(318, 119);
     }
 
     if (
       user.passExpiresAt !== null &&
       Date.now() / 60000 > user.passExpiresAt
     ) {
-      throw new AppError(317, "this password is expired try forget password");
+      throw new AppError(317, 120);
     }
 
     const token = jwt.sign({ user }, env.JWT_SECRET, {
@@ -160,7 +159,7 @@ export const sendVerificationCode = async (req, res, next) => {
     user.save();
 
     Response.normalizer(req, res, {
-      message: "Verification Code sent to your email",
+      messageCode: 121,
     });
   } catch (error) {
     return next(error);
@@ -181,7 +180,7 @@ export const readAllUsers = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: users,
-      message: "fetched data successfully",
+      messageCode: 100,
       type: "multi/pagination",
     });
   } catch (error) {
@@ -201,7 +200,7 @@ export const readProfile = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: user,
-      message: "fetched data successfully",
+      messageCode: 100,
     });
   } catch (error) {
     return next(error);
@@ -245,7 +244,7 @@ export const updateProfile = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: updatedUser,
-      message: "User Updated successfully",
+      messageCode: 122,
     });
   } catch (error) {
     return next(error);
@@ -268,7 +267,7 @@ export const changePassword = async (req, res, next) => {
     user.save();
 
     Response.normalizer(req, res, {
-      message: "Password changed successfully",
+      messageCode: 123,
     });
   } catch (error) {
     return next(error);
@@ -304,8 +303,7 @@ export const resetPassword = async (req, res, next) => {
     sendTemporaryPassword(temporaryPass, user.email);
 
     Response.normalizer(req, res, {
-      message:
-        "Your new password sent to your email\nthis password only works for a day\nchange your password in your profile",
+      messageCode: 124,
     });
   } catch (error) {
     return next(error);

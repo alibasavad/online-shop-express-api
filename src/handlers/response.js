@@ -1,12 +1,19 @@
 const errorHandler = require("./error-handler");
+import * as constants from "../constants/index";
 
 exports.normalizer = (
   req,
   res,
-  { result = "", message = "", type = "single", status = 200 }
+  { result = "", messageCode, type = "single", status = 200 }
 ) => {
   const page = req.query.page;
   const size = req.query.size ? req.query.size : 5;
+
+  let message;
+
+  if (messageCode !== "") {
+    message = constants.messages.messageCodes[messageCode];
+  }
 
   switch (type) {
     case "single":

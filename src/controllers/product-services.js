@@ -46,7 +46,7 @@ export const readAllProducts = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: products,
-      message: "fetched data successfully",
+      messageCode: 100,
       type: "multi/pagination",
     });
   } catch (error) {
@@ -97,7 +97,7 @@ export const readProductById = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: product,
-      message: "fetched data successfully",
+      messageCode: 100,
     });
   } catch (error) {
     return next(error);
@@ -136,7 +136,7 @@ export const createProduct = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: product,
-      message: "Product Created Successfully",
+      messageCode: 106,
     });
   } catch (error) {
     if (!(req.files === undefined || req.files.length === 0))
@@ -156,7 +156,7 @@ export const disableProduct = async (req, res, next) => {
     product.save();
 
     Response.normalizer(req, res, {
-      message: "Product Disabled Successfully",
+      messageCode: 107,
     });
   } catch (error) {
     return next(error);
@@ -195,7 +195,7 @@ export const updateProduct = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: updatedProduct,
-      message: "Product Updated Successfully",
+      messageCode: 108,
     });
   } catch (error) {
     return next(error);
@@ -231,7 +231,7 @@ export const updateProductImages = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: product,
-      message: "Product Updated Successfully",
+      messageCode: 108,
     });
   } catch (error) {
     if (!(req.files === undefined || req.files.length === 0))
@@ -255,7 +255,7 @@ export const deleteProductImages = async (req, res, next) => {
     product.save();
 
     Response.normalizer(req, res, {
-      message: "Product Images Deleted Successfully",
+      messageCode: 109,
     });
   } catch (error) {
     return next(error);
@@ -274,7 +274,7 @@ export const enableProduct = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: product,
-      message: "Product Deleted Successfully",
+      messageCode: 110,
     });
   } catch (error) {
     return next(error);
@@ -319,7 +319,7 @@ export const readDisabledProducts = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: products,
-      message: "fetched data successfully",
+      messageCode: 100,
       type: "multi/pagination",
     });
   } catch (error) {

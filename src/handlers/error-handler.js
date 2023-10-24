@@ -1,4 +1,4 @@
-import errorCodes from "../configs/error-codes.json";
+import * as constants from "../constants/index";
 
 export const notFound = (req, res, next) => {
   res.status(404).json({
@@ -11,14 +11,17 @@ export class AppError extends Error {
   constructor(errorCode, message) {
     if (message) {
       if (message instanceof Object) message = JSON.stringify(message);
-      super(errorCodes[errorCode][0] + "  :  " + message);
+      else if (typeof message === "number")
+        message = constants.messages.messageCodes[message];
+
+      super(constants.errors.errorCodes[errorCode][0] + "  :  " + message);
     } else {
-      super(errorCodes[errorCode][0]);
+      super(constants.errors.errorCodes[errorCode][0]);
     }
 
     this.errorCode = errorCode;
 
-    this.statusCode = errorCodes[errorCode][1];
+    this.statusCode = constants.errors.errorCodes[errorCode][1];
 
     Object.setPrototypeOf(this, AppError.prototype);
   }

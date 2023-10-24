@@ -16,7 +16,7 @@ export const readAllPermissions = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: permissions,
-      message: "fetched data successfully",
+      messageCode: 100,
       type: "multi/pagination",
     });
   } catch (error) {
@@ -47,7 +47,7 @@ export const readAllRoles = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: roles,
-      message: "fetched data successfully",
+      messageCode: 100,
       type: "multi/pagination",
     });
   } catch (error) {
@@ -75,7 +75,7 @@ export const createRole = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: role,
-      message: "Role Created successfully",
+      messageCode: 111,
     });
   } catch (error) {
     return next(error);
@@ -98,7 +98,7 @@ export const changeUserRole = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: updatedUser,
-      message: "Users Role Changed successfully",
+      messageCode: 112,
     });
   } catch (error) {
     return next(error);
@@ -121,7 +121,7 @@ export const addUserRole = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: updatedUser,
-      message: "Role Added To User successfully",
+      messageCode: 113,
     });
   } catch (error) {
     return next(error);
@@ -157,7 +157,7 @@ export const updateRole = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: updatedRole,
-      message: "Role Updated successfully",
+      messageCode: 114,
     });
   } catch (error) {
     return next(error);
@@ -172,7 +172,7 @@ export const readRoleById = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: role,
-      message: "fetched data successfully",
+      messageCode: 100,
     });
   } catch (error) {
     return next(error);
@@ -205,7 +205,7 @@ export const disableRole = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: role,
-      message: "Role Disabled successfully",
+      messageCode: 115,
     });
   } catch (error) {
     return next(error);
@@ -271,7 +271,7 @@ export const readDisabledRoles = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: roles,
-      message: "fetched data successfully",
+      messageCode: 100,
       type: "multi/pagination",
     });
   } catch (error) {
@@ -292,7 +292,7 @@ export const enableRole = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: role,
-      message: "Role Enabled Successfully",
+      messageCode: 116,
     });
   } catch (error) {
     return next(error);

@@ -45,7 +45,7 @@ export const readAllCategories = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: categories,
-      message: "fetched data successfully",
+      messageCode: 100,
       type: "multi/pagination",
     });
   } catch (error) {
@@ -111,7 +111,7 @@ export const readCategoryById = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: category,
-      message: "fetched data successfully",
+      messageCode: 100,
       type: "multi/pagination",
     });
   } catch (error) {
@@ -145,7 +145,7 @@ export const createCategory = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: category,
-      message: "fetched data successfully",
+      messageCode: 101,
     });
   } catch (error) {
     if (req.file !== undefined) deleteImages(req.files);
@@ -171,7 +171,7 @@ export const disableCategory = async (req, res, next) => {
     category.save();
 
     Response.normalizer(req, res, {
-      message: "Category Disabled Successfully",
+      messageCode: 102,
     });
   } catch (error) {
     return next(error);
@@ -204,7 +204,7 @@ export const updateCategory = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: updatedCategory,
-      message: "fetched data successfully",
+      messageCode: 103,
     });
   } catch (error) {
     return next(error);
@@ -236,7 +236,7 @@ export const updateCategoryThumbnail = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: category,
-      message: "fetched data successfully",
+      messageCode: 103,
     });
   } catch (error) {
     if (req.file !== undefined) deleteImages(req.files);
@@ -257,7 +257,7 @@ export const deleteCategoryThumbnail = async (req, res, next) => {
     category.save();
 
     Response.normalizer(req, res, {
-      message: "Category Thumbnail Deleted Successfully",
+      messageCode: 104,
     });
   } catch (error) {
     return next(error);
@@ -276,7 +276,7 @@ export const enableCategory = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: category,
-      message: "Category Deleted Successfully",
+      messageCode: 105,
     });
   } catch (error) {
     return next(error);
@@ -305,7 +305,7 @@ export const readDisabledCategories = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: categories,
-      message: "fetched data successfully",
+      messageCode: 100,
       type: "multi/pagination",
     });
   } catch (error) {
