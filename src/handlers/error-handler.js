@@ -36,6 +36,10 @@ export const errorHandler = (error, req, res, next) => {
     return errorHandler(new AppError(303, error.keyValue), req, res, next);
   }
 
+  if (error.name === "TokenExpiredError") {
+    return errorHandler(new AppError(308), req, res, next);
+  }
+
   if (error.name === "BSONError") {
     return errorHandler(new AppError(300), req, res, next);
   }

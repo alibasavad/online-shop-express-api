@@ -16,7 +16,9 @@ router
   .route("/category")
   .post(rolePermission.checkPermission, category.createCategory);
 
-router.route("/category/thumbnail").post(uploader.uploadCategoryThumbnail);
+router
+  .route("/category/thumbnail")
+  .post(rolePermission.checkPermission, uploader.uploadCategoryThumbnail);
 
 router
   .route("/category/:Id")
@@ -45,7 +47,9 @@ router
   .route("/product")
   .post(rolePermission.checkPermission, product.createProduct);
 
-router.route("/product/images").post(uploader.uploadProductImages);
+router
+  .route("/product/images")
+  .post(rolePermission.checkPermission, uploader.uploadProductImages);
 
 router
   .route("/product/:Id")
@@ -126,5 +130,9 @@ router.route("/register").post(user.register);
 router.route("/disable_account").post(user.disableAccount);
 
 router.route("/login").post(user.login);
+
+router.route("/logout").post(user.logout);
+
+router.route("/generate_token").post(user.generateAccessToken);
 
 module.exports = router;

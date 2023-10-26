@@ -5,6 +5,7 @@ import env from "../configs/env.json";
 import validation from "../middlewares/data-validation";
 import { mapperPermissions } from "../middlewares/mapper";
 import { AppError } from "../handlers/error-handler";
+import { checkToken } from "../middlewares/token";
 
 const Response = require("../handlers/response");
 
@@ -212,42 +213,6 @@ export const disableRole = async (req, res, next) => {
   }
 };
 
-export const checkPermission = async (req, res, next) => {
-  try {
-    if (req.headers["authorization"] === undefined) throw new AppError(315);
-
-    req.token = req.headers["authorization"].split(" ")[1];
-
-    let tokenId = jwt.verify(req.token, env.JWT_SECRET).user._id;
-
-    req.user = await User.findById(tokenId);
-
-    if (req.user.isDisable === true) throw new AppError(327);
-
-    const permission = req.route.path.slice(1) + "." + req.method.toLowerCase();
-
-    const userPermissions = [];
-
-    for (let role of req.user.role) {
-      const checkRole = await Role.findOne({ name: role });
-
-      if (checkRole.isDisable === false) {
-        checkRole.permissions.forEach((permission) => {
-          userPermissions.push(permission.name);
-        });
-      }
-    }
-
-    if (!userPermissions.includes(permission)) {
-      throw new AppError(316);
-    }
-
-    next();
-  } catch (error) {
-    return next(error);
-  }
-};
-
 export const readDisabledRoles = async (req, res, next) => {
   try {
     const roles = await Role.aggregate([
@@ -294,6 +259,44 @@ export const enableRole = async (req, res, next) => {
       result: role,
       messageCode: 116,
     });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const checkPermission = async (req, res, next) => {
+  try {
+    if (req.headers["authorization"] === undefined) throw new AppError(315);
+
+    req.token = req.headers["authorization"].split(" ")[1];
+
+    let tokenId = jwt.verify(req.token, env.JWT_SECRET).user._id;
+
+    req.user = await User.findById(tokenId);
+
+    if (req.user.isDisable === true) throw new AppError(327);
+
+    await checkToken.accessToken(req.user._id, req.token);
+
+    const permission = req.route.path.slice(1) + "." + req.method.toLowerCase();
+
+    const userPermissions = [];
+
+    for (let role of req.user.role) {
+      const checkRole = await Role.findOne({ name: role });
+
+      if (checkRole.isDisable === false) {
+        checkRole.permissions.forEach((permission) => {
+          userPermissions.push(permission.name);
+        });
+      }
+    }
+
+    if (!userPermissions.includes(permission)) {
+      throw new AppError(316);
+    }
+
+    next();
   } catch (error) {
     return next(error);
   }

@@ -8,6 +8,7 @@ import {
 import generatePassword from "../middlewares/password-generator";
 import validation from "../middlewares/data-validation";
 import { AppError } from "../handlers/error-handler";
+import { checkToken, removeToken, saveToken } from "../middlewares/token";
 
 const Response = require("../handlers/response");
 const validator = require("validator");
@@ -90,10 +91,25 @@ export const login = async (req, res, next) => {
       throw new AppError(317, 120);
     }
 
-    const token = jwt.sign({ user }, env.JWT_SECRET, {
+    const accessToken = jwt.sign({ user }, env.JWT_SECRET, {
       expiresIn: env.JWT_EXPIRES_IN,
     });
-    res.json({ token: token, expiresIn: env.JWT_EXPIRES_IN });
+
+    const refreshToken = jwt.sign({ user }, env.JWT_SECRET_REFRESH_TOKEN, {
+      expiresIn: env.JWT_EXPIRES_IN_REFRESH,
+    });
+
+    await saveToken(user._id, accessToken, refreshToken);
+
+    user.save();
+
+    res.json({
+      accessToken: { token: accessToken, expiresIn: env.JWT_EXPIRES_IN },
+      refreshToken: {
+        token: refreshToken,
+        expiresIn: env.JWT_EXPIRES_IN_REFRESH,
+      },
+    });
   } catch (error) {
     return next(error);
   }
@@ -115,13 +131,25 @@ export const verifyAccount = async (req, res, next) => {
     if (check) {
       user.isDisable = false;
 
-      user.save();
-
-      const token = jwt.sign({ user }, env.JWT_SECRET, {
+      const accessToken = jwt.sign({ user }, env.JWT_SECRET, {
         expiresIn: env.JWT_EXPIRES_IN,
       });
 
-      res.json({ token: token, expiresIn: env.JWT_EXPIRES_IN });
+      const refreshToken = jwt.sign({ user }, env.JWT_SECRET_REFRESH_TOKEN, {
+        expiresIn: env.JWT_EXPIRES_IN_REFRESH,
+      });
+
+      await saveToken(user._id, accessToken, refreshToken);
+
+      user.save();
+
+      res.json({
+        accessToken: { token: accessToken, expiresIn: env.JWT_EXPIRES_IN },
+        refreshToken: {
+          token: refreshToken,
+          expiresIn: env.JWT_EXPIRES_IN_REFRESH,
+        },
+      });
     } else {
       throw new AppError(320);
     }
@@ -304,6 +332,52 @@ export const resetPassword = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       messageCode: 124,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const generateAccessToken = async (req, res, next) => {
+  try {
+    if (req.headers["authorization"] === undefined) throw new AppError(315);
+
+    req.token = req.headers["authorization"].split(" ")[1];
+
+    let tokenId = jwt.verify(req.token, env.JWT_SECRET_REFRESH_TOKEN).user._id;
+
+    await checkToken.refreshToken(tokenId, req.token);
+
+    const user = await User.findById(tokenId);
+
+    const accessToken = jwt.sign({ user }, env.JWT_SECRET, {
+      expiresIn: env.JWT_EXPIRES_IN,
+    });
+
+    await saveToken(user._id, accessToken, req.token);
+
+    res.json({
+      accessToken: { token: accessToken, expiresIn: env.JWT_EXPIRES_IN },
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    if (req.headers["authorization"] === undefined) throw new AppError(315);
+
+    req.token = req.headers["authorization"].split(" ")[1];
+
+    let tokenId = jwt.verify(req.token, env.JWT_SECRET).user._id;
+
+    await checkToken.accessToken(tokenId, req.token);
+
+    await removeToken(tokenId);
+
+    Response.normalizer(req, res, {
+      messageCode: 131,
     });
   } catch (error) {
     return next(error);

@@ -30,4 +30,5 @@ export const messageCodes = {
   128: "First and Last name must contain only alphebet and space\nand must start with alphebet",
   129: "Email Sent",
   130: "File Uploaded Successfully",
+  131: "User Logout Successfully",
 };

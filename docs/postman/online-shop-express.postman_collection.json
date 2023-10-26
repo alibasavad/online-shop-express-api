@@ -626,17 +626,16 @@
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/Ali/Desktop/banana.png"
+							"mode": "raw",
+							"raw": "{\r\n    \"thumbnail\" : \"1698182343185-banana.png\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/category/thumbnail/6533c22479eaa11026d2bd1a",
+							"raw": "127.0.0.1:8000/api/v1/category/thumbnail/653832ad2829cf39683badda",
 							"host": [
 								"127",
 								"0",
@@ -649,7 +648,7 @@
 								"v1",
 								"category",
 								"thumbnail",
-								"6533c22479eaa11026d2bd1a"
+								"653832ad2829cf39683badda"
 							]
 						}
 					},
@@ -658,6 +657,16 @@
 				{
 					"name": "read-disable-categories",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -763,6 +772,51 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "upload-category-thumbnail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "thumbnail",
+									"type": "file",
+									"src": "/C:/Users/Ali/Desktop/ice.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/category/thumbnail/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"thumbnail",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -838,58 +892,13 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "P 2",
-									"type": "text"
-								},
-								{
-									"key": "price",
-									"value": "100",
-									"type": "text"
-								},
-								{
-									"key": "quantity",
-									"value": "10",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "New Product",
-									"type": "text"
-								},
-								{
-									"key": "main",
-									"type": "file",
-									"src": "/C:/Users/Ali/Desktop/ice.png"
-								},
-								{
-									"key": "images",
-									"type": "file",
-									"src": [
-										"/C:/Users/Ali/Desktop/banana.png",
-										"/C:/Users/Ali/Desktop/ice.png",
-										"/C:/Users/Ali/Desktop/pp.png"
-									]
-								},
-								{
-									"key": "categoryId[0]",
-									"value": "65280f13ef1ab4dc2118ef43",
-									"type": "text"
-								},
-								{
-									"key": "categoryId[1]",
-									"value": "6527164e370e0ccef394e674",
-									"type": "text"
-								},
-								{
-									"key": "categoryId[2]",
-									"value": "65271664370e0ccef394e676",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"product 01\",\r\n    \"price\": 5000,\r\n    \"quantity\": 700,\r\n    \"description\": \"new Product On test\",\r\n    \"categoryId\": [\r\n        \"6536dd8437c6fde975c59915\",\r\n        \"6536e0475a0b8f9252cb415d\"\r\n    ],\r\n    \"images\": [\r\n        \"1698182686465-ice.png\",\r\n        \"1698182686465-banana.png\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
 							"raw": "127.0.0.1:8000/api/v1/product",
@@ -1002,25 +1011,16 @@
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "main",
-									"type": "file",
-									"src": "/C:/Users/Ali/Desktop/pp.png"
-								},
-								{
-									"key": "images",
-									"type": "file",
-									"src": [
-										"/C:/Users/Ali/Desktop/banana.png",
-										"/C:/Users/Ali/Desktop/ice.png"
-									]
+							"mode": "raw",
+							"raw": "{\r\n    \"images\": [\r\n        \"1698183019175-برنامه.jpg\",\r\n        \"1698183019176-food.png\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/product/images/6533bcee65d8370f0b86ca00",
+							"raw": "127.0.0.1:8000/api/v1/product/images/653836bd549ecbd7121569cc",
 							"host": [
 								"127",
 								"0",
@@ -1033,7 +1033,7 @@
 								"v1",
 								"product",
 								"images",
-								"6533bcee65d8370f0b86ca00"
+								"653836bd549ecbd7121569cc"
 							]
 						}
 					},
@@ -1042,6 +1042,16 @@
 				{
 					"name": "read-disable-product",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1146,6 +1156,56 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "upload-product-images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "main",
+									"type": "file",
+									"src": "/C:/Users/Ali/Desktop/ice.png"
+								},
+								{
+									"key": "others",
+									"type": "file",
+									"src": "/C:/Users/Ali/Desktop/banana.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/product/images/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"images",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1159,7 +1219,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Reza\",\r\n    \"lastName\": \"Ahmadi\",\r\n    \"email\": \"rezaahmadi@sail.com\",\r\n    \"phoneNumber\": \"09380101112\",\r\n    \"password\" : \"12345678\"\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Reza\",\r\n    \"lastName\": \"Ahmadi\",\r\n    \"email\": \"rezaa2hmadi@sail.com\",\r\n    \"phoneNumber\": \"09280101112\",\r\n    \"password\" : \"Pass1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1521,6 +1581,74 @@
 								"api",
 								"v1",
 								"forget_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/logout/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate-access-token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{refreshToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/generate_token/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"generate_token",
+								""
 							]
 						}
 					},
