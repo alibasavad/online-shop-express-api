@@ -1,6 +1,8 @@
 import { AppError } from "../handlers/error-handler";
 
+// validate given parameters
 const validation = {
+  // password validation
   password: (password) => {
     const passwordPattern =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.{8,})(?!.*[ ])/g;
@@ -10,6 +12,7 @@ const validation = {
     else throw new AppError(306, 125);
   },
 
+  // alphaNumeric validation
   alphaNumeric: (name) => {
     const namePattern = /^[a-zA-Z](\w|[ ])*$/g;
 
@@ -18,6 +21,7 @@ const validation = {
     else throw new AppError(306, 126);
   },
 
+  // phoneNumber validation
   phoneNumber: (PhoneNumber) => {
     const phoneNumberPatttern = /^09\d{9}$/g;
 
@@ -26,6 +30,7 @@ const validation = {
     else throw new AppError(306, 127);
   },
 
+  // alpha validation
   alpha: (familyName) => {
     const familyNamePatttern = /^[a-zA-Z][a-zA-Z ]+$/g;
 

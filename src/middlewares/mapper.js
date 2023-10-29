@@ -1,3 +1,4 @@
+// map cattegory ids to expected format
 export const mapperCategoryId = (list) => {
   let mappedList = [];
 
@@ -8,6 +9,7 @@ export const mapperCategoryId = (list) => {
   return mappedList;
 };
 
+// map permissions to expected format
 export const mapperPermissions = (list) => {
   let mappedList = [];
 
@@ -18,6 +20,7 @@ export const mapperPermissions = (list) => {
   return mappedList;
 };
 
+// map Product Images  to expected format
 export const mapperProductImages = (list) => {
   let mappedList = [];
   let mainImageIsAdded = false;

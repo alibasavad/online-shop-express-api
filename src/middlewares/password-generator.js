@@ -1,3 +1,4 @@
+// generate a password randomly
 function generatePassword() {
   var length = 10,
     charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",

@@ -1,6 +1,7 @@
 import { AppError } from "../handlers/error-handler";
 import Token from "../models/token";
 
+// save given tokens to database
 export const saveToken = async (userId, accessToken, refreshToken) => {
   let token = await Token.findOne({ user: userId });
 
@@ -18,12 +19,14 @@ export const saveToken = async (userId, accessToken, refreshToken) => {
   token.save();
 };
 
+// remove users's token from database
 export const removeToken = async (userId) => {
   let token = await Token.findOne({ user: userId });
   token.token = { accessToken: "", refreshToken: "" };
   token.save();
 };
 
+// check if token is exist in user's token database
 export const checkToken = {
   accessToken: async (userId, requestToken) => {
     const token = await Token.findOne({ user: userId });

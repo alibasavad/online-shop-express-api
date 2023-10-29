@@ -3,6 +3,7 @@ import env from "../configs/env.json";
 import { AppError } from "../handlers/error-handler";
 import * as constants from "../constants/index";
 
+// create email transporter
 const transporter = nodemailer.createTransport({
   port: env.SMTP_PORT,
   host: env.SMTP_HOST,
@@ -12,6 +13,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// send confirmation code to user's email
 export const sendEmailConfirmation = (confirmationCode, email) => {
   const mailOption = {
     from: env.EMAIL, // sender address
@@ -29,6 +31,7 @@ export const sendEmailConfirmation = (confirmationCode, email) => {
   });
 };
 
+// send temporary password to user's email
 export const sendTemporaryPassword = (temporaryPass, email) => {
   const mailOption = {
     from: env.EMAIL, // sender address

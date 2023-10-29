@@ -1,5 +1,6 @@
 import * as constants from "../constants/index";
 
+// throw not found error for not defined end points
 export const notFound = (req, res, next) => {
   res.status(404).json({
     success: false,
@@ -7,6 +8,7 @@ export const notFound = (req, res, next) => {
   });
 };
 
+// creat a new error class as Apperror
 export class AppError extends Error {
   constructor(errorCode, message) {
     if (message) {
@@ -27,6 +29,7 @@ export class AppError extends Error {
   }
 }
 
+// error hendler try ro send error with specefic format using Apperror class
 export const errorHandler = (error, req, res, next) => {
   if (error.name === "ValidationError") {
     return errorHandler(new AppError(305, error.message), req, res, next);
