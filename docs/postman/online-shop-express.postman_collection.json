@@ -251,7 +251,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"onlyProducts updated\",\r\n    \"permissions\": [\r\n        {\r\n            \"name\": \"product.post\"\r\n        },\r\n        {\r\n            \"name\": \"product/:productId.put\"\r\n        }\r\n    ]\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -530,7 +530,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"C2 updated\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -743,16 +743,6 @@
 						},
 						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/Ali/Desktop/banana.png"
-								}
-							]
-						},
 						"url": {
 							"raw": "127.0.0.1:8000/api/v1/category/thumbnail/653680915b54be8eb91c59fe",
 							"host": [
@@ -1093,15 +1083,6 @@
 						},
 						"method": "POST",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"shoe2\",\r\n    \"categoryId\": [\r\n        \"65280f13ef1ab4dc2118ef43\",\r\n        \"6527164e370e0ccef394e674\",\r\n        \"65271664370e0ccef394e676\"\r\n    ],\r\n    \"price\": 4000,\r\n    \"quantity\": 100,\r\n    \"description\": \"hahaha\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
 							"raw": "127.0.0.1:8000/api/v1/product/enable/65368cd0fe5b2c3280e86fcb",
 							"host": [

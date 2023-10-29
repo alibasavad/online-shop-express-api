@@ -1,0 +1,946 @@
+openapi: 3.0.3
+info:
+  title: online-shop-express
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: 127.0.0.1
+paths:
+  /api/v1/permissions:
+    get:
+      tags:
+        - role-permission-service
+      summary: read-permissions
+      description: read-permissions
+      operationId: readPermissions
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: size
+          in: query
+          schema:
+            type: string
+            example: '10'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              read-permissions:
+                value: ''
+      responses:
+        '200':
+          description: ''
+  /api/v1/roles:
+    get:
+      tags:
+        - role-permission-service
+      summary: read-roles
+      description: read-roles
+      operationId: readRoles
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: ''
+  /api/v1/role:
+    post:
+      tags:
+        - role-permission-service
+      summary: create-role
+      description: create-role
+      operationId: createRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: onlyProducts3
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    example: product.post
+                  example:
+                    - product.post
+                    - product/:Id.patch
+                    - product/:Id.delete
+            examples:
+              create-role:
+                value:
+                  name: onlyProducts3
+                  permissions:
+                    - product.post
+                    - product/:Id.patch
+                    - product/:Id.delete
+      responses:
+        '200':
+          description: ''
+  /api/v1/role/652af5031b62fc3c59fea492:
+    get:
+      tags:
+        - role-permission-service
+      summary: read-role-by-id
+      description: read-role-by-id
+      operationId: readRoleById
+      requestBody:
+        content:
+          application/json:
+            examples:
+              read-role-by-id:
+                value: ''
+      responses:
+        '200':
+          description: ''
+  /api/v1/role/6536d2128e35df9f3147a43c:
+    patch:
+      tags:
+        - role-permission-service
+      summary: update-role
+      description: update-role
+      operationId: updateRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    example: product.post
+                  example:
+                    - product.post
+                    - product/:Id.patch
+                    - product/:Id.delete
+                    - category.post
+            examples:
+              update-role:
+                value:
+                  permissions:
+                    - product.post
+                    - product/:Id.patch
+                    - product/:Id.delete
+                    - category.post
+      responses:
+        '200':
+          description: ''
+  /api/v1/role/652d56dc3f04efd409b3e692:
+    delete:
+      tags:
+        - role-permission-service
+      summary: disable-role
+      description: disable-role
+      operationId: disableRole
+      requestBody:
+        content:
+          application/json:
+            examples:
+              disable-role:
+                value: ''
+      responses:
+        '200':
+          description: ''
+  /api/v1/user_role/change:
+    patch:
+      tags:
+        - role-permission-service
+      summary: user-role / change
+      description: user-role / change
+      operationId: userRoleChange
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  example: adminUser
+                userId:
+                  type: string
+                  example: 6529a2580bd0bcbcd93d4ae9
+            examples:
+              user-role / change:
+                value:
+                  role: adminUser
+                  userId: 6529a2580bd0bcbcd93d4ae9
+      responses:
+        '200':
+          description: ''
+  /api/v1/user_role/add:
+    patch:
+      tags:
+        - role-permission-service
+      summary: user-role / add
+      description: user-role / add
+      operationId: userRoleAdd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  example: adminUser
+                userId:
+                  type: string
+                  example: 6529a2580bd0bcbcd93d4ae9
+            examples:
+              user-role / add:
+                value:
+                  role: adminUser
+                  userId: 6529a2580bd0bcbcd93d4ae9
+      responses:
+        '200':
+          description: ''
+  /api/v1/disable-roles:
+    get:
+      tags:
+        - role-permission-service
+      summary: read-disable-roles
+      description: read-disable-roles
+      operationId: readDisableRoles
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: size
+          in: query
+          schema:
+            type: string
+            example: '2'
+      responses:
+        '200':
+          description: ''
+  /api/v1/categories:
+    get:
+      tags:
+        - category-service
+      summary: read-categories
+      description: read-categories
+      operationId: readCategories
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: ''
+  /api/v1/category/6527164e370e0ccef394e674:
+    get:
+      tags:
+        - category-service
+      summary: read-category-by-Id
+      description: read-category-by-Id
+      operationId: readCategoryById
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: ''
+    patch:
+      tags:
+        - category-service
+      summary: update-category
+      description: update-category
+      operationId: updateCategory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: New Category Name As C2
+                name:
+                  type: string
+                  example: C2 updated3
+            examples:
+              update-category:
+                value:
+                  description: New Category Name As C2
+                  name: C2 updated3
+      responses:
+        '200':
+          description: ''
+  /api/v1/category/653680915b54be8eb91c59fe:
+    delete:
+      tags:
+        - category-service
+      summary: disable-category
+      description: disable-category
+      operationId: disableCategory
+      requestBody:
+        content:
+          application/json:
+            examples:
+              disable-category:
+                value: ''
+      responses:
+        '200':
+          description: ''
+  /api/v1/category/:
+    post:
+      tags:
+        - category-service
+      summary: create-category
+      description: create-category
+      operationId: createCategory
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: a new category
+                image:
+                  type: string
+                  format: binary
+                name:
+                  type: string
+                  example: C 03
+      responses:
+        '200':
+          description: ''
+  /api/v1/category/thumbnail/653832ad2829cf39683badda:
+    patch:
+      tags:
+        - category-service
+      summary: update-category-thumbnail
+      description: update-category-thumbnail
+      operationId: updateCategoryThumbnail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                thumbnail:
+                  type: string
+                  example: 1698182343185-banana.png
+            examples:
+              update-category-thumbnail:
+                value:
+                  thumbnail: 1698182343185-banana.png
+      responses:
+        '200':
+          description: ''
+  /api/v1/disable-categories:
+    get:
+      tags:
+        - category-service
+      summary: read-disable-categories
+      description: read-disable-categories
+      operationId: readDisableCategories
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: ''
+  /api/v1/category/enable/653680915b54be8eb91c59fe:
+    post:
+      tags:
+        - category-service
+      summary: enable-category
+      description: enable-category
+      operationId: enableCategory
+      responses:
+        '200':
+          description: ''
+  /api/v1/category/thumbnail/653680915b54be8eb91c59fe:
+    delete:
+      tags:
+        - category-service
+      summary: delete-category-thumbnail
+      description: delete-category-thumbnail
+      operationId: deleteCategoryThumbnail
+      responses:
+        '200':
+          description: ''
+  /api/v1/category/thumbnail/:
+    post:
+      tags:
+        - category-service
+      summary: upload-category-thumbnail
+      description: upload-category-thumbnail
+      operationId: uploadCategoryThumbnail
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                thumbnail:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: ''
+  /api/v1/product/6528106370cb5777a7a9aab2:
+    get:
+      tags:
+        - product-service
+      summary: read-product-by-id
+      description: read-product-by-id
+      operationId: readProductById
+      responses:
+        '200':
+          description: ''
+  /api/v1/products:
+    get:
+      tags:
+        - product-service
+      summary: read-product
+      description: read-product
+      operationId: readProduct
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: ''
+  /api/v1/product:
+    post:
+      tags:
+        - product-service
+      summary: create-product
+      description: create-product
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: array
+                  items:
+                    type: string
+                    example: 6536dd8437c6fde975c59915
+                  example:
+                    - 6536dd8437c6fde975c59915
+                    - 6536e0475a0b8f9252cb415d
+                description:
+                  type: string
+                  example: new Product On test
+                images:
+                  type: array
+                  items:
+                    type: string
+                    example: 1698182686465-ice.png
+                  example:
+                    - 1698182686465-ice.png
+                    - 1698182686465-banana.png
+                name:
+                  type: string
+                  example: product 01
+                price:
+                  type: number
+                  example: 5000
+                quantity:
+                  type: number
+                  example: 700
+            examples:
+              create-product:
+                value:
+                  categoryId:
+                    - 6536dd8437c6fde975c59915
+                    - 6536e0475a0b8f9252cb415d
+                  description: new Product On test
+                  images:
+                    - 1698182686465-ice.png
+                    - 1698182686465-banana.png
+                  name: product 01
+                  price: 5000
+                  quantity: 700
+      responses:
+        '200':
+          description: ''
+  /api/v1/product/653143d295960ff81665a7ae:
+    patch:
+      tags:
+        - product-service
+      summary: update-product
+      description: update-product
+      operationId: updateProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: array
+                  items:
+                    type: string
+                    example: 65280f13ef1ab4dc2118ef43
+                  example:
+                    - 65280f13ef1ab4dc2118ef43
+                    - 6527164e370e0ccef394e674
+                    - 65271664370e0ccef394e676
+                description:
+                  type: string
+                  example: hahaha
+                name:
+                  type: string
+                  example: shoe2
+                price:
+                  type: number
+                  example: 4000
+                quantity:
+                  type: number
+                  example: 100
+            examples:
+              update-product:
+                value:
+                  categoryId:
+                    - 65280f13ef1ab4dc2118ef43
+                    - 6527164e370e0ccef394e674
+                    - 65271664370e0ccef394e676
+                  description: hahaha
+                  name: shoe2
+                  price: 4000
+                  quantity: 100
+      responses:
+        '200':
+          description: ''
+  /api/v1/product/652827c858bd852e5995d89d:
+    delete:
+      tags:
+        - product-service
+      summary: delete-product
+      description: delete-product
+      operationId: deleteProduct
+      responses:
+        '200':
+          description: ''
+  /api/v1/product/images/653836bd549ecbd7121569cc:
+    patch:
+      tags:
+        - product-service
+      summary: update-product-images
+      description: update-product-images
+      operationId: updateProductImages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: string
+                    example: 1698183019175-برنامه.jpg
+                  example:
+                    - 1698183019175-برنامه.jpg
+                    - 1698183019176-food.png
+            examples:
+              update-product-images:
+                value:
+                  images:
+                    - 1698183019175-برنامه.jpg
+                    - 1698183019176-food.png
+      responses:
+        '200':
+          description: ''
+  /api/v1/disable-products:
+    get:
+      tags:
+        - product-service
+      summary: read-disable-product
+      description: read-disable-product
+      operationId: readDisableProduct
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: ''
+  /api/v1/product/enable/65368cd0fe5b2c3280e86fcb:
+    post:
+      tags:
+        - product-service
+      summary: enable-product
+      description: enable-product
+      operationId: enableProduct
+      responses:
+        '200':
+          description: ''
+  /api/v1/product/images/65368cd0fe5b2c3280e86fcb:
+    delete:
+      tags:
+        - product-service
+      summary: delete-product-images
+      description: delete-product-images
+      operationId: deleteProductImages
+      responses:
+        '200':
+          description: ''
+  /api/v1/product/images/:
+    post:
+      tags:
+        - product-service
+      summary: upload-product-images
+      description: upload-product-images
+      operationId: uploadProductImages
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                main:
+                  type: string
+                  format: binary
+                others:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: ''
+  /api/v1/register/:
+    post:
+      tags:
+        - user-service
+      summary: register
+      description: register
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: rezaa2hmadi@sail.com
+                firstName:
+                  type: string
+                  example: Reza
+                lastName:
+                  type: string
+                  example: Ahmadi
+                password:
+                  type: string
+                  example: Pass1234
+                phoneNumber:
+                  type: string
+                  example: '09280101112'
+            examples:
+              register:
+                value:
+                  email: rezaa2hmadi@sail.com
+                  firstName: Reza
+                  lastName: Ahmadi
+                  password: Pass1234
+                  phoneNumber: '09280101112'
+      responses:
+        '200':
+          description: ''
+  /api/v1/login:
+    post:
+      tags:
+        - user-service
+      summary: login
+      description: login
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: rezaahmadi@sail.com
+                password:
+                  type: string
+                  example: Pass1234
+            examples:
+              login:
+                value:
+                  email: rezaahmadi@sail.com
+                  password: Pass1234
+      responses:
+        '200':
+          description: ''
+  /api/v1/verification_code:
+    post:
+      tags:
+        - user-service
+      summary: send-verification-code
+      description: send-verification-code
+      operationId: sendVerificationCode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: rezaahmadi@gmail.com
+                password:
+                  type: string
+                  example: '12345678'
+            examples:
+              send-verification-code:
+                value:
+                  email: rezaahmadi@gmail.com
+                  password: '12345678'
+      responses:
+        '200':
+          description: ''
+  /api/v1/verify:
+    post:
+      tags:
+        - user-service
+      summary: verify-account
+      description: verify-account
+      operationId: verifyAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: rezaahmadi2@gmail.com
+                password:
+                  type: string
+                  example: '12345678'
+                verificationCode:
+                  type: string
+                  example: '970175'
+            examples:
+              verify-account:
+                value:
+                  email: rezaahmadi2@gmail.com
+                  password: '12345678'
+                  verificationCode: '970175'
+      responses:
+        '200':
+          description: ''
+  /api/v1/disable_account:
+    post:
+      tags:
+        - user-service
+      summary: disable-account
+      description: disable-account
+      operationId: disableAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: alibasavqwad138193@gmail.com
+                password:
+                  type: string
+                  example: '12345678'
+            examples:
+              disable-account:
+                value:
+                  email: alibasavqwad138193@gmail.com
+                  password: '12345678'
+      responses:
+        '200':
+          description: ''
+  /api/v1/users:
+    get:
+      tags:
+        - user-service
+      summary: read-users
+      description: read-users
+      operationId: readUsers
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              read-users:
+                value: ''
+      responses:
+        '200':
+          description: ''
+  /api/v1/profile:
+    get:
+      tags:
+        - user-service
+      summary: read-profile
+      description: read-profile
+      operationId: readProfile
+      requestBody:
+        content:
+          application/json:
+            examples:
+              read-profile:
+                value: ''
+      responses:
+        '200':
+          description: ''
+    patch:
+      tags:
+        - user-service
+      summary: update-profile
+      description: update-profile
+      operationId: updateProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: Mahdi
+                lastName:
+                  type: string
+                  example: Jokar
+                phoneNumber:
+                  type: string
+                  example: '09382790111'
+            examples:
+              update-profile:
+                value:
+                  firstName: Mahdi
+                  lastName: Jokar
+                  phoneNumber: '09382790111'
+      responses:
+        '200':
+          description: ''
+  /api/v1/profile/change_password:
+    patch:
+      tags:
+        - user-service
+      summary: update-profile-password
+      description: update-profile-password
+      operationId: updateProfilePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPass:
+                  type: string
+                  example: '12345678'
+                newPass:
+                  type: string
+                  example: '12345678'
+                newPassRepeat:
+                  type: string
+                  example: '12345678'
+            examples:
+              update-profile-password:
+                value:
+                  currentPass: '12345678'
+                  newPass: '12345678'
+                  newPassRepeat: '12345678'
+      responses:
+        '200':
+          description: ''
+  /api/v1/forget_password:
+    post:
+      tags:
+        - user-service
+      summary: forget-password
+      description: forget-password
+      operationId: forgetPassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: alibasavad1381@gmail.com
+            examples:
+              forget-password:
+                value:
+                  email: alibasavad1381@gmail.com
+      responses:
+        '200':
+          description: ''
+  /api/v1/logout/:
+    post:
+      tags:
+        - user-service
+      summary: logout
+      description: logout
+      operationId: logout
+      responses:
+        '200':
+          description: ''
+  /api/v1/generate_token/:
+    post:
+      tags:
+        - user-service
+      summary: generate-access-token
+      description: generate-access-token
+      operationId: generateAccessToken
+      responses:
+        '200':
+          description: ''
+  /:
+    get:
+      summary: TEST
+      description: TEST
+      operationId: test
+      requestBody:
+        content:
+          application/json:
+            examples:
+              TEST:
+                value: ''
+      responses:
+        '200':
+          description: ''
+tags:
+  - name: role-permission-service
+  - name: category-service
+  - name: product-service
+  - name: user-service

@@ -13,7 +13,7 @@ const app = express();
 const swaggerui = require("swagger-ui-express");
 import swaggerJSDoc from "swagger-jsdoc";
 
-const swaggerdocs = swaggerJSDoc(env.options);
+const swaggerdocs = swaggerJSDoc(env.SWAGGER_OPTIONS);
 
 app.use("/api-docs", swaggerui.serve, swaggerui.setup(swaggerdocs));
 
