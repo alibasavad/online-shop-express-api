@@ -8,6 +8,15 @@ const routes = require("./src/routes/route");
 
 const app = express();
 
+// swagger
+
+const swaggerui = require("swagger-ui-express");
+import swaggerJSDoc from "swagger-jsdoc";
+
+const swaggerdocs = swaggerJSDoc(env.options);
+
+app.use("/api-docs", swaggerui.serve, swaggerui.setup(swaggerdocs));
+
 // mongoDB
 
 mongoose.Promise = global.Promise;
