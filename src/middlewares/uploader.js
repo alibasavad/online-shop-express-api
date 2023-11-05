@@ -5,17 +5,9 @@ import { AppError } from "../handlers/error-handler";
 
 const Response = require("../handlers/response");
 
-// product images storage
-const productImageStorage = multer.diskStorage({
-  destination: `${__dirname}/../../public/product`,
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-// category images storage
-const categoryThumbnailStorage = multer.diskStorage({
-  destination: `${__dirname}/../../public/category`,
+// images storage
+const imageStorage = multer.diskStorage({
+  destination: `${__dirname}/../../public/images`,
   filename: (req, file, cb) => {
     cb(null, Date.now() + "-" + file.originalname);
   },
@@ -40,14 +32,6 @@ export const checkImageSize = (list) => {
   }
 };
 
-// check size of uplodaed thumbnail
-export const checkThumbnailSize = (list) => {
-  const maxSize = 1000000 * env.MAX_THUMBNAIL_SIZE_MEGEBYTE;
-  for (let image of list) {
-    if (image.size > maxSize) throw new AppError(307);
-  }
-};
-
 // delete images given in a list of paths's
 export const deleteImages = (images) => {
   for (let image of images) {
@@ -56,14 +40,14 @@ export const deleteImages = (images) => {
 };
 
 // product image uploader function
-const productImagesUploader = multer({
-  storage: productImageStorage,
+const imageUploader = multer({
+  storage: imageStorage,
 });
 
 // product image uploader service
-export const uploadProductImages = async (req, res, next) => {
+export const uploadImages = async (req, res, next) => {
   // product image uploader function
-  productImagesUploader.any()(req, res, async (error) => {
+  imageUploader.any()(req, res, async (error) => {
     try {
       // throw error if no file is uploaded
       if (req.files === undefined || req.files.length === 0)
@@ -90,46 +74,6 @@ export const uploadProductImages = async (req, res, next) => {
     } catch (error) {
       if (!(req.files === undefined || req.files.length === 0))
         deleteImages(req.files);
-      return next(error);
-    }
-  });
-};
-
-// category thumbnail uploader function
-const categoryThumbnailUploader = multer({
-  storage: categoryThumbnailStorage,
-});
-
-// category thumbnail uploader service
-export const uploadCategoryThumbnail = async (req, res, next) => {
-  // category thumbnail uploader function
-  categoryThumbnailUploader.single("thumbnail")(req, res, async (error) => {
-    try {
-      req.files = [req.file];
-      // throw error if no file is uploaded
-      if (req.file === undefined) throw new AppError(301);
-
-      // check uploaded file format
-      checkImages(req.files);
-
-      // check uploaded file size
-      checkImageSize(req.files);
-
-      const images = [];
-
-      // add tumbnail name to images list
-      req.files.forEach((file) => {
-        images.push(file.filename);
-      });
-
-      Response.normalizer(req, res, {
-        result: images,
-        messageCode: 130,
-        type: "multi",
-      });
-    } catch (error) {
-      console.log(req.files);
-      if (req.file !== undefined) deleteImages(req.files);
       return next(error);
     }
   });

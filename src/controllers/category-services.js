@@ -2,7 +2,7 @@ import Category from "../models/category";
 import mongoose from "mongoose";
 import Product from "../models/product";
 import validation from "../middlewares/data-validation";
-import { unlinkSync } from "fs";
+import { unlinkSync, existsSync } from "fs";
 import { AppError } from "../handlers/error-handler";
 
 const Response = require("../handlers/response");
@@ -230,8 +230,11 @@ export const updateCategoryThumbnail = async (req, res, next) => {
     const category = await Category.findById(req.params.Id);
 
     // Delete the existing thumbnail file
-    if (category.thumbnail) {
-      unlinkSync(`${__dirname}/../../public/category/${category.thumbnail}`);
+    if (
+      category.thumbnail &&
+      existsSync(`${__dirname}/../../public/images/${category.thumbnail}`)
+    ) {
+      unlinkSync(`${__dirname}/../../public/images/${category.thumbnail}`);
     }
 
     // Set the category's thumbnail to the new value
@@ -255,9 +258,13 @@ export const deleteCategoryThumbnail = async (req, res, next) => {
     // Find the category by its ID
     const category = await Category.findById(req.params.Id);
 
+    if (!existsSync(`${__dirname}/../../public/images/${category.thumbnail}`)) {
+      throw new AppError(309);
+    }
+
     // Delete the existing thumbnail file
     if (category.thumbnail) {
-      unlinkSync(`${__dirname}/../../public/category/${category.thumbnail}`);
+      unlinkSync(`${__dirname}/../../public/images/${category.thumbnail}`);
     }
 
     // Remove the thumbnail property from the category

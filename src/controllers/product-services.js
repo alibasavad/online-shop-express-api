@@ -5,6 +5,7 @@ import validation from "../middlewares/data-validation";
 import { mapperCategoryId, mapperProductImages } from "../middlewares/mapper";
 import { deleteImages } from "../middlewares/uploader";
 import { AppError } from "../handlers/error-handler";
+import { unlinkSync, existsSync } from "fs";
 
 const Response = require("../handlers/response");
 
@@ -234,12 +235,13 @@ export const updateProductImages = async (req, res, next) => {
     // Create an array to store the paths of the old images
     const oldImages = [];
     for (let image of product.images) {
-      console.log(image);
-      image.path = `${__dirname}/../../public/product/${image.imageURL}`;
+      image.path = `${__dirname}/../../public/images/${image.imageURL}`;
       oldImages.push(image);
     }
     // Delete the old images from the file system
-    deleteImages(oldImages);
+    for (let image of oldImages) {
+      if (existsSync(image.path)) unlinkSync(image.path);
+    }
 
     // Set the product's images and thumbnail to the new values
     product.images = images;
@@ -266,11 +268,14 @@ export const deleteProductImages = async (req, res, next) => {
     // Create an array to store the paths of the images to be deleted
     const images = [];
     for (let image of product.images) {
-      image.path = `${__dirname}/../../public/product/${image.imageURL}`;
+      image.path = `${__dirname}/../../public/images/${image.imageURL}`;
       images.push(image);
     }
     // Delete the images from the file system
-    deleteImages(images);
+    for (let image of images) {
+      if (existsSync(image.path)) unlinkSync(image.path);
+      else throw new AppError(309);
+    }
 
     // Remove the images and thumbnail property from the product
     product.images = undefined;

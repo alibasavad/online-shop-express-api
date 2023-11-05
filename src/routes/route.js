@@ -8,6 +8,12 @@ const express = require("express");
 
 const router = express.Router();
 
+// __________________________Upload Services___________________________________
+
+router
+  .route("/upload/image")
+  .post(rolePermission.checkPermission, uploader.uploadImages);
+
 // __________________________Category Services_________________________________
 
 router.route("/categories").get(category.readAllCategories);
@@ -15,10 +21,6 @@ router.route("/categories").get(category.readAllCategories);
 router
   .route("/category")
   .post(rolePermission.checkPermission, category.createCategory);
-
-router
-  .route("/category/thumbnail")
-  .post(rolePermission.checkPermission, uploader.uploadCategoryThumbnail);
 
 router
   .route("/category/:Id")
@@ -46,10 +48,6 @@ router.route("/products").get(product.readAllProducts);
 router
   .route("/product")
   .post(rolePermission.checkPermission, product.createProduct);
-
-router
-  .route("/product/images")
-  .post(  uploader.uploadProductImages);
 
 router
   .route("/product/:Id")
