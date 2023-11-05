@@ -48,3 +48,5 @@ app.use(errorHandler.notFound);
 app.listen(env.PORT, () => {
   console.log(`\x1B[35mServer listening on port: ${env.PORT}`);
 });
+
+export default app;

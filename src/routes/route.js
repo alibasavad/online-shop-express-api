@@ -49,7 +49,7 @@ router
 
 router
   .route("/product/images")
-  .post(rolePermission.checkPermission, uploader.uploadProductImages);
+  .post(  uploader.uploadProductImages);
 
 router
   .route("/product/:Id")
