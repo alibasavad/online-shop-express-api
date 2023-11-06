@@ -1,14 +1,15 @@
 import User from "../models/user";
 import env from "../configs/env.json";
-import auth from "../middlewares/auth";
+import auth from "../utils/auth";
 import {
   sendEmailConfirmation,
   sendTemporaryPassword,
-} from "../middlewares/smtp";
-import generatePassword from "../middlewares/password-generator";
-import validation from "../middlewares/data-validation";
+} from "../utils/smtp";
+import generatePassword from "../utils/password-generator";
+import validation from "../utils/data-validation";
 import { AppError } from "../handlers/error-handler";
-import { checkToken, removeToken, saveToken } from "../middlewares/token";
+import { checkToken, removeToken, saveToken } from "../utils/token";
+import { makeSixDigitRandomString } from "../utils/global";
 
 const Response = require("../handlers/response");
 const validator = require("validator");
@@ -249,15 +250,6 @@ export const sendVerificationCode = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-};
-
-// make a random six digit string
-const makeSixDigitRandomString = () => {
-  let randomString = "";
-  for (let i = 0; i < 6; i++) {
-    randomString += Math.floor(Math.random() * 10).toString();
-  }
-  return randomString;
 };
 
 // Read all users

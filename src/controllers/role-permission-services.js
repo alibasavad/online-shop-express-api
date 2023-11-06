@@ -2,10 +2,10 @@ import Role from "../models/role";
 import Permission from "../models/permission";
 import User from "../models/user";
 import env from "../configs/env.json";
-import validation from "../middlewares/data-validation";
-import { mapperPermissions } from "../middlewares/mapper";
+import validation from "../utils/data-validation";
+import { mapperPermissions } from "../utils/mapper";
 import { AppError } from "../handlers/error-handler";
-import { checkToken } from "../middlewares/token";
+import { checkToken } from "../utils/token";
 
 const Response = require("../handlers/response");
 

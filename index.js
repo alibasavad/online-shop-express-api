@@ -40,8 +40,7 @@ app.use(errorHandler.errorHandler);
 
 // show images
 
-app.use("/api/v1/", express.static("public/category"));
-app.use("/api/v1/", express.static("public/product"));
+app.use("/api/v1/", express.static("public/images"));
 
 app.use(errorHandler.notFound);
 

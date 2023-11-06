@@ -1,11 +1,11 @@
 import Category from "../models/category";
 import mongoose from "mongoose";
 import Product from "../models/product";
-import validation from "../middlewares/data-validation";
-import { mapperCategoryId, mapperProductImages } from "../middlewares/mapper";
-import { deleteImages } from "../middlewares/uploader";
+import validation from "../utils/data-validation";
+import { mapperCategoryId, mapperProductImages } from "../utils/mapper";
 import { AppError } from "../handlers/error-handler";
 import { unlinkSync, existsSync } from "fs";
+import { checkCategoryId } from "../utils/global";
 
 const Response = require("../handlers/response");
 
@@ -361,18 +361,5 @@ export const readDisabledProducts = async (req, res, next) => {
     });
   } catch (error) {
     return next(error);
-  }
-};
-
-// Helper function to check if category IDs are valid and not disabled
-const checkCategoryId = async (categoryIds) => {
-  for (let category of categoryIds) {
-    // Find the category by its ID
-    let check = await Category.findById(category);
-
-    // If the category is null or disabled, throw an error
-    if (check === null || check.isDisable === true) {
-      throw new AppError(304);
-    }
   }
 };
