@@ -384,25 +384,6 @@ paths:
       responses:
         '200':
           description: ''
-  /api/v1/category/thumbnail/:
-    post:
-      tags:
-        - category-service
-      summary: upload-category-thumbnail
-      description: upload-category-thumbnail
-      operationId: uploadCategoryThumbnail
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                thumbnail:
-                  type: string
-                  format: binary
-      responses:
-        '200':
-          description: ''
   /api/v1/product/6528106370cb5777a7a9aab2:
     get:
       tags:
@@ -607,28 +588,6 @@ paths:
       summary: delete-product-images
       description: delete-product-images
       operationId: deleteProductImages
-      responses:
-        '200':
-          description: ''
-  /api/v1/product/images/:
-    post:
-      tags:
-        - product-service
-      summary: upload-product-images
-      description: upload-product-images
-      operationId: uploadProductImages
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                main:
-                  type: string
-                  format: binary
-                others:
-                  type: string
-                  format: binary
       responses:
         '200':
           description: ''
@@ -925,6 +884,28 @@ paths:
       responses:
         '200':
           description: ''
+  /api/v1/upload/image/:
+    post:
+      tags:
+        - upload-service
+      summary: upload-images
+      description: upload-images
+      operationId: uploadImages
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                main:
+                  type: string
+                  format: binary
+                others:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: ''
   /:
     get:
       summary: TEST
@@ -944,3 +925,4 @@ tags:
   - name: category-service
   - name: product-service
   - name: user-service
+  - name: upload-service

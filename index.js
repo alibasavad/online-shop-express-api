@@ -5,17 +5,9 @@ import env from "./src/configs/env.json";
 const express = require("express");
 const errorHandler = require("./src/handlers/error-handler");
 const routes = require("./src/routes/route");
+const cors = require("cors");
 
 const app = express();
-
-// swagger
-
-const swaggerui = require("swagger-ui-express");
-import swaggerJSDoc from "swagger-jsdoc";
-
-const swaggerdocs = swaggerJSDoc(env.SWAGGER_OPTIONS);
-
-app.use("/api-docs", swaggerui.serve, swaggerui.setup(swaggerdocs));
 
 // mongoDB
 
@@ -29,6 +21,10 @@ mongoose.connect(env.MONGODB_URL, {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// cors
+
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Under Developement :)...");
