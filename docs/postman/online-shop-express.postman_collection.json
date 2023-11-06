@@ -762,51 +762,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "upload-category-thumbnail",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "thumbnail",
-									"type": "file",
-									"src": "/C:/Users/Ali/Desktop/ice.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "127.0.0.1:8000/api/v1/category/thumbnail/",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"v1",
-								"category",
-								"thumbnail",
-								""
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -1133,56 +1088,6 @@
 								"product",
 								"images",
 								"65368cd0fe5b2c3280e86fcb"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "upload-product-images",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "main",
-									"type": "file",
-									"src": "/C:/Users/Ali/Desktop/ice.png"
-								},
-								{
-									"key": "others",
-									"type": "file",
-									"src": "/C:/Users/Ali/Desktop/banana.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "127.0.0.1:8000/api/v1/product/images/",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"v1",
-								"product",
-								"images",
-								""
 							]
 						}
 					},
@@ -1629,6 +1534,65 @@
 								"api",
 								"v1",
 								"generate_token",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "upload-service",
+			"item": [
+				{
+					"name": "upload-images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "main",
+									"type": "file",
+									"src": [
+										"/C:/Users/Ali/Desktop/banana.png",
+										"/C:/Users/Ali/Desktop/ice.png"
+									]
+								},
+								{
+									"key": "others",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/upload/image/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"upload",
+								"image",
 								""
 							]
 						}

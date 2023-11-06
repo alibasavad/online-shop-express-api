@@ -1,10 +1,7 @@
 import User from "../models/user";
 import env from "../configs/env.json";
 import auth from "../utils/auth";
-import {
-  sendEmailConfirmation,
-  sendTemporaryPassword,
-} from "../utils/smtp";
+import { sendEmailConfirmation, sendTemporaryPassword } from "../utils/smtp";
 import generatePassword from "../utils/password-generator";
 import validation from "../utils/data-validation";
 import { AppError } from "../handlers/error-handler";
@@ -271,6 +268,9 @@ export const readAllUsers = async (req, res, next) => {
 // Read user profile
 export const readProfile = async (req, res, next) => {
   try {
+    if (req.isAuthenticated === false) {
+      throw new AppError(328);
+    }
     // Find user by their ID and select specific fields to return in the response
     const user = await User.findById(req.user._id).select([
       "firstName",
@@ -292,6 +292,10 @@ export const readProfile = async (req, res, next) => {
 // update user profile
 export const updateProfile = async (req, res, next) => {
   try {
+    if (req.isAuthenticated === false) {
+      throw new AppError(328);
+    }
+
     // Find user by their ID
     const user = await User.findById(req.user._id);
 
@@ -346,6 +350,10 @@ export const updateProfile = async (req, res, next) => {
 // Change user's password
 export const changePassword = async (req, res, next) => {
   try {
+    if (req.isAuthenticated === false) {
+      throw new AppError(328);
+    }
+
     // Authenticate the user with the provided email and password
     const user = await auth(req.user.email, req.body.currentPass);
 

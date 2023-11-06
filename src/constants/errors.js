@@ -27,4 +27,5 @@ export const errorCodes = {
   325: ["THIS_ID_IS_DISABLE", 400],
   326: ["THIS_ID_IS_ENABLE", 400],
   327: ["TOKEN_EXPIRED", 400],
+  328: ["UNAUTORIZED_REQUEST", 400],
 };

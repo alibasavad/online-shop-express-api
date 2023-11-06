@@ -3,6 +3,8 @@ import * as product from "../controllers/product-services";
 import * as user from "../controllers/user-services";
 import * as rolePermission from "../controllers/role-permission-services";
 import * as uploader from "../middlewares/uploader";
+import { checkPermission } from "../middlewares/check-permission";
+import { authenticate } from "../middlewares/authenticate";
 
 const express = require("express");
 
@@ -12,110 +14,106 @@ const router = express.Router();
 
 router
   .route("/upload/image")
-  .post(rolePermission.checkPermission, uploader.uploadImages);
+  .post(authenticate, checkPermission, uploader.uploadImages);
 
 // __________________________Category Services_________________________________
 
-router.route("/categories").get(category.readAllCategories);
+router.route("/categories").get(authenticate, category.readAllCategories);
 
 router
   .route("/category")
-  .post(rolePermission.checkPermission, category.createCategory);
+  .post(authenticate, checkPermission, category.createCategory);
 
 router
   .route("/category/:Id")
-  .get(category.readCategoryById)
-  .delete(rolePermission.checkPermission, category.disableCategory)
-  .patch(rolePermission.checkPermission, category.updateCategory);
+  .get(authenticate, category.readCategoryById)
+  .delete(authenticate, checkPermission, category.disableCategory)
+  .patch(authenticate, checkPermission, category.updateCategory);
 
 router
   .route("/category/thumbnail/:Id")
-  .patch(rolePermission.checkPermission, category.updateCategoryThumbnail)
-  .delete(rolePermission.checkPermission, category.deleteCategoryThumbnail);
+  .patch(authenticate, checkPermission, category.updateCategoryThumbnail)
+  .delete(authenticate, checkPermission, category.deleteCategoryThumbnail);
 
 router
   .route("/category/enable/:Id")
-  .post(rolePermission.checkPermission, category.enableCategory);
+  .post(authenticate, checkPermission, category.enableCategory);
 
 router
   .route("/disable-categories")
-  .get(rolePermission.checkPermission, category.readDisabledCategories);
+  .get(authenticate, checkPermission, category.readDisabledCategories);
 
 // __________________________Product Services_________________________________
 
-router.route("/products").get(product.readAllProducts);
+router.route("/products").get(authenticate, product.readAllProducts);
 
 router
   .route("/product")
-  .post(rolePermission.checkPermission, product.createProduct);
+  .post(authenticate, checkPermission, product.createProduct);
 
 router
   .route("/product/:Id")
-  .get(product.readProductById)
-  .delete(rolePermission.checkPermission, product.disableProduct)
-  .patch(rolePermission.checkPermission, product.updateProduct);
+  .get(authenticate, product.readProductById)
+  .delete(authenticate, checkPermission, product.disableProduct)
+  .patch(authenticate, checkPermission, product.updateProduct);
 
 router
   .route("/product/images/:Id")
-  .patch(rolePermission.checkPermission, product.updateProductImages)
-  .delete(rolePermission.checkPermission, product.deleteProductImages);
+  .patch(authenticate, checkPermission, product.updateProductImages)
+  .delete(authenticate, checkPermission, product.deleteProductImages);
 
 router
   .route("/product/enable/:Id")
-  .post(rolePermission.checkPermission, product.enableProduct);
+  .post(authenticate, checkPermission, product.enableProduct);
 
 router
   .route("/disable-products")
-  .get(rolePermission.checkPermission, product.readDisabledProducts);
+  .get(authenticate, checkPermission, product.readDisabledProducts);
 
 // __________________________RolePermission Services_________________________________
 
 router
   .route("/roles")
-  .get(rolePermission.checkPermission, rolePermission.readAllRoles);
+  .get(authenticate, checkPermission, rolePermission.readAllRoles);
 
-router
-  .route("/role")
-  .post(rolePermission.checkPermission, rolePermission.createRole);
+router.route("/role").post(checkPermission, rolePermission.createRole);
 
 router
   .route("/role/:Id")
-  .get(rolePermission.checkPermission, rolePermission.readRoleById)
-  .delete(rolePermission.checkPermission, rolePermission.disableRole)
-  .patch(rolePermission.checkPermission, rolePermission.updateRole);
+  .get(authenticate, checkPermission, rolePermission.readRoleById)
+  .delete(authenticate, checkPermission, rolePermission.disableRole)
+  .patch(authenticate, checkPermission, rolePermission.updateRole);
 
 router
   .route("/permissions")
-  .get(rolePermission.checkPermission, rolePermission.readAllPermissions);
-
-router.route("/users").get(rolePermission.checkPermission, user.readAllUsers);
+  .get(authenticate, checkPermission, rolePermission.readAllPermissions);
 
 router
   .route("/user_role/change")
-  .patch(rolePermission.checkPermission, rolePermission.changeUserRole);
+  .patch(authenticate, checkPermission, rolePermission.changeUserRole);
 
 router
   .route("/user_role/add")
-  .patch(rolePermission.checkPermission, rolePermission.addUserRole);
+  .patch(authenticate, checkPermission, rolePermission.addUserRole);
 
 router
   .route("/role/enable/:Id")
-  .post(rolePermission.checkPermission, rolePermission.enableRole);
+  .post(authenticate, checkPermission, rolePermission.enableRole);
 
 router
   .route("/disable-roles")
-  .get(rolePermission.checkPermission, rolePermission.readDisabledRoles);
+  .get(authenticate, checkPermission, rolePermission.readDisabledRoles);
 
 // __________________________User Services_________________________________
 
 router
   .route("/profile")
-  .get(rolePermission.checkPermission, user.readProfile)
-  .patch(rolePermission.checkPermission, user.updateProfile);
+  .get(authenticate, user.readProfile)
+  .patch(authenticate, user.updateProfile);
 
 router
   .route("/profile/change_password")
-  .patch(rolePermission.checkPermission, user.changePassword);
+  .patch(authenticate, user.changePassword);
 
 router.route("/forget_password").post(user.resetPassword);
 
@@ -132,5 +130,7 @@ router.route("/login").post(user.login);
 router.route("/logout").post(user.logout);
 
 router.route("/generate_token").post(user.generateAccessToken);
+
+router.route("/users").get(authenticate, checkPermission, user.readAllUsers);
 
 module.exports = router;
