@@ -1,4 +1,3 @@
-import Category from "../models/category";
 import mongoose from "mongoose";
 import Product from "../models/product";
 import validation from "../utils/data-validation";
@@ -358,6 +357,27 @@ export const readDisabledProducts = async (req, res, next) => {
       result: products,
       messageCode: 100,
       type: "multi/pagination",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const forceDelete = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.Id);
+
+    for (let image of product.images) {
+      if (existsSync(`${__dirname}/../../public/images/${image.imageURL}`)) {
+        unlinkSync(`${__dirname}/../../public/images/${image.imageURL}`);
+      }
+    }
+
+    await product.deleteOne();
+
+    Response.normalizer(req, res, {
+      result: product,
+      messageCode: 132,
     });
   } catch (error) {
     return next(error);

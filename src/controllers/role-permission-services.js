@@ -1,11 +1,9 @@
 import Role from "../models/role";
 import Permission from "../models/permission";
 import User from "../models/user";
-import env from "../configs/env.json";
 import validation from "../utils/data-validation";
 import { mapperPermissions } from "../utils/mapper";
 import { AppError } from "../handlers/error-handler";
-import { checkToken } from "../utils/token";
 
 const Response = require("../handlers/response");
 
@@ -230,14 +228,14 @@ export const disableRole = async (req, res, next) => {
       "limitedUser",
       "adminUser",
     ];
-    // If the role is already disabled, throw an error
-    if (role.isDisable === true) {
-      throw new AppError(325);
-    }
 
     // If the role does not exist, throw an error
     if (role === null) {
       throw new AppError(314);
+    }
+    // If the role is already disabled, throw an error
+    if (role.isDisable === true) {
+      throw new AppError(325);
     }
 
     // If the role is an indelible role, throw an error

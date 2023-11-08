@@ -336,3 +336,30 @@ export const readDisabledCategories = async (req, res, next) => {
     return next(error);
   }
 };
+
+export const forceDelete = async (req, res, next) => {
+  try {
+    const category = await Category.findById(req.params.Id);
+
+    if (existsSync(`${__dirname}/../../public/images/${category.thumbnail}`)) {
+      unlinkSync(`${__dirname}/../../public/images/${category.thumbnail}`);
+    }
+
+    const products = await Product.find({ categoryId: { _id: category._id } });
+
+    // remove this category from products that contains it
+    for (let product of products) {
+      product.categoryId.remove(category._id);
+      await product.save();
+    }
+
+    await category.deleteOne();
+
+    Response.normalizer(req, res, {
+      result: category,
+      messageCode: 132,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};

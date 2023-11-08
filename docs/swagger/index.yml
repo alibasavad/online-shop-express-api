@@ -309,19 +309,25 @@ paths:
       operationId: createCategory
       requestBody:
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
                 description:
                   type: string
-                  example: a new category
-                image:
-                  type: string
-                  format: binary
+                  example: New Category
                 name:
                   type: string
-                  example: C 03
+                  example: C 04
+                thumbnail:
+                  type: string
+                  example: 1699220385727-banana.png
+            examples:
+              create-category:
+                value:
+                  description: New Category
+                  name: C 04
+                  thumbnail: 1699220385727-banana.png
       responses:
         '200':
           description: ''
@@ -381,6 +387,16 @@ paths:
       summary: delete-category-thumbnail
       description: delete-category-thumbnail
       operationId: deleteCategoryThumbnail
+      responses:
+        '200':
+          description: ''
+  /api/v1/category/force_delete/654b54aa1c4d8be1bb5df612:
+    delete:
+      tags:
+        - category-service
+      summary: category-force-delete
+      description: category-force-delete
+      operationId: categoryForceDelete
       responses:
         '200':
           description: ''
@@ -588,6 +604,16 @@ paths:
       summary: delete-product-images
       description: delete-product-images
       operationId: deleteProductImages
+      responses:
+        '200':
+          description: ''
+  /api/v1/product/force_delete/654a97987df4705ce27aecc7:
+    delete:
+      tags:
+        - product-service
+      summary: product-force-delete
+      description: product-force-delete
+      operationId: productForceDelete
       responses:
         '200':
           description: ''

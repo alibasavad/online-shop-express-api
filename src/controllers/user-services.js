@@ -9,7 +9,6 @@ import { checkToken, removeToken, saveToken } from "../utils/token";
 import { makeSixDigitRandomString } from "../utils/global";
 
 const Response = require("../handlers/response");
-const validator = require("validator");
 const Bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -153,7 +152,7 @@ export const verifyAccount = async (req, res, next) => {
     // If the user is not found, throw an error
     if (user === null) throw new AppError(317);
 
-    // If the user account is disabled, throw an error
+    // If the user account is enabled, throw an error
     if (user.isDisable === false) throw new AppError(319);
 
     // check if user verification code is equal to given verification code

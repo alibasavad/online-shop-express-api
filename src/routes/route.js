@@ -43,6 +43,10 @@ router
   .route("/disable-categories")
   .get(authenticate, checkPermission, category.readDisabledCategories);
 
+router
+  .route("/category/force_delete/:Id")
+  .delete(authenticate, checkPermission, category.forceDelete);
+
 // __________________________Product Services_________________________________
 
 router.route("/products").get(authenticate, product.readAllProducts);
@@ -70,13 +74,19 @@ router
   .route("/disable-products")
   .get(authenticate, checkPermission, product.readDisabledProducts);
 
+router
+  .route("/product/force_delete/:Id")
+  .delete(authenticate, checkPermission, product.forceDelete);
+
 // __________________________RolePermission Services_________________________________
 
 router
   .route("/roles")
   .get(authenticate, checkPermission, rolePermission.readAllRoles);
 
-router.route("/role").post(checkPermission, rolePermission.createRole);
+router
+  .route("/role")
+  .post(authenticate, checkPermission, rolePermission.createRole);
 
 router
   .route("/role/:Id")

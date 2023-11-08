@@ -572,24 +572,13 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "C 03",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "a new category",
-									"type": "text"
-								},
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/Ali/Desktop/ice.png"
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"C 04\",\r\n    \"description\" : \"New Category\",\r\n    \"thumbnail\" : \"1699220385727-banana.png\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
 							"raw": "127.0.0.1:8000/api/v1/category/",
@@ -758,6 +747,41 @@
 								"category",
 								"thumbnail",
 								"653680915b54be8eb91c59fe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "category-force-delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/category/force_delete/654b54aa1c4d8be1bb5df612",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"force_delete",
+								"654b54aa1c4d8be1bb5df612"
 							]
 						}
 					},
@@ -1088,6 +1112,41 @@
 								"product",
 								"images",
 								"65368cd0fe5b2c3280e86fcb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product-force-delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/product/force_delete/654a97987df4705ce27aecc7",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"force_delete",
+								"654a97987df4705ce27aecc7"
 							]
 						}
 					},

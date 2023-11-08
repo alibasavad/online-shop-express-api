@@ -31,4 +31,5 @@ export const messageCodes = {
   129: "Email Sent",
   130: "File Uploaded Successfully",
   131: "User Logout Successfully",
+  132: "Data Deleted Successfully",
 };
