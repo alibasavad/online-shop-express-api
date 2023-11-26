@@ -28,4 +28,5 @@ export const errorCodes = {
   326: ["THIS_ID_IS_ENABLE", 400],
   327: ["TOKEN_EXPIRED", 400],
   328: ["UNAUTORIZED_REQUEST", 400],
+  329: ["PRODUCT_DOES_NOT_EXIST_IN_CART", 400],
 };

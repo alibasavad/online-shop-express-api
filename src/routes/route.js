@@ -1,4 +1,5 @@
 import * as category from "../controllers/category-services";
+import * as cart from "../controllers/cart-services";
 import * as product from "../controllers/product-services";
 import * as user from "../controllers/user-services";
 import * as rolePermission from "../controllers/role-permission-services";
@@ -142,5 +143,13 @@ router.route("/logout").post(user.logout);
 router.route("/generate_token").post(user.generateAccessToken);
 
 router.route("/users").get(authenticate, checkPermission, user.readAllUsers);
+
+// __________________________Cart Services_________________________________
+
+router.route("/cart").get(authenticate, cart.readCart);
+
+router.route("/add_cart").patch(authenticate, cart.addProduct);
+
+router.route("/subtract_cart").patch(authenticate, cart.subtractProduct);
 
 module.exports = router;
