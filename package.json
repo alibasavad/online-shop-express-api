@@ -25,7 +25,8 @@
     "supertest": "^6.3.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "zarinpal-checkout": "^0.2.7"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",

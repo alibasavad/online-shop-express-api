@@ -1,4 +1,5 @@
 import * as category from "../controllers/category-services";
+import * as order from "../controllers/order-services";
 import * as cart from "../controllers/cart-services";
 import * as product from "../controllers/product-services";
 import * as user from "../controllers/user-services";
@@ -151,5 +152,23 @@ router.route("/cart").get(authenticate, cart.readCart);
 router.route("/add_cart").patch(authenticate, cart.addProduct);
 
 router.route("/subtract_cart").patch(authenticate, cart.subtractProduct);
+
+// __________________________Cart Services_________________________________
+
+router.route("/payment").post(authenticate, order.payment);
+
+router.route("/verify_payment").get(order.verifyOrder);
+
+router.route("/orders").get(authenticate, order.readOrders);
+
+router.route("/order/:Id").get(authenticate, order.readOrderById);
+
+router
+  .route("/check_orders")
+  .get(authenticate, checkPermission, order.checkOrders);
+
+router
+  .route("/check_order")
+  .get(authenticate, checkPermission, order.checkOrder);
 
 module.exports = router;

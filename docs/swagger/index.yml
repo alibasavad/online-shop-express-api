@@ -33,6 +33,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/roles:
     get:
       tags:
@@ -49,6 +51,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/role:
     post:
       tags:
@@ -85,6 +89,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/role/652af5031b62fc3c59fea492:
     get:
       tags:
@@ -101,6 +107,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/role/6536d2128e35df9f3147a43c:
     patch:
       tags:
@@ -135,6 +143,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/role/652d56dc3f04efd409b3e692:
     delete:
       tags:
@@ -151,6 +161,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/user_role/change:
     patch:
       tags:
@@ -178,6 +190,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/user_role/add:
     patch:
       tags:
@@ -205,6 +219,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/disable-roles:
     get:
       tags:
@@ -226,6 +242,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/categories:
     get:
       tags:
@@ -284,6 +302,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/category/653680915b54be8eb91c59fe:
     delete:
       tags:
@@ -300,6 +320,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/category/:
     post:
       tags:
@@ -331,6 +353,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/category/thumbnail/653832ad2829cf39683badda:
     patch:
       tags:
@@ -354,6 +378,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/disable-categories:
     get:
       tags:
@@ -370,6 +396,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/category/enable/653680915b54be8eb91c59fe:
     post:
       tags:
@@ -380,6 +408,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/category/thumbnail/653680915b54be8eb91c59fe:
     delete:
       tags:
@@ -390,6 +420,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/category/force_delete/654b54aa1c4d8be1bb5df612:
     delete:
       tags:
@@ -400,7 +432,9 @@ paths:
       responses:
         '200':
           description: ''
-  /api/v1/product/6528106370cb5777a7a9aab2:
+      security:
+        - bearerAuth: []
+  /api/v1/product/65377fce30508b0e91fe151d:
     get:
       tags:
         - product-service
@@ -483,6 +517,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/product/653143d295960ff81665a7ae:
     patch:
       tags:
@@ -531,6 +567,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/product/652827c858bd852e5995d89d:
     delete:
       tags:
@@ -541,6 +579,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/product/images/653836bd549ecbd7121569cc:
     patch:
       tags:
@@ -571,6 +611,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/disable-products:
     get:
       tags:
@@ -587,6 +629,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/product/enable/65368cd0fe5b2c3280e86fcb:
     post:
       tags:
@@ -597,6 +641,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/product/images/65368cd0fe5b2c3280e86fcb:
     delete:
       tags:
@@ -607,6 +653,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/product/force_delete/654a97987df4705ce27aecc7:
     delete:
       tags:
@@ -617,6 +665,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/register/:
     post:
       tags:
@@ -790,6 +840,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/profile:
     get:
       tags:
@@ -806,6 +858,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
     patch:
       tags:
         - user-service
@@ -836,6 +890,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/profile/change_password:
     patch:
       tags:
@@ -867,6 +923,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/forget_password:
     post:
       tags:
@@ -900,6 +958,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/generate_token/:
     post:
       tags:
@@ -910,6 +970,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
   /api/v1/upload/image/:
     post:
       tags:
@@ -932,6 +994,198 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/cart:
+    get:
+      tags:
+        - cart-service
+      summary: read-cart
+      description: read-cart
+      operationId: readCart
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/subtract_cart:
+    patch:
+      tags:
+        - cart-service
+      summary: subtract-product-to-cart
+      description: subtract-product-to-cart
+      operationId: subtractProductToCart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product:
+                  type: string
+                  example: 654a90e1b91211bfa70f4ccb
+            examples:
+              subtract-product-to-cart:
+                value:
+                  product: 654a90e1b91211bfa70f4ccb
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/add_cart:
+    patch:
+      tags:
+        - cart-service
+      summary: add-product-to-cart
+      description: add-product-to-cart
+      operationId: addProductToCart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product:
+                  type: string
+                  example: 65377fce30508b0e91fe151d
+            examples:
+              add-product-to-cart:
+                value:
+                  product: 65377fce30508b0e91fe151d
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/payment:
+    post:
+      tags:
+        - cart-service
+      summary: make-order
+      description: make-order
+      operationId: makeOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  type: string
+                  example: s 1 , A 1
+                city:
+                  type: string
+                  example: bam
+                country:
+                  type: string
+                  example: Iran
+                postalCode:
+                  type: string
+                  example: 1122aaa5ss
+            examples:
+              make-order:
+                value:
+                  address: s 1 , A 1
+                  city: bam
+                  country: Iran
+                  postalCode: 1122aaa5ss
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/orders:
+    get:
+      tags:
+        - cart-service
+      summary: 'check-orders '
+      description: 'check-orders '
+      operationId: checkOrders
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: size
+          in: query
+          schema:
+            type: string
+            example: '2'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              'check-orders ':
+                value: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/order/656a576d0735408fc092580e:
+    get:
+      tags:
+        - cart-service
+      summary: read-order-by-id
+      description: read-order-by-id
+      operationId: readOrderById
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/check_orders:
+    get:
+      tags:
+        - cart-service
+      summary: check-orders-by-user (Admin)
+      description: check-orders-by-user (Admin)
+      operationId: checkOrdersByUserAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  example: 6536dbad6618a295ebdc4d38
+            examples:
+              check-orders-by-user (Admin):
+                value:
+                  userId: 6536dbad6618a295ebdc4d38
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/check_order:
+    get:
+      tags:
+        - cart-service
+      summary: check-order  (Admin)
+      description: check-order  (Admin)
+      operationId: checkOrderAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Id:
+                  type: string
+                  example: 6536dbad6618a295ebdc4d38
+            examples:
+              check-order  (Admin):
+                value:
+                  Id: 6536dbad6618a295ebdc4d38
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
   /:
     get:
       summary: TEST
@@ -946,9 +1200,15 @@ paths:
       responses:
         '200':
           description: ''
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
 tags:
   - name: role-permission-service
   - name: category-service
   - name: product-service
   - name: user-service
   - name: upload-service
+  - name: cart-service

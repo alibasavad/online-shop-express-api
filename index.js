@@ -40,10 +40,6 @@ app.use("/api/v1/image", express.static("public/images"));
 
 app.use(errorHandler.notFound);
 
-// app.listen(env.PORT, () => {
-//   console.log(`\x1B[35mServer listening on port: ${env.PORT}`);
-// });
-
 if (process.env.NODE_ENV !== "test") {
   app.listen(env.PORT, () =>
     console.log(`\x1B[35mServer listening on port: ${env.PORT}`)

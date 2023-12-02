@@ -32,4 +32,5 @@ export const messageCodes = {
   130: "File Uploaded Successfully",
   131: "User Logout Successfully",
   132: "Data Deleted Successfully",
+  133: "Your Order Has Been Registered",
 };
