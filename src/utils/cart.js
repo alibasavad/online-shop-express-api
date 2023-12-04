@@ -35,13 +35,13 @@ export const refreshCart = async (userId) => {
   for (let productId of cart.products) {
     let product = await Product.findById(productId._id);
 
-    if (product === null || product.isDisable === true || productId.Qty === 0)
+    if (product === null || product.isDisable === true || productId.qty === 0)
       cart.products.remove(productId);
     else {
-      if (product.quantity >= productId.Qty) productId.isAvailable = true;
+      if (product.quantity >= productId.qty) productId.isAvailable = true;
       else productId.isAvailable = false;
-      totalPrice += product.price * productId.Qty;
-      totalQty += productId.Qty;
+      totalPrice += product.price * productId.qty;
+      totalQty += productId.qty;
     }
   }
 
@@ -75,6 +75,7 @@ export const refreshCart = async (userId) => {
         totalPrice: 1,
         totalQty: 1,
         updatedAt: 1,
+        createdAt: 1,
       },
     },
   ]);
@@ -83,7 +84,7 @@ export const refreshCart = async (userId) => {
     let cartProduct = cart.products.find(
       ({ _id }) => _id.toString() === product._id.toString()
     );
-    product.Qty = cartProduct.Qty;
+    product.qty = cartProduct.qty;
     product.isAvailable = cartProduct.isAvailable;
   }
 

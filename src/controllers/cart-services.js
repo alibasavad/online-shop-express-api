@@ -14,7 +14,7 @@ export const readCart = async (req, res, next) => {
     let cart = await Cart.findOne({ user: req.user._id });
 
     if (cart === null) {
-      cart = createCart(req.user._id);
+      cart = await createCart(req.user._id);
     }
 
     Response.normalizer(req, res, {
@@ -22,6 +22,7 @@ export const readCart = async (req, res, next) => {
       messageCode: 100,
     });
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 };
@@ -46,7 +47,7 @@ export const addProduct = async (req, res, next) => {
 
     for (let cartProduct of cart.products) {
       if (cartProduct._id.toString() === product._id.toString()) {
-        cartProduct.Qty += 1;
+        cartProduct.qty += 1;
         cart.totalQty += 1;
         cart.totalPrice += product.price;
         isExist = true;
@@ -54,7 +55,7 @@ export const addProduct = async (req, res, next) => {
     }
 
     if (!isExist) {
-      cart.products.push({ _id: req.body.product, Qty: 1 });
+      cart.products.push({ _id: req.body.product, qty: 1 });
       cart.totalQty += 1;
       cart.totalPrice += product.price;
     }
@@ -90,7 +91,7 @@ export const subtractProduct = async (req, res, next) => {
 
     for (let cartProduct of cart.products) {
       if (cartProduct._id.toString() === product._id.toString()) {
-        cartProduct.Qty -= 1;
+        cartProduct.qty -= 1;
         cart.totalQty -= 1;
         cart.totalPrice -= product.price;
         isExist = true;

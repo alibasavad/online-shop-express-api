@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const paymentSchema = new Schema(
+const invoiceSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -27,5 +27,5 @@ const paymentSchema = new Schema(
   }
 );
 
-const Payment = mongoose.model("Payment", paymentSchema);
-export default Payment;
+const Invoice = mongoose.model("Invoice", invoiceSchema);
+export default Invoice;

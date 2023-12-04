@@ -153,7 +153,7 @@ router.route("/add_cart").patch(authenticate, cart.addProduct);
 
 router.route("/subtract_cart").patch(authenticate, cart.subtractProduct);
 
-// __________________________Cart Services_________________________________
+// __________________________Order Services_________________________________
 
 router.route("/payment").post(authenticate, order.payment);
 
@@ -169,6 +169,20 @@ router
 
 router
   .route("/check_order")
-  .get(authenticate, checkPermission, order.checkOrder);
+  .patch(authenticate, checkPermission, order.checkOrder);
+
+router
+  .route("/not_checkd_orders")
+  .get(authenticate, checkPermission, order.notCheckedOrders);
+
+router
+  .route("/pending_orders")
+  .get(authenticate, checkPermission, order.pendingOrders);
+
+router
+  .route("/delivered_orders")
+  .get(authenticate, checkPermission, order.deliveredOrders);
+
+router.route("/deliver").patch(authenticate, checkPermission, order.deliver);
 
 module.exports = router;

@@ -1713,7 +1713,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"product\" : \"654a90e1b91211bfa70f4ccb\"\r\n}",
+							"raw": "{\r\n    \"product\" : \"65377fce30508b0e91fe151d\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1779,7 +1779,12 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "order-service",
+			"item": [
 				{
 					"name": "make-order",
 					"event": [
@@ -1939,7 +1944,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/order/656a576d0735408fc092580e",
+							"raw": "127.0.0.1:8000/api/v1/order/656dabab38cbcee66c3a240a",
 							"host": [
 								"127",
 								"0",
@@ -1951,7 +1956,7 @@
 								"api",
 								"v1",
 								"order",
-								"656a576d0735408fc092580e"
+								"656dabab38cbcee66c3a240a"
 							]
 						}
 					},
@@ -1985,7 +1990,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/check_orders",
+							"raw": "127.0.0.1:8000/api/v1/check_orders?page=1&&size=2",
 							"host": [
 								"127",
 								"0",
@@ -1997,16 +2002,27 @@
 								"api",
 								"v1",
 								"check_orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": null,
+									"value": null
+								},
+								{
+									"key": "size",
+									"value": "2"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "check-order  (Admin)",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
+					"name": "deliver (Admin)",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -2018,11 +2034,53 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Id\" : \"6536dbad6618a295ebdc4d38\"\r\n}",
+							"raw": "{\r\n    \"Id\" : \"656dabab38cbcee66c3a240a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/deliver",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"deliver"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check-order  (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\" : \"656dabab38cbcee66c3a240a\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2042,6 +2100,159 @@
 								"api",
 								"v1",
 								"check_order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "not-checked-orders(Admin)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\" : \"656dabab38cbcee66c3a240a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/not_checkd_orders?page=1 ",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"not_checkd_orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1 "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pending-orders(Admin)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\" : \"656dabab38cbcee66c3a240a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/pending_orders?page=1 ",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"pending_orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1 "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delivered-orders(Admin)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\" : \"656dabab38cbcee66c3a240a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/delivered_orders?page=1 ",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"delivered_orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1 "
+								}
 							]
 						}
 					},

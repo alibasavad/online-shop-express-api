@@ -19,7 +19,7 @@ const orderSchema = new Schema(
           type: Schema.Types.ObjectId,
           ref: "productSchema",
         },
-        Qty: {
+        qty: {
           type: Number,
         },
       },
@@ -80,6 +80,15 @@ const orderSchema = new Schema(
 
     result: {
       type: Boolean,
+    },
+    isChecked: {
+      type: Boolean,
+      default: false,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "delivered"],
+      default: "pending",
     },
   },
   {

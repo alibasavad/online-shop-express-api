@@ -33,4 +33,5 @@ export const errorCodes = {
   331: ["EMPTY_CART", 400],
   332: ["ERROR_IN_PAYMENT_OPERATION", 400],
   333: ["PRODUCT_UNAVAILABLE", 400],
+  334: ["UNPAID_ORDER", 400],
 };

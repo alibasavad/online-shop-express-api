@@ -3,15 +3,18 @@ import Cart from "../models/cart";
 import Order from "../models/order";
 import ZarinPal from "zarinpal-checkout";
 import env from "../configs/env.json";
-import Payment from "../models/payment";
+import Invoice from "../models/invoice";
 import { createCart, refreshCart } from "../utils/cart";
 import Product from "../models/product";
 import {
   checkOrderData,
   checkOrdersData,
+  deliveredOrdersData,
+  notCheckedOrdersData,
   orderData,
   ordersData,
-} from "../utils/payment";
+  pendingOrdersData,
+} from "../utils/order";
 
 const Response = require("../handlers/response");
 
@@ -30,7 +33,7 @@ export const payment = async (req, res, next) => {
 
     if (cart.products.length === 0) throw new AppError(331);
 
-    let shippingPrice = 25000;
+    let shippingPrice = env.SHIPPING_PRICE;
 
     refreshCart(req.user._id);
 
@@ -39,7 +42,7 @@ export const payment = async (req, res, next) => {
     cart.products.forEach((product) => {
       if (product.isAvailable === false)
         throw new AppError(333, `PRODUCT ID  : ${product._id}`);
-      products.push({ _id: product._id, Qty: product.Qty });
+      products.push({ _id: product._id, Qty: product.qty });
     });
 
     const newOrder = new Order({
@@ -73,7 +76,7 @@ export const payment = async (req, res, next) => {
       })
       .then(async (response) => {
         if (response.status == 100) {
-          await new Payment({
+          await new Invoice({
             user: req.user._id,
             orderId: newOrder._id,
             authority: response.authority,
@@ -89,42 +92,42 @@ export const payment = async (req, res, next) => {
 
 export const verifyOrder = async (req, res, next) => {
   try {
-    let payment = await Payment.findOne({ authority: req.query.Authority });
+    let invoice = await Invoice.findOne({ authority: req.query.Authority });
 
-    let order = await Order.findById(payment.orderId);
+    let order = await Order.findById(invoice.orderId);
 
     let cart = await Cart.findOne({ user: order.user });
 
     const zarinpal = ZarinPal.create(env.MERCHANT_ID, true);
 
-    if (payment.result !== undefined) throw new AppError(330);
+    if (invoice.result !== undefined) throw new AppError(330);
 
     let refId = await zarinpal
       .PaymentVerification({
-        Amount: payment.amount,
+        Amount: invoice.amount,
         Authority: req.query.Authority,
       })
       .then(function (response) {
         if (response.status == 100) {
-          payment.result = true;
+          invoice.result = true;
         } else {
-          payment.result = false;
+          invoice.result = false;
         }
         return response.RefID;
       });
 
-    await payment.save();
+    await invoice.save();
 
     order.trackerId = refId;
-    order.result = payment.result;
+    order.result = invoice.result;
 
     await order.save();
 
-    if (!payment.result) throw new AppError(332);
+    if (!invoice.result) throw new AppError(332);
 
     for (let item of cart.products) {
       let product = await Product.findById(item._id);
-      product.quantity -= item.Qty;
+      product.quantity -= item.qty;
       product.save();
     }
 
@@ -190,6 +193,65 @@ export const checkOrders = async (req, res, next) => {
 
 export const checkOrder = async (req, res, next) => {
   try {
+    const order = await Order.findById(req.body.Id);
+
+    order.isChecked = true;
+    await order.save();
+
+    Response.normalizer(req, res, {
+      result: await checkOrderData(req.body.Id),
+      messageCode: 100,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const notCheckedOrders = async (req, res, next) => {
+  try {
+    Response.normalizer(req, res, {
+      result: await notCheckedOrdersData(),
+      messageCode: 100,
+      type: "multi/pagination",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const pendingOrders = async (req, res, next) => {
+  try {
+    Response.normalizer(req, res, {
+      result: await pendingOrdersData(),
+      messageCode: 100,
+      type: "multi/pagination",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const deliveredOrders = async (req, res, next) => {
+  try {
+    Response.normalizer(req, res, {
+      result: await deliveredOrdersData(),
+      messageCode: 100,
+      type: "multi/pagination",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const deliver = async (req, res, next) => {
+  try {
+    const order = await Order.findById(req.body.Id);
+
+    if (order.result === false) throw new AppError(334);
+
+    order.status = "delivered";
+    await order.save();
+
     Response.normalizer(req, res, {
       result: await checkOrderData(req.body.Id),
       messageCode: 100,
