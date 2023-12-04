@@ -90,3 +90,47 @@ export const refreshCart = async (userId) => {
 
   return result;
 };
+
+export const activeCart = async () => {
+  let result = await Cart.aggregate([
+    {
+      $lookup: {
+        from: "products",
+        localField: "products._id",
+        foreignField: "_id",
+        as: "product",
+      },
+    },
+    {
+      $project: {
+        product: {
+          _id: 1,
+          name: 1,
+          price: 1,
+          thumbnail: 1,
+        },
+        totalPrice: 1,
+        totalQty: 1,
+        updatedAt: 1,
+        createdAt: 1,
+        products: 1,
+      },
+    },
+  ]);
+
+  for (let cart of result) {
+    if (cart.products.length <= 0) result.remove(cart);
+
+    for (let product of cart.product) {
+      let cartProduct = cart.products.find(
+        ({ _id }) => _id.toString() === product._id.toString()
+      );
+
+      product.qty = cartProduct.qty;
+      product.isAvailable = cartProduct.isAvailable;
+    }
+    cart.products = undefined;
+  }
+
+  return result;
+};

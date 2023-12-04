@@ -149,6 +149,10 @@ router.route("/users").get(authenticate, checkPermission, user.readAllUsers);
 
 router.route("/cart").get(authenticate, cart.readCart);
 
+router
+  .route("/active_carts")
+  .get(authenticate, checkPermission, cart.activeCarts);
+
 router.route("/add_cart").patch(authenticate, cart.addProduct);
 
 router.route("/subtract_cart").patch(authenticate, cart.subtractProduct);

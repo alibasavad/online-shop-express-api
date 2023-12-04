@@ -1,6 +1,6 @@
 import Cart from "../models/cart";
 import { AppError } from "../handlers/error-handler";
-import { createCart, refreshCart } from "../utils/cart";
+import { activeCart, createCart, refreshCart } from "../utils/cart";
 import Product from "../models/product";
 
 const Response = require("../handlers/response");
@@ -106,6 +106,17 @@ export const subtractProduct = async (req, res, next) => {
 
     Response.normalizer(req, res, {
       result: await refreshCart(req.user._id),
+      messageCode: 100,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const activeCarts = async (req, res, next) => {
+  try {
+    Response.normalizer(req, res, {
+      result: await activeCart(),
       messageCode: 100,
     });
   } catch (error) {

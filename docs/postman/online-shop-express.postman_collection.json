@@ -1779,6 +1779,39 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "actve-carts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/active_carts",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"active_carts"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
