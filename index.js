@@ -13,8 +13,8 @@ const app = express();
 
 mongoose.Promise = global.Promise;
 mongoose.connect(env.MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 });
 
 //  bodyParser
@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send("Under Developement :)...");
+    res.send("Under Developement :)...");
 });
 
 app.use("/api/v1/", routes);
@@ -41,9 +41,9 @@ app.use("/api/v1/image", express.static("public/images"));
 app.use(errorHandler.notFound);
 
 if (process.env.NODE_ENV !== "test") {
-  app.listen(env.PORT, () =>
-    console.log(`\x1B[35mServer listening on port: ${env.PORT}`)
-  );
+    app.listen(env.PORT, () =>
+        console.log(`\x1B[35mServer listening on port: ${env.PORT}`)
+    );
 }
 
 export default app;

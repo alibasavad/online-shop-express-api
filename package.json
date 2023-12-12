@@ -1,41 +1,41 @@
 {
-  "name": "online-shop-express-epi",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon --exec babel-node index.js",
-    "test": "jest --forceExit --verbose --maxWorkers=1 ",
-    "doc": "node ./docs/swagger/index.js"
-  },
-  "author": "AliBasavad",
-  "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "jest": "^29.7.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.1.0",
-    "mongoose": "^7.6.1",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.6",
-    "nodemon": "^3.0.1",
-    "supertest": "^6.3.3",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0",
-    "validator": "^13.11.0",
-    "zarinpal-checkout": "^0.2.7"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/node": "^7.22.19",
-    "@babel/preset-env": "^7.23.2"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
-  }
+    "name": "online-shop-express-epi",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon --exec babel-node index.js",
+        "test": "jest --forceExit --verbose --maxWorkers=1 ",
+        "doc": "node ./docs/swagger/index.js"
+    },
+    "author": "AliBasavad",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.20.2",
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "jest": "^29.7.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongodb": "^6.1.0",
+        "mongoose": "^7.6.1",
+        "multer": "^1.4.5-lts.1",
+        "nodemailer": "^6.9.6",
+        "nodemon": "^3.0.1",
+        "supertest": "^6.3.3",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.0",
+        "validator": "^13.11.0",
+        "zarinpal-checkout": "^0.2.7"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.23.2",
+        "@babel/node": "^7.22.19",
+        "@babel/preset-env": "^7.23.2"
+    },
+    "babel": {
+        "presets": [
+            "@babel/preset-env"
+        ]
+    }
 }

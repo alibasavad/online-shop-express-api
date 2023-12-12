@@ -1877,7 +1877,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"country\" : \"Iran\" ,\r\n    \"city\" : \"bam\" ,\r\n    \"address\" : \"s 1 , A 1\" ,\r\n    \"postalCode\" : \"1122aaa5ss\"\r\n}",
+							"raw": "{\r\n    \"country\": \"Iran\",\r\n    \"city\": \"bam\",\r\n    \"address\": \"s 1 , A 1\",\r\n    \"postalCode\": \"1122aaa5ss\",\r\n    \"paymentType\": \"wallet\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2286,6 +2286,87 @@
 									"key": "page",
 									"value": "1 "
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "wallet-service",
+			"item": [
+				{
+					"name": "read-wallet",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/wallet",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deposit",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\" : 250000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/wallet/deposit",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"wallet",
+								"deposit"
 							]
 						}
 					},

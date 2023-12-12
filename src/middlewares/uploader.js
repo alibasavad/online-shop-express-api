@@ -6,48 +6,48 @@ const Response = require("../handlers/response");
 
 // images storage
 const imageStorage = multer.diskStorage({
-  destination: `${__dirname}/../../public/images`,
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
+    destination: `${__dirname}/../../public/images`,
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "-" + file.originalname);
+    },
 });
 
 // product image uploader function
 const imageUploader = multer({
-  storage: imageStorage,
+    storage: imageStorage,
 });
 
 // product image uploader service
 export const uploadImages = async (req, res, next) => {
-  // product image uploader function
-  imageUploader.any()(req, res, async (error) => {
-    try {
-      // throw error if no file is uploaded
-      if (req.files === undefined || req.files.length === 0)
-        throw new AppError(301);
+    // product image uploader function
+    imageUploader.any()(req, res, async (error) => {
+        try {
+            // throw error if no file is uploaded
+            if (req.files === undefined || req.files.length === 0)
+                throw new AppError(301);
 
-      // check uploaded file format
-      checkImages(req.files);
+            // check uploaded file format
+            checkImages(req.files);
 
-      // check uploaded file size
-      checkImageSize(req.files);
+            // check uploaded file size
+            checkImageSize(req.files);
 
-      const images = [];
+            const images = [];
 
-      // add image names to images list
-      req.files.forEach((file) => {
-        images.push(file.filename);
-      });
+            // add image names to images list
+            req.files.forEach((file) => {
+                images.push(file.filename);
+            });
 
-      Response.normalizer(req, res, {
-        result: images,
-        messageCode: 130,
-        type: "multi",
-      });
-    } catch (error) {
-      if (!(req.files === undefined || req.files.length === 0))
-        deleteImages(req.files);
-      return next(error);
-    }
-  });
+            Response.normalizer(req, res, {
+                result: images,
+                messageCode: 130,
+                type: "multi",
+            });
+        } catch (error) {
+            if (!(req.files === undefined || req.files.length === 0))
+                deleteImages(req.files);
+            return next(error);
+        }
+    });
 };

@@ -3,29 +3,29 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const categorySchema = new Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    
-    thumbnail: {
-      type: String,
-    },
+    {
+        name: {
+            type: String,
+            required: true,
+            unique: true,
+        },
 
-    description: {
-      type: String,
-    },
+        thumbnail: {
+            type: String,
+        },
 
-    isDisable: {
-      type: Boolean,
-      default: false,
+        description: {
+            type: String,
+        },
+
+        isDisable: {
+            type: Boolean,
+            default: false,
+        },
     },
-  },
-  {
-    timestamps: true,
-  }
+    {
+        timestamps: true,
+    }
 );
 
 const Category = mongoose.model("Category", categorySchema);

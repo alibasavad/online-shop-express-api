@@ -3,39 +3,39 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const cartSchema = new Schema(
-  {
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "userSchema",
-      unique: true,
-    },
-    products: [
-      {
-        _id: {
-          type: Schema.Types.ObjectId,
-          ref: "productSchema",
+    {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "userSchema",
+            unique: true,
         },
-        qty: {
-          type: Number,
+        products: [
+            {
+                _id: {
+                    type: Schema.Types.ObjectId,
+                    ref: "productSchema",
+                },
+                qty: {
+                    type: Number,
+                },
+                isAvailable: {
+                    type: Boolean,
+                    default: false,
+                },
+            },
+        ],
+        totalPrice: {
+            type: Number,
+            default: 0,
         },
-        isAvailable: {
-          type: Boolean,
-          default: false,
+        totalQty: {
+            type: Number,
+            default: 0,
         },
-      },
-    ],
-    totalPrice: {
-      type: Number,
-      default: 0,
     },
-    totalQty: {
-      type: Number,
-      default: 0,
-    },
-  },
-  {
-    timestamps: true,
-  }
+    {
+        timestamps: true,
+    }
 );
 
 const Cart = mongoose.model("Cart", cartSchema);

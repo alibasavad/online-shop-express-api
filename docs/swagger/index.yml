@@ -1023,11 +1023,11 @@ paths:
               properties:
                 product:
                   type: string
-                  example: 654a90e1b91211bfa70f4ccb
+                  example: 65377fce30508b0e91fe151d
             examples:
               subtract-product-to-cart:
                 value:
-                  product: 654a90e1b91211bfa70f4ccb
+                  product: 65377fce30508b0e91fe151d
       responses:
         '200':
           description: ''
@@ -1058,10 +1058,22 @@ paths:
           description: ''
       security:
         - bearerAuth: []
+  /api/v1/active_carts:
+    get:
+      tags:
+        - cart-service
+      summary: actve-carts
+      description: actve-carts
+      operationId: actveCarts
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
   /api/v1/payment:
     post:
       tags:
-        - cart-service
+        - order-service
       summary: make-order
       description: make-order
       operationId: makeOrder
@@ -1080,6 +1092,9 @@ paths:
                 country:
                   type: string
                   example: Iran
+                paymentType:
+                  type: string
+                  example: wallet
                 postalCode:
                   type: string
                   example: 1122aaa5ss
@@ -1089,6 +1104,7 @@ paths:
                   address: s 1 , A 1
                   city: bam
                   country: Iran
+                  paymentType: wallet
                   postalCode: 1122aaa5ss
       responses:
         '200':
@@ -1098,7 +1114,7 @@ paths:
   /api/v1/orders:
     get:
       tags:
-        - cart-service
+        - order-service
       summary: 'check-orders '
       description: 'check-orders '
       operationId: checkOrders
@@ -1124,10 +1140,10 @@ paths:
           description: ''
       security:
         - bearerAuth: []
-  /api/v1/order/656a576d0735408fc092580e:
+  /api/v1/order/656dabab38cbcee66c3a240a:
     get:
       tags:
-        - cart-service
+        - order-service
       summary: read-order-by-id
       description: read-order-by-id
       operationId: readOrderById
@@ -1139,10 +1155,21 @@ paths:
   /api/v1/check_orders:
     get:
       tags:
-        - cart-service
+        - order-service
       summary: check-orders-by-user (Admin)
       description: check-orders-by-user (Admin)
       operationId: checkOrdersByUserAdmin
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: size
+          in: query
+          schema:
+            type: string
+            example: '2'
       requestBody:
         content:
           application/json:
@@ -1161,10 +1188,35 @@ paths:
           description: ''
       security:
         - bearerAuth: []
-  /api/v1/check_order:
-    get:
+  /api/v1/deliver:
+    patch:
       tags:
-        - cart-service
+        - order-service
+      summary: deliver (Admin)
+      description: deliver (Admin)
+      operationId: deliverAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Id:
+                  type: string
+                  example: 656dabab38cbcee66c3a240a
+            examples:
+              deliver (Admin):
+                value:
+                  Id: 656dabab38cbcee66c3a240a
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/check_order:
+    patch:
+      tags:
+        - order-service
       summary: check-order  (Admin)
       description: check-order  (Admin)
       operationId: checkOrderAdmin
@@ -1176,11 +1228,141 @@ paths:
               properties:
                 Id:
                   type: string
-                  example: 6536dbad6618a295ebdc4d38
+                  example: 656dabab38cbcee66c3a240a
             examples:
               check-order  (Admin):
                 value:
-                  Id: 6536dbad6618a295ebdc4d38
+                  Id: 656dabab38cbcee66c3a240a
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/not_checkd_orders:
+    get:
+      tags:
+        - order-service
+      summary: not-checked-orders(Admin)
+      description: not-checked-orders(Admin)
+      operationId: notCheckedOrdersAdmin
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1 '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Id:
+                  type: string
+                  example: 656dabab38cbcee66c3a240a
+            examples:
+              not-checked-orders(Admin):
+                value:
+                  Id: 656dabab38cbcee66c3a240a
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/pending_orders:
+    get:
+      tags:
+        - order-service
+      summary: pending-orders(Admin)
+      description: pending-orders(Admin)
+      operationId: pendingOrdersAdmin
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1 '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Id:
+                  type: string
+                  example: 656dabab38cbcee66c3a240a
+            examples:
+              pending-orders(Admin):
+                value:
+                  Id: 656dabab38cbcee66c3a240a
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/delivered_orders:
+    get:
+      tags:
+        - order-service
+      summary: delivered-orders(Admin)
+      description: delivered-orders(Admin)
+      operationId: deliveredOrdersAdmin
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1 '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Id:
+                  type: string
+                  example: 656dabab38cbcee66c3a240a
+            examples:
+              delivered-orders(Admin):
+                value:
+                  Id: 656dabab38cbcee66c3a240a
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/wallet:
+    get:
+      tags:
+        - wallet-service
+      summary: read-wallet
+      description: read-wallet
+      operationId: readWallet
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/wallet/deposit:
+    patch:
+      tags:
+        - wallet-service
+      summary: deposit
+      description: deposit
+      operationId: deposit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  example: 250000
+            examples:
+              deposit:
+                value:
+                  amount: 250000
       responses:
         '200':
           description: ''
@@ -1212,3 +1394,5 @@ tags:
   - name: user-service
   - name: upload-service
   - name: cart-service
+  - name: order-service
+  - name: wallet-service
