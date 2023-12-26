@@ -3,6 +3,7 @@ import Order from "../models/order";
 import Invoice from "../models/invoice";
 import Wallet from "../models/wallet";
 import { AppError } from "../handlers/error-handler";
+import Product from "../models/product";
 
 export const orderData = async (Id) => {
     const order = await Order.findById(Id);
@@ -403,4 +404,20 @@ export const walletPayment = async (userId, amount) => {
 
     wallet.save();
     return true;
+};
+
+export const reserveProducts = async (products) => {
+    for (let item of products) {
+        let product = await Product.findById(item._id);
+        product.reserved += item.qty;
+        await product.save();
+    }
+};
+
+export const unreserveProducts = async (products) => {
+    for (let item of products) {
+        let product = await Product.findById(item._id);
+        product.reserved -= item.qty;
+        await product.save();
+    }
 };

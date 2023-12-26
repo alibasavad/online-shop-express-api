@@ -42,7 +42,8 @@ export const refreshCart = async (userId) => {
         )
             cart.products.remove(productId);
         else {
-            if (product.quantity >= productId.qty) productId.isAvailable = true;
+            if (product.quantity - product.reserved >= productId.qty)
+                productId.isAvailable = true;
             else productId.isAvailable = false;
             totalPrice += product.price * productId.qty;
             totalQty += productId.qty;

@@ -14,6 +14,8 @@ import {
     orderData,
     ordersData,
     pendingOrdersData,
+    reserveProducts,
+    unreserveProducts,
     walletPayment,
 } from "../utils/order";
 
@@ -43,7 +45,7 @@ export const payment = async (req, res, next) => {
         cart.products.forEach((product) => {
             if (product.isAvailable === false)
                 throw new AppError(333, `PRODUCT ID  : ${product._id}`);
-            products.push({ _id: product._id, Qty: product.qty });
+            products.push({ _id: product._id, qty: product.qty });
         });
 
         const newOrder = new Order({
@@ -110,6 +112,7 @@ export const payment = async (req, res, next) => {
                         authority: response.authority,
                         amount: newOrder.totalPrice,
                     }).save();
+                    await reserveProducts(newOrder.products);
                     return res.redirect(response.url);
                 }
             });
@@ -127,6 +130,8 @@ export const verifyOrder = async (req, res, next) => {
         let cart = await Cart.findOne({ user: order.user });
 
         const zarinpal = ZarinPal.create(env.MERCHANT_ID, true);
+
+        unreserveProducts(order.products);
 
         if (invoice.result !== undefined) throw new AppError(330);
 

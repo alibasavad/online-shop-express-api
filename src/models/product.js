@@ -47,6 +47,10 @@ const productSchema = new Schema(
             type: Boolean,
             default: false,
         },
+        reserved: {
+            type: Number,
+            default: 0,
+        },
     },
     {
         timestamps: true,
