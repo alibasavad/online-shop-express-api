@@ -12,7 +12,6 @@ const jwt = require("jsonwebtoken");
 // Read all permissions
 export const readAllPermissions = async (req, res, next) => {
     try {
-        // Find all permissions and select only the "name" field
         const permissions = await Permission.find().select(["name"]);
 
         Response.normalizer(req, res, {
@@ -28,7 +27,6 @@ export const readAllPermissions = async (req, res, next) => {
 // Read all roles
 export const readAllRoles = async (req, res, next) => {
     try {
-        // Aggregate the roles collection to include only roles that are not disabled
         const roles = await Role.aggregate([
             {
                 $match: {
@@ -61,25 +59,20 @@ export const readAllRoles = async (req, res, next) => {
 // Create a role
 export const createRole = async (req, res, next) => {
     try {
-        // Map the permissions array to expected form
         req.body.permissions = mapperPermissions(req.body.permissions);
 
-        // Validate the name using the alphaNumeric validation function
         validation.alphaNumeric(req.body.name);
 
-        // Create a new role with the provided name and permissions
         const newrole = new Role({
             name: req.body.name,
             permissions: req.body.permissions,
         });
 
-        // Check if each permission in the new role exists
         for (let permission of newrole.permissions) {
             let check = await Permission.findOne({ name: permission.name });
             if (check === null) throw new AppError(310);
         }
 
-        // Save the new role
         const role = await newrole.save();
 
         Response.normalizer(req, res, {
@@ -94,21 +87,16 @@ export const createRole = async (req, res, next) => {
 // Change a user's role
 export const changeUserRole = async (req, res, next) => {
     try {
-        // Find the user by their ID
         const user = await User.findById(req.body.userId);
 
-        // Find the role by its name
         const role = await Role.findOne({ name: req.body.role });
 
-        // If the role or user is not found, or if the role is disabled, throw an error
         if (role === null || user === null || role.isDisable === true) {
             throw new AppError(311);
         }
 
-        // Update the user's role with the new role name
         user.role = [role.name];
 
-        // Save the updated user
         let updatedUser = await user.save();
 
         Response.normalizer(req, res, {
@@ -123,21 +111,16 @@ export const changeUserRole = async (req, res, next) => {
 // Add a role to a user
 export const addUserRole = async (req, res, next) => {
     try {
-        // Find the user by their ID
         const user = await User.findById(req.body.userId);
 
-        // Find the role by its name
         const role = await Role.findOne({ name: req.body.role });
 
-        // If the role or user is not found, or if the role is disabled, throw an error
         if (role === null || user === null || role.isDisable === true) {
             throw new AppError(311);
         }
 
-        // Add the role to the user's role array
         user.role.push(role.name);
 
-        // Save the updated user
         let updatedUser = await user.save();
 
         Response.normalizer(req, res, {
@@ -152,32 +135,25 @@ export const addUserRole = async (req, res, next) => {
 // Update a role
 export const updateRole = async (req, res, next) => {
     try {
-        // Map the permissions array to expexted form
         req.body.permissions = mapperPermissions(req.body.permissions);
 
-        // Find the role by its ID
         const role = await Role.findById(req.params.Id);
 
-        // Define an array of roles that cannot be edited
         const uneditableRoles = ["normalUser", "superUser", "limitedUser"];
 
-        // If the role is in the uneditableRoles array, throw an error
         if (uneditableRoles.includes(role.name)) {
             throw new AppError(312);
         }
 
-        // Set the permissions to the updated permissions if provided, otherwise use the current permissions
         let permissions = req.body.permissions
             ? req.body.permissions
             : role.permissions;
 
-        // Check if each permission in the updated role exists
         for (let permission of permissions) {
             let check = await Permission.findOne({ name: permission.name });
             if (check === null) throw new AppError(310);
         }
 
-        // Update the role's permissions with the updated permissions
         await role.updateOne(
             {
                 permissions: permissions,
@@ -185,7 +161,6 @@ export const updateRole = async (req, res, next) => {
             { new: true, useFindAndModify: false }
         );
 
-        // Find the updated role by its ID
         const updatedRole = await Role.findById(req.params.Id);
 
         Response.normalizer(req, res, {
@@ -200,10 +175,8 @@ export const updateRole = async (req, res, next) => {
 // Read a role by its ID
 export const readRoleById = async (req, res, next) => {
     try {
-        // Find the role by its ID
         const role = await Role.findById(req.params.Id);
 
-        // If the role is disabled, throw an error
         if (role.isDisable === true) throw new AppError(300);
 
         Response.normalizer(req, res, {
@@ -218,10 +191,8 @@ export const readRoleById = async (req, res, next) => {
 // Disable a role by its ID
 export const disableRole = async (req, res, next) => {
     try {
-        // Find the role by its ID
         const role = await Role.findById(req.params.Id);
 
-        // Define a list of indelible roles that cannot be disabled
         const indelibleRoles = [
             "normalUser",
             "superUser",
@@ -229,24 +200,19 @@ export const disableRole = async (req, res, next) => {
             "adminUser",
         ];
 
-        // If the role does not exist, throw an error
         if (role === null) {
             throw new AppError(314);
         }
-        // If the role is already disabled, throw an error
         if (role.isDisable === true) {
             throw new AppError(325);
         }
 
-        // If the role is an indelible role, throw an error
         if (indelibleRoles.includes(role.name)) {
             throw new AppError(313);
         }
 
-        // Set the isDisable property of the role to true
         role.isDisable = true;
 
-        // Save the updated role
         await role.save();
 
         Response.normalizer(req, res, {
@@ -261,7 +227,6 @@ export const disableRole = async (req, res, next) => {
 // Read disabled roles
 export const readDisabledRoles = async (req, res, next) => {
     try {
-        // Find all roles that are disabled using aggregation
         const roles = await Role.aggregate([
             {
                 $match: {
@@ -294,17 +259,13 @@ export const readDisabledRoles = async (req, res, next) => {
 // Enable a role by its ID
 export const enableRole = async (req, res, next) => {
     try {
-        // Find the role by its ID
         const role = await Role.findById(req.params.Id);
 
-        // If the role is already enabled, throw an error
         if (role.isDisable === false) {
             throw new AppError(326);
         }
 
-        // Set the isDisable property of the role to false
         role.isDisable = false;
-        // Save the updated role
         await role.save();
 
         Response.normalizer(req, res, {

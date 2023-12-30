@@ -1,4 +1,8 @@
-// map cattegory ids to expected format
+/**
+ * @description map category ids to wanted format ( [ { id : "categoryId" } ] )
+ * @param {Array} list 
+ * @returns Array 
+ */
 export const mapperCategoryId = (list) => {
     let mappedList = [];
 
@@ -9,7 +13,11 @@ export const mapperCategoryId = (list) => {
     return mappedList;
 };
 
-// map permissions to expected format
+/**
+ * @description map permission names to wanted format ( [ { name : "permission" } ] )
+ * @param {Array} list 
+ * @returns Array
+ */
 export const mapperPermissions = (list) => {
     let mappedList = [];
 
@@ -20,7 +28,11 @@ export const mapperPermissions = (list) => {
     return mappedList;
 };
 
-// map Product Images  to expected format
+/**
+ * @description map images to wanted format ( [ { imageURL : "Url" , isMain : Boolean } ] ) 
+ * @param {Array} list 
+ * @returns Array
+ */
 export const mapperProductImages = (list) => {
     let mappedList = [];
     let mainImageIsAdded = false;

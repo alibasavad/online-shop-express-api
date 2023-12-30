@@ -6,6 +6,7 @@ import Invoice from "../models/invoice";
 
 const Response = require("../handlers/response");
 
+// read user wallet
 export const readWallet = async (req, res, next) => {
     try {
         if (req.isAuthenticated === false) {
@@ -28,6 +29,7 @@ export const readWallet = async (req, res, next) => {
     }
 };
 
+// deposit to wallet
 export const deposit = async (req, res, next) => {
     try {
         if (req.isAuthenticated === false) {
@@ -41,6 +43,7 @@ export const deposit = async (req, res, next) => {
             wallet = await wallet.save();
         }
 
+        // use zarinpal gateway
         const zarinpal = ZarinPal.create(env.MERCHANT_ID, true);
 
         zarinpal
@@ -67,6 +70,7 @@ export const deposit = async (req, res, next) => {
     }
 };
 
+// verify deposit
 export const verification = async (req, res, next) => {
     try {
         const zarinpal = ZarinPal.create(env.MERCHANT_ID, true);

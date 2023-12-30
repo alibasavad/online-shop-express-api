@@ -17,6 +17,11 @@ Array.prototype.remove = function () {
     return this;
 };
 
+/**
+ * @description creat cart for user
+ * @param {String} userId  
+ * @returns Cart (mongoose model)
+ */
 export const createCart = async (userId) => {
     const newCart = new Cart({
         user: userId,
@@ -24,8 +29,14 @@ export const createCart = async (userId) => {
 
     const cart = await newCart.save();
     return cart;
+    
 };
 
+/**
+ * @description refresh cart and its product informations
+ * @param {String} userId 
+ * @returns Cart (mongoose model)
+ */
 export const refreshCart = async (userId) => {
     let cart = await Cart.findOne({ user: userId });
 
@@ -96,6 +107,10 @@ export const refreshCart = async (userId) => {
     return result;
 };
 
+/**
+ * @description read carts that have at least 1 product in it (admin)
+ * @returns Cart (mongoose model)
+ */
 export const activeCart = async () => {
     let result = await Cart.aggregate([
         {

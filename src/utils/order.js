@@ -5,6 +5,11 @@ import Wallet from "../models/wallet";
 import { AppError } from "../handlers/error-handler";
 import Product from "../models/product";
 
+/**
+ * @description return specefic orders info
+ * @param {String} Id
+ * @returns Order (mongoose model)
+ */
 export const orderData = async (Id) => {
     const order = await Order.findById(Id);
 
@@ -56,6 +61,11 @@ export const orderData = async (Id) => {
     return result;
 };
 
+/**
+ * @description return a specefic order (admin)
+ * @param {String} Id
+ * @returns Order (mongoose model)
+ */
 export const checkOrderData = async (Id) => {
     const order = await Order.findById(Id);
 
@@ -111,6 +121,11 @@ export const checkOrderData = async (Id) => {
     return result;
 };
 
+/**
+ * @description return all orders (admin)
+ * @param {String} Id
+ * @returns Order (mongoose model)
+ */
 export const checkOrdersData = async (Id) => {
     const result = await Order.aggregate([
         {
@@ -168,6 +183,11 @@ export const checkOrdersData = async (Id) => {
     return result;
 };
 
+/**
+ * @description return all user's orders
+ * @param {String} Id
+ * @returns Order (mongoose model)
+ */
 export const ordersData = async (Id) => {
     const result = await Order.aggregate([
         {
@@ -221,6 +241,10 @@ export const ordersData = async (Id) => {
     return result;
 };
 
+/**
+ * @description retuen not checked orders (admin)
+ * @returns Order (mongoose model)
+ */
 export const notCheckedOrdersData = async () => {
     const result = await Order.aggregate([
         {
@@ -278,6 +302,10 @@ export const notCheckedOrdersData = async () => {
     return result;
 };
 
+/**
+ * @description retuen pending orders (admin)
+ * @returns Order (mongoose model)
+ */
 export const pendingOrdersData = async () => {
     const result = await Order.aggregate([
         {
@@ -335,6 +363,10 @@ export const pendingOrdersData = async () => {
     return result;
 };
 
+/**
+ * @description retuen delivered orders (admin)
+ * @returns Order (mongoose model)
+ */
 export const deliveredOrdersData = async () => {
     const result = await Order.aggregate([
         {
@@ -391,6 +423,12 @@ export const deliveredOrdersData = async () => {
     return result;
 };
 
+/**
+ * @description pay order from wallet
+ * @param {String} userId
+ * @param {Number} amount
+ * @returns Boolean
+ */
 export const walletPayment = async (userId, amount) => {
     const wallet = await Wallet.findOne({ user: userId });
 
@@ -406,6 +444,10 @@ export const walletPayment = async (userId, amount) => {
     return true;
 };
 
+/**
+ * @description reserve products until order result
+ * @param {Array} products
+ */
 export const reserveProducts = async (products) => {
     for (let item of products) {
         let product = await Product.findById(item._id);
@@ -414,6 +456,10 @@ export const reserveProducts = async (products) => {
     }
 };
 
+/**
+ * @description unreserve products
+ * @param {Array} products
+ */
 export const unreserveProducts = async (products) => {
     for (let item of products) {
         let product = await Product.findById(item._id);

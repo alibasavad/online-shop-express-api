@@ -28,13 +28,11 @@ export const readAllCategories = async (req, res, next) => {
         const categories = await Category.aggregate([
             {
                 $match: {
-                    // find only datas with below condition
                     isDisable: false,
                 },
             },
             {
                 $project: {
-                    // showing only below valuse
                     _id: 1,
                     name: 1,
                     thumbnail: 1,
@@ -61,14 +59,12 @@ export const readCategoryById = async (req, res, next) => {
         const category = await Category.aggregate([
             {
                 $match: {
-                    // find only datas with below condition
                     _id: new mongoose.Types.ObjectId(req.params.Id),
                     isDisable: false,
                 },
             },
             {
                 $project: {
-                    // showing only below valuse
                     _id: 1,
                     name: 1,
                     thumbnail: 1,
@@ -79,10 +75,9 @@ export const readCategoryById = async (req, res, next) => {
             },
         ]);
 
-        if (category.length === 0) throw new AppError(300); // no category find with given id
+        if (category.length === 0) throw new AppError(300);
 
         const products = await Category.aggregate([
-            // find products that contain this category
             {
                 $match: {
                     _id: new mongoose.Types.ObjectId(req.params.Id),
@@ -129,17 +124,14 @@ export const readCategoryById = async (req, res, next) => {
 // Create a new category
 export const createCategory = async (req, res, next) => {
     try {
-        // Validate the category name
         validation.alphaNumeric(req.body.name);
 
-        // Create a new category
         const newCategory = new Category({
             name: req.body.name,
             thumbnail: req.body.thumbnail,
             description: req.body.description,
         });
 
-        // Save the category to the database
         let category = await newCategory.save();
 
         Response.normalizer(req, res, {
@@ -154,27 +146,21 @@ export const createCategory = async (req, res, next) => {
 // disable category (instead of deleting)
 export const disableCategory = async (req, res, next) => {
     try {
-        // find category by id
         const category = await Category.findById(req.params.Id);
 
-        // check if category is already disable
         if (category.isDisable === true) throw new AppError(325);
 
-        // find products that contain this category
         const products = await Product.find({
             categoryId: { _id: category._id },
         });
 
-        // remove this category from products that contains it
         for (let product of products) {
             product.categoryId.remove(category._id);
             await product.save();
         }
 
-        // change category to disabled
         category.isDisable = true;
 
-        // save changes on category
         category.save();
 
         Response.normalizer(req, res, {
@@ -188,21 +174,16 @@ export const disableCategory = async (req, res, next) => {
 // Update a category
 export const updateCategory = async (req, res, next) => {
     try {
-        // Find the category by its ID
         const category = await Category.findById(req.params.Id);
 
-        // check request body for name and change name to new name
         let name = req.body.name ? req.body.name : category.name;
 
-        // check request body for description and change description to new description
         let description = req.body.description
             ? req.body.description
             : category.description;
 
-        // Validate the category name
         validation.alphaNumeric(name);
 
-        // Update the category with the new values
         await category.updateOne(
             {
                 name: name,
@@ -210,7 +191,6 @@ export const updateCategory = async (req, res, next) => {
             },
             { new: true, useFindAndModify: false }
         );
-        // Find the updated category
         const updatedCategory = await Category.findById(req.params.Id);
 
         Response.normalizer(req, res, {
@@ -225,13 +205,10 @@ export const updateCategory = async (req, res, next) => {
 // Update a category's thumbnail
 export const updateCategoryThumbnail = async (req, res, next) => {
     try {
-        // change thumbnail to request body thumbnail
         let thumbnail = req.body.thumbnail;
 
-        // Find the category by its ID
         const category = await Category.findById(req.params.Id);
 
-        // Delete the existing thumbnail file
         if (
             category.thumbnail &&
             existsSync(`${__dirname}/../../public/images/${category.thumbnail}`)
@@ -241,10 +218,8 @@ export const updateCategoryThumbnail = async (req, res, next) => {
             );
         }
 
-        // Set the category's thumbnail to the new value
         category.thumbnail = thumbnail;
 
-        // Save the updated category
         await category.save();
 
         Response.normalizer(req, res, {
@@ -259,7 +234,6 @@ export const updateCategoryThumbnail = async (req, res, next) => {
 // Delete a category's thumbnail
 export const deleteCategoryThumbnail = async (req, res, next) => {
     try {
-        // Find the category by its ID
         const category = await Category.findById(req.params.Id);
 
         if (
@@ -270,17 +244,14 @@ export const deleteCategoryThumbnail = async (req, res, next) => {
             throw new AppError(309);
         }
 
-        // Delete the existing thumbnail file
         if (category.thumbnail) {
             unlinkSync(
                 `${__dirname}/../../public/images/${category.thumbnail}`
             );
         }
 
-        // Remove the thumbnail property from the category
         category.thumbnail = undefined;
 
-        // Save the updated category
         category.save();
 
         Response.normalizer(req, res, {
@@ -294,16 +265,12 @@ export const deleteCategoryThumbnail = async (req, res, next) => {
 // Enable a disabled category
 export const enableCategory = async (req, res, next) => {
     try {
-        // Find the category by its ID
         const category = await Category.findById(req.params.Id);
 
-        // Check if the category is already enabled
         if (category.isDisable === false) throw new AppError(326);
 
-        // Set the category's isDisable property to false
         category.isDisable = false;
 
-        // Save the updated category
         category.save();
 
         Response.normalizer(req, res, {
@@ -318,7 +285,6 @@ export const enableCategory = async (req, res, next) => {
 // Read all disabled categories
 export const readDisabledCategories = async (req, res, next) => {
     try {
-        // Find all categories that are disabled
         const categories = await Category.aggregate([
             {
                 $match: {
@@ -347,6 +313,7 @@ export const readDisabledCategories = async (req, res, next) => {
     }
 };
 
+// force delete a category
 export const forceDelete = async (req, res, next) => {
     try {
         const category = await Category.findById(req.params.Id);
@@ -363,7 +330,6 @@ export const forceDelete = async (req, res, next) => {
             categoryId: { _id: category._id },
         });
 
-        // remove this category from products that contains it
         for (let product of products) {
             product.categoryId.remove(category._id);
             await product.save();

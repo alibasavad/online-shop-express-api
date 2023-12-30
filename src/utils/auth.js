@@ -5,7 +5,7 @@ const Bcrypt = require("bcryptjs");
  * @description authenticate user using email and password
  * @param {string} email type : string
  * @param {string} password type : string
- * @returns
+ * @returns User (mongoose model) Or null
  */
 const auth = async (email, password) => {
     let user = await User.findOne({ email: email });

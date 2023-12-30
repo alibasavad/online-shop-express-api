@@ -5,6 +5,7 @@ import Product from "../models/product";
 
 const Response = require("../handlers/response");
 
+// show cart items
 export const readCart = async (req, res, next) => {
     try {
         if (req.isAuthenticated === false) {
@@ -27,6 +28,7 @@ export const readCart = async (req, res, next) => {
     }
 };
 
+// add a product to cart
 export const addProduct = async (req, res, next) => {
     try {
         if (req.isAuthenticated === false) {
@@ -71,6 +73,7 @@ export const addProduct = async (req, res, next) => {
     }
 };
 
+// dubstract a product from cart
 export const subtractProduct = async (req, res, next) => {
     try {
         if (req.isAuthenticated === false) {
@@ -113,6 +116,7 @@ export const subtractProduct = async (req, res, next) => {
     }
 };
 
+// returns list of carts that have at least 1 product in them
 export const activeCarts = async (req, res, next) => {
     try {
         Response.normalizer(req, res, {

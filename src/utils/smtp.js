@@ -13,7 +13,11 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// send confirmation code to user's email
+/**
+ * @description send confirmation code to user's email
+ * @param {String} confirmationCode
+ * @param {String} email
+ */
 export const sendEmailConfirmation = (confirmationCode, email) => {
     const mailOption = {
         from: env.EMAIL, // sender address
@@ -31,7 +35,11 @@ export const sendEmailConfirmation = (confirmationCode, email) => {
     });
 };
 
-// send temporary password to user's email
+/**
+ * @description send temporary password to user's email
+ * @param {String} temporaryPass
+ * @param {String} email
+ */
 export const sendTemporaryPassword = (temporaryPass, email) => {
     const mailOption = {
         from: env.EMAIL, // sender address

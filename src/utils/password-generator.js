@@ -1,4 +1,7 @@
-// generate a password randomly
+/**
+ * @description generate password for users that forget their password
+ * @returns String
+ */
 function generatePassword() {
     var length = 10,
         charset =

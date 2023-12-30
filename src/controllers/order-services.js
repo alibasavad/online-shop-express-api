@@ -21,6 +21,7 @@ import {
 
 const Response = require("../handlers/response");
 
+// payment for order
 export const payment = async (req, res, next) => {
     try {
         if (req.isAuthenticated === false) {
@@ -68,6 +69,7 @@ export const payment = async (req, res, next) => {
 
         await newOrder.validate();
 
+        // pay by wallet
         if (newOrder.paymentType === "wallet") {
             let result = await walletPayment(req.user._id, newOrder.totalPrice);
 
@@ -94,6 +96,7 @@ export const payment = async (req, res, next) => {
 
         await newOrder.save();
 
+        // pay by zarincart gateway
         const zarinpal = ZarinPal.create(env.MERCHANT_ID, true);
 
         zarinpal
@@ -121,6 +124,7 @@ export const payment = async (req, res, next) => {
     }
 };
 
+// verify if user pay the order 
 export const verifyOrder = async (req, res, next) => {
     try {
         let invoice = await Invoice.findOne({ authority: req.query.Authority });
@@ -178,6 +182,7 @@ export const verifyOrder = async (req, res, next) => {
     }
 };
 
+// return all user's orders
 export const readOrders = async (req, res, next) => {
     try {
         if (req.isAuthenticated === false) {
@@ -194,6 +199,7 @@ export const readOrders = async (req, res, next) => {
     }
 };
 
+// return specefic order
 export const readOrderById = async (req, res, next) => {
     try {
         if (req.isAuthenticated === false) {
@@ -214,6 +220,7 @@ export const readOrderById = async (req, res, next) => {
     }
 };
 
+// return all orders (admin)
 export const checkOrders = async (req, res, next) => {
     try {
         Response.normalizer(req, res, {
@@ -226,6 +233,7 @@ export const checkOrders = async (req, res, next) => {
     }
 };
 
+// return specefic order (admin)
 export const checkOrder = async (req, res, next) => {
     try {
         const order = await Order.findById(req.body.Id);
@@ -242,6 +250,7 @@ export const checkOrder = async (req, res, next) => {
     }
 };
 
+// return orders that not checked by admin (admin)
 export const notCheckedOrders = async (req, res, next) => {
     try {
         Response.normalizer(req, res, {
@@ -254,6 +263,7 @@ export const notCheckedOrders = async (req, res, next) => {
     }
 };
 
+// return pending Orders (admin)
 export const pendingOrders = async (req, res, next) => {
     try {
         Response.normalizer(req, res, {
@@ -266,6 +276,7 @@ export const pendingOrders = async (req, res, next) => {
     }
 };
 
+// return delivered Orders (admin)
 export const deliveredOrders = async (req, res, next) => {
     try {
         Response.normalizer(req, res, {
@@ -278,6 +289,7 @@ export const deliveredOrders = async (req, res, next) => {
     }
 };
 
+// deliver an order (admin)
 export const deliver = async (req, res, next) => {
     try {
         const order = await Order.findById(req.body.Id);

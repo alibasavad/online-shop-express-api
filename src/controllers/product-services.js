@@ -11,7 +11,6 @@ const Response = require("../handlers/response");
 // Read all products
 export const readAllProducts = async (req, res, next) => {
     try {
-        // Find all products that are not disabled
         const products = await Product.aggregate([
             {
                 $match: {
@@ -59,7 +58,6 @@ export const readAllProducts = async (req, res, next) => {
 // Read a product by its ID
 export const readProductById = async (req, res, next) => {
     try {
-        // Find the product by its ID and ensure it is not disabled
         const product = await Product.aggregate([
             {
                 $match: {
@@ -97,7 +95,6 @@ export const readProductById = async (req, res, next) => {
             },
         ]);
 
-        // If no product is found, throw an error
         if (product.length === 0) throw new AppError(300);
 
         Response.normalizer(req, res, {
@@ -112,19 +109,14 @@ export const readProductById = async (req, res, next) => {
 // Create a new product
 export const createProduct = async (req, res, next) => {
     try {
-        // Map the images array in the request body to include imageURL and isMain properties
         let images = mapperProductImages(req.body.images);
 
-        // Find the thumbnail image from the mapped images array
         let thumbnail = images.find(({ isMain }) => isMain === true).imageURL;
 
-        // Map the categoryId to the expected form
         req.body.categoryId = mapperCategoryId(req.body.categoryId);
 
-        // Validate the given name
         validation.alphaNumeric(req.body.name);
 
-        // Create a new product with the request body values
         const newProduct = new Product({
             name: req.body.name,
             categoryId: req.body.categoryId,
@@ -135,10 +127,8 @@ export const createProduct = async (req, res, next) => {
             description: req.body.description,
         });
 
-        // Check if the categoryIds exists
         await checkCategoryId(newProduct.categoryId);
 
-        // Save the new product
         let product = await newProduct.save();
 
         Response.normalizer(req, res, {
@@ -153,16 +143,12 @@ export const createProduct = async (req, res, next) => {
 // Disable a product by its ID
 export const disableProduct = async (req, res, next) => {
     try {
-        // Find the product by its ID
         const product = await Product.findById(req.params.Id);
 
-        // If the product is already disabled, throw an error
         if (product.isDisable === true) throw new AppError(325);
 
-        // Set the isDisable property of the product to true
         product.isDisable = true;
 
-        // Save the updated product
         product.save();
 
         Response.normalizer(req, res, {
@@ -176,10 +162,8 @@ export const disableProduct = async (req, res, next) => {
 // Update a product by its ID
 export const updateProduct = async (req, res, next) => {
     try {
-        // Find the product by its ID
         const product = await Product.findById(req.params.Id);
 
-        // Update the properties of the product based on the request body values, or keep the original values if not provided
         let name = req.body.name ? req.body.name : product.name;
         let categoryId = req.body.categoryId
             ? mapperCategoryId(req.body.categoryId)
@@ -190,13 +174,10 @@ export const updateProduct = async (req, res, next) => {
             ? req.body.description
             : product.description;
 
-        // Validate the name using the alphaNumeric validation function
         validation.alphaNumeric(name);
 
-        // Check if the categoryId exists
         await checkCategoryId(categoryId);
 
-        // Update the product with the new values
         await product.updateOne(
             {
                 name: name,
@@ -207,7 +188,6 @@ export const updateProduct = async (req, res, next) => {
             },
             { new: true, useFindAndModify: false }
         );
-        // Find the updated product by its ID
         const updatedProduct = await Product.findById(req.params.Id);
 
         Response.normalizer(req, res, {
@@ -222,31 +202,24 @@ export const updateProduct = async (req, res, next) => {
 // Update a product's images
 export const updateProductImages = async (req, res, next) => {
     try {
-        // Map the request body images to the expected format
         let images = mapperProductImages(req.body.images);
 
-        // Find the thumbnail image from the mapped images array
         let thumbnail = images.find(({ isMain }) => isMain === true).imageURL;
 
-        // Find the product by its ID
         let product = await Product.findById(req.params.Id);
 
-        // Create an array to store the paths of the old images
         const oldImages = [];
         for (let image of product.images) {
             image.path = `${__dirname}/../../public/images/${image.imageURL}`;
             oldImages.push(image);
         }
-        // Delete the old images from the file system
         for (let image of oldImages) {
             if (existsSync(image.path)) unlinkSync(image.path);
         }
 
-        // Set the product's images and thumbnail to the new values
         product.images = images;
         product.thumbnail = thumbnail;
 
-        // Save the updated product
         await product.save();
 
         Response.normalizer(req, res, {
@@ -261,26 +234,21 @@ export const updateProductImages = async (req, res, next) => {
 // Delete a product's images
 export const deleteProductImages = async (req, res, next) => {
     try {
-        // Find the product by its ID
         const product = await Product.findById(req.params.Id);
 
-        // Create an array to store the paths of the images to be deleted
         const images = [];
         for (let image of product.images) {
             image.path = `${__dirname}/../../public/images/${image.imageURL}`;
             images.push(image);
         }
-        // Delete the images from the file system
         for (let image of images) {
             if (existsSync(image.path)) unlinkSync(image.path);
             else throw new AppError(309);
         }
 
-        // Remove the images and thumbnail property from the product
         product.images = undefined;
         product.thumbnail = undefined;
 
-        // Save the updated product
         product.save();
 
         Response.normalizer(req, res, {
@@ -294,16 +262,12 @@ export const deleteProductImages = async (req, res, next) => {
 // Enable a disabled product
 export const enableProduct = async (req, res, next) => {
     try {
-        // Find the product by its ID
         const product = await Product.findById(req.params.Id);
 
-        // Check if the product is already enabled
         if (product.isDisable === false) throw new AppError(326);
 
-        // Set the product's isDisable property to false
         product.isDisable = false;
 
-        // Save the updated product
         product.save();
 
         Response.normalizer(req, res, {
@@ -318,7 +282,6 @@ export const enableProduct = async (req, res, next) => {
 // Read all disabled products
 export const readDisabledProducts = async (req, res, next) => {
     try {
-        // Find all products that are disabled
         const products = await Product.aggregate([
             {
                 $match: {
@@ -363,6 +326,7 @@ export const readDisabledProducts = async (req, res, next) => {
     }
 };
 
+// Force delete a product
 export const forceDelete = async (req, res, next) => {
     try {
         const product = await Product.findById(req.params.Id);

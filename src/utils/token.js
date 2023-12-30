@@ -1,7 +1,13 @@
 import { AppError } from "../handlers/error-handler";
 import Token from "../models/token";
 
-// save given tokens to database
+/**
+ * @description save given tokens to database
+ * @param {String} userId
+ * @param {String} accessToken
+ * @param {String} refreshToken
+ * @returns
+ */
 export const saveToken = async (userId, accessToken, refreshToken) => {
     let token = await Token.findOne({ user: userId });
 
@@ -19,7 +25,10 @@ export const saveToken = async (userId, accessToken, refreshToken) => {
     token.save();
 };
 
-// remove users's token from database
+/**
+ * @description remove users's token from database
+ * @param {String} userId
+ */
 export const removeToken = async (userId) => {
     let token = await Token.findOne({ user: userId });
     token.token = { accessToken: "", refreshToken: "" };
@@ -28,10 +37,20 @@ export const removeToken = async (userId) => {
 
 // check if token is exist in user's token database
 export const checkToken = {
+    /**
+     *
+     * @param {String} userId
+     * @param {String} requestToken
+     */
     accessToken: async (userId, requestToken) => {
         const token = await Token.findOne({ user: userId });
         if (token.token.accessToken !== requestToken) throw new AppError(315);
     },
+    /**
+     *
+     * @param {String} userId
+     * @param {String} requestToken
+     */
     refreshToken: async (userId, requestToken) => {
         const token = await Token.findOne({ user: userId });
         if (token.token.refreshToken !== requestToken) throw new AppError(315);
