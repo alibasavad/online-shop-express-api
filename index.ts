@@ -1,21 +1,17 @@
+import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import { errorHandler, notFound, AppError } from "./src/handlers/error-handler";
+import routes from "./src/routes/route";
 import env from "./src/configs/env.json";
-
-const express = require("express");
-const errorHandler = require("./src/handlers/error-handler");
-const routes = require("./src/routes/route");
-const cors = require("cors");
+import cors from "cors";
 
 const app = express();
 
 // mongoDB
 
 mongoose.Promise = global.Promise;
-mongoose.connect(env.MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect(env.MONGODB_URL);
 
 //  bodyParser
 
@@ -32,13 +28,13 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/", routes);
 
-app.use(errorHandler.errorHandler);
+app.use(errorHandler);
 
 // show images
 
 app.use("/api/v1/image", express.static("public/images"));
 
-app.use(errorHandler.notFound);
+app.use(notFound);
 
 if (process.env.NODE_ENV !== "test") {
     app.listen(env.PORT, () =>
