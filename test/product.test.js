@@ -58,9 +58,9 @@ describe("/product.POST", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[106]}`, async () => {
+        test(`message be : ${messageCodes[106].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[106])
+                expect.stringContaining(messageCodes[106].message)
             );
         });
     });
@@ -69,7 +69,7 @@ describe("/product.POST", () => {
         describe("Invalid name", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/product")
                     .send({
@@ -81,12 +81,12 @@ describe("/product.POST", () => {
                         images: ["1698182686465-ice.png"],
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -94,7 +94,7 @@ describe("/product.POST", () => {
         describe("MONGO_SERVER_ERROR", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[303][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[303].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/product")
                     .send({
@@ -106,12 +106,12 @@ describe("/product.POST", () => {
                         images: ["1698182686465-ice.png"],
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[303][1]);
+                expect(response.statusCode).toBe(errorCodes[303].code);
             });
 
-            test(`message be : ${errorCodes[303][0]}`, () => {
+            test(`message be : ${errorCodes[303].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[303][0])
+                    expect.stringContaining(errorCodes[303].message)
                 );
             });
         });
@@ -119,7 +119,7 @@ describe("/product.POST", () => {
         describe("Invalid category id", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[304][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[304].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/product")
                     .send({
@@ -131,12 +131,12 @@ describe("/product.POST", () => {
                         images: ["1698182686465-ice.png"],
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[304][1]);
+                expect(response.statusCode).toBe(errorCodes[304].code);
             });
 
-            test(`message be : ${errorCodes[304][0]}`, () => {
+            test(`message be : ${errorCodes[304].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[304][0])
+                    expect.stringContaining(errorCodes[304].message)
                 );
             });
         });
@@ -157,9 +157,9 @@ describe("/product/:Id.GET", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[100]}`, async () => {
+        test(`message be : ${messageCodes[100].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[100])
+                expect.stringContaining(messageCodes[100].message)
             );
         });
     });
@@ -168,16 +168,16 @@ describe("/product/:Id.GET", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .get(`/api/v1/product/${product._id}12`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -203,9 +203,9 @@ describe("/product/:Id.PATCH", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[108]}`, async () => {
+        test(`message be : ${messageCodes[108].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[108])
+                expect.stringContaining(messageCodes[108].message)
             );
         });
     });
@@ -214,7 +214,7 @@ describe("/product/:Id.PATCH", () => {
         describe("Invalid name", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app)
                     .patch(`/api/v1/product/${product._id}`)
                     .send({
@@ -224,12 +224,12 @@ describe("/product/:Id.PATCH", () => {
                         description: "updated product",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -237,7 +237,7 @@ describe("/product/:Id.PATCH", () => {
         describe("Invalid category id", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[304][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[304].code}`, async () => {
                 response = await request(app)
                     .patch(`/api/v1/product/${product._id}`)
                     .send({
@@ -248,12 +248,12 @@ describe("/product/:Id.PATCH", () => {
                         description: "updated product",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[304][1]);
+                expect(response.statusCode).toBe(errorCodes[304].code);
             });
 
-            test(`message be : ${errorCodes[304][0]}`, () => {
+            test(`message be : ${errorCodes[304].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[304][0])
+                    expect.stringContaining(errorCodes[304].message)
                 );
             });
         });
@@ -276,9 +276,9 @@ describe("/product/images/:Id.PATCH", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[108]}`, async () => {
+        test(`message be : ${messageCodes[108].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[108])
+                expect.stringContaining(messageCodes[108].message)
             );
         });
     });
@@ -287,19 +287,19 @@ describe("/product/images/:Id.PATCH", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .patch(`/api/v1/product/images/${product._id}12`)
                     .send({
                         images: ["example.png"],
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -320,9 +320,9 @@ describe("/product.DELETE/:Id", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[107]}`, async () => {
+        test(`message be : ${messageCodes[107].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[107])
+                expect.stringContaining(messageCodes[107].message)
             );
         });
     });
@@ -331,16 +331,16 @@ describe("/product.DELETE/:Id", () => {
         describe("Already disabled product", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[325][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[325].code}`, async () => {
                 response = await request(app)
                     .delete(`/api/v1/product/${product._id}`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[325][1]);
+                expect(response.statusCode).toBe(errorCodes[325].code);
             });
 
-            test(`message be : ${errorCodes[325][0]}`, () => {
+            test(`message be : ${errorCodes[325].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[325][0])
+                    expect.stringContaining(errorCodes[325].message)
                 );
             });
         });
@@ -348,16 +348,16 @@ describe("/product.DELETE/:Id", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .delete(`/api/v1/product/${product._id}12`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -376,9 +376,9 @@ describe("/disable-products.GET", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[100]}`, async () => {
+        test(`message be : ${messageCodes[100].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[100])
+                expect.stringContaining(messageCodes[100].message)
             );
         });
     });
@@ -397,9 +397,9 @@ describe("/product/enable/:Id.POST", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[110]}`, async () => {
+        test(`message be : ${messageCodes[110].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[110])
+                expect.stringContaining(messageCodes[110].message)
             );
         });
     });
@@ -408,16 +408,16 @@ describe("/product/enable/:Id.POST", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .post(`/api/v1/product/enable/${product._id}12`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -425,16 +425,16 @@ describe("/product/enable/:Id.POST", () => {
         describe("Already enabled product", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[326][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[326].code}`, async () => {
                 response = await request(app)
                     .post(`/api/v1/product/enable/${product._id}`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[326][1]);
+                expect(response.statusCode).toBe(errorCodes[326].code);
             });
 
-            test(`message be : ${errorCodes[326][0]}`, () => {
+            test(`message be : ${errorCodes[326].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[326][0])
+                    expect.stringContaining(errorCodes[326].message)
                 );
             });
         });
@@ -455,9 +455,9 @@ describe("/product/force_delete/:Id.DELETE", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[132]}`, async () => {
+        test(`message be : ${messageCodes[132].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[132])
+                expect.stringContaining(messageCodes[132].message)
             );
         });
     });
@@ -466,16 +466,16 @@ describe("/product/force_delete/:Id.DELETE", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .delete(`/api/v1/product/force_delete/${product._id}`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });

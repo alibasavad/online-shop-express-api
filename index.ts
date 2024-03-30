@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import { errorHandler, notFound, AppError } from "./src/handlers/error-handler";
+import { errorHandler, notFound } from "./src/handlers/error-handler";
 import routes from "./src/routes/route";
 import env from "./src/configs/env.json";
 import cors from "cors";

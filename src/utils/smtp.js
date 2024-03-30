@@ -30,7 +30,7 @@ export const sendEmailConfirmation = (confirmationCode, email) => {
         if (err) {
             throw new AppError(324);
         } else {
-            console.log(constants.messages.messageCodes[129]);
+            console.log(constants.messages.messageCodes[129].message);
         }
     });
 };
@@ -52,7 +52,7 @@ export const sendTemporaryPassword = (temporaryPass, email) => {
         if (err) {
             throw new AppError(324);
         } else {
-            console.log(constants.messages.messageCodes[129]);
+            console.log(constants.messages.messageCodes[129].message);
         }
     });
 };

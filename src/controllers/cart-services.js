@@ -23,7 +23,6 @@ export const readCart = async (req, res, next) => {
             messageCode: 100,
         });
     } catch (error) {
-        console.log(error);
         return next(error);
     }
 };

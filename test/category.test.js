@@ -78,7 +78,7 @@ describe("/category.POST", () => {
         describe("Invalid name", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/category")
                     .send({
@@ -87,12 +87,12 @@ describe("/category.POST", () => {
                         thumbnail: "1699220385727-banana.png",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -100,7 +100,7 @@ describe("/category.POST", () => {
         describe("MONGO_SERVER_ERROR", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[303][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[303].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/category")
                     .send({
@@ -109,12 +109,12 @@ describe("/category.POST", () => {
                         thumbnail: "1699220385727-banana.png",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[303][1]);
+                expect(response.statusCode).toBe(errorCodes[303].code);
             });
 
-            test(`message be : ${errorCodes[303][0]}`, () => {
+            test(`message be : ${errorCodes[303].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[303][0])
+                    expect.stringContaining(errorCodes[303].message)
                 );
             });
         });
@@ -135,9 +135,9 @@ describe("/category/:Id.GET", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[100]}`, async () => {
+        test(`message be : ${messageCodes[100].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[100])
+                expect.stringContaining(messageCodes[100].message)
             );
         });
     });
@@ -146,16 +146,16 @@ describe("/category/:Id.GET", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .get(`/api/v1/category/${category._id}12`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -179,9 +179,9 @@ describe("/category/:Id.PATCH", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[103]}`, async () => {
+        test(`message be : ${messageCodes[103].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[103])
+                expect.stringContaining(messageCodes[103].message)
             );
         });
     });
@@ -190,7 +190,7 @@ describe("/category/:Id.PATCH", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .patch(`/api/v1/category/${category._id}12`)
                     .send({
@@ -198,12 +198,12 @@ describe("/category/:Id.PATCH", () => {
                         description: "updated Category",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -211,7 +211,7 @@ describe("/category/:Id.PATCH", () => {
         describe("Invalid Name", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app)
                     .patch(`/api/v1/category/${category._id}`)
                     .send({
@@ -219,12 +219,12 @@ describe("/category/:Id.PATCH", () => {
                         description: "updated Category",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -247,9 +247,9 @@ describe("/category/thumbnail/:Id.PATCH", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[103]}`, async () => {
+        test(`message be : ${messageCodes[103].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[103])
+                expect.stringContaining(messageCodes[103].message)
             );
         });
     });
@@ -258,19 +258,19 @@ describe("/category/thumbnail/:Id.PATCH", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .patch(`/api/v1/category/thumbnail/${category._id}12`)
                     .send({
                         thumbnail: "example.png",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -291,9 +291,9 @@ describe("/category.DELETE/:Id", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[102]}`, async () => {
+        test(`message be : ${messageCodes[102].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[102])
+                expect.stringContaining(messageCodes[102].message)
             );
         });
     });
@@ -302,16 +302,16 @@ describe("/category.DELETE/:Id", () => {
         describe("Already disabled category", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[325][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[325].code}`, async () => {
                 response = await request(app)
                     .delete(`/api/v1/category/${category._id}`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[325][1]);
+                expect(response.statusCode).toBe(errorCodes[325].code);
             });
 
-            test(`message be : ${errorCodes[325][0]}`, () => {
+            test(`message be : ${errorCodes[325].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[325][0])
+                    expect.stringContaining(errorCodes[325].message)
                 );
             });
         });
@@ -319,16 +319,16 @@ describe("/category.DELETE/:Id", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .delete(`/api/v1/category/${category._id}12`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -347,9 +347,9 @@ describe("/disable-categories.GET", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[100]}`, async () => {
+        test(`message be : ${messageCodes[100].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[100])
+                expect.stringContaining(messageCodes[100].message)
             );
         });
     });
@@ -368,9 +368,9 @@ describe("/category/enable/:Id.POST", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[105]}`, async () => {
+        test(`message be : ${messageCodes[105].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[105])
+                expect.stringContaining(messageCodes[105].message)
             );
         });
     });
@@ -379,16 +379,16 @@ describe("/category/enable/:Id.POST", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .post(`/api/v1/category/enable/${category._id}12`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -396,16 +396,16 @@ describe("/category/enable/:Id.POST", () => {
         describe("Already enabled category", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[326][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[326].code}`, async () => {
                 response = await request(app)
                     .post(`/api/v1/category/enable/${category._id}`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[326][1]);
+                expect(response.statusCode).toBe(errorCodes[326].code);
             });
 
-            test(`message be : ${errorCodes[326][0]}`, () => {
+            test(`message be : ${errorCodes[326].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[326][0])
+                    expect.stringContaining(errorCodes[326].message)
                 );
             });
         });
@@ -426,9 +426,9 @@ describe("/category/force_delete/:Id.DELETE", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[132]}`, async () => {
+        test(`message be : ${messageCodes[132].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[132])
+                expect.stringContaining(messageCodes[132].message)
             );
         });
     });
@@ -437,16 +437,16 @@ describe("/category/force_delete/:Id.DELETE", () => {
         describe("Invalid ID Input", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .delete(`/api/v1/category/force_delete/${category._id}`)
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });

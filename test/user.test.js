@@ -25,9 +25,9 @@ describe("/register.POST", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[117]}`, async () => {
+        test(`message be : ${messageCodes[117].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[117])
+                expect.stringContaining(messageCodes[117].message)
             );
         });
     });
@@ -36,7 +36,7 @@ describe("/register.POST", () => {
         describe("Alpha regex error", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app).post("/api/v1/register").send({
                     firstName: "T@EST",
                     lastName: "TE3ST",
@@ -44,12 +44,12 @@ describe("/register.POST", () => {
                     phoneNumber: "09123456789",
                     password: "Pass1234",
                 });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -57,7 +57,7 @@ describe("/register.POST", () => {
         describe("phone number regex error", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app).post("/api/v1/register").send({
                     firstName: "TEST",
                     lastName: "TEST",
@@ -65,12 +65,12 @@ describe("/register.POST", () => {
                     phoneNumber: "02123456789",
                     password: "Pass1234",
                 });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -78,7 +78,7 @@ describe("/register.POST", () => {
         describe("password regex error", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app).post("/api/v1/register").send({
                     firstName: "TEST",
                     lastName: "TEST",
@@ -86,12 +86,12 @@ describe("/register.POST", () => {
                     phoneNumber: "09123456789",
                     password: "www",
                 });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -99,7 +99,7 @@ describe("/register.POST", () => {
         describe("MONGO_SERVER_ERROR", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[303][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[303].code}`, async () => {
                 response = await request(app).post("/api/v1/register").send({
                     firstName: "TEST",
                     lastName: "TEST",
@@ -107,12 +107,12 @@ describe("/register.POST", () => {
                     phoneNumber: "09123456789",
                     password: "Pass1234",
                 });
-                expect(response.statusCode).toBe(errorCodes[303][1]);
+                expect(response.statusCode).toBe(errorCodes[303].code);
             });
 
-            test(`message be : ${errorCodes[303][0]}`, () => {
+            test(`message be : ${errorCodes[303].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[303][0])
+                    expect.stringContaining(errorCodes[303].message)
                 );
             });
         });
@@ -145,18 +145,18 @@ describe("/verify.POST", () => {
         describe("wrong email or password", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[317][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[317].code}`, async () => {
                 response = await request(app).post("/api/v1/verify").send({
                     email: "invalid@email.com",
                     password: "Pass12dd34",
                     verificationCode: user.verificationCode.code,
                 });
-                expect(response.statusCode).toBe(errorCodes[317][1]);
+                expect(response.statusCode).toBe(errorCodes[317].code);
             });
 
-            test(`message be : ${errorCodes[317][0]}`, () => {
+            test(`message be : ${errorCodes[317].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[317][0])
+                    expect.stringContaining(errorCodes[317].message)
                 );
             });
         });
@@ -164,18 +164,18 @@ describe("/verify.POST", () => {
         describe("User already verified", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[319][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[319].code}`, async () => {
                 response = await request(app).post("/api/v1/verify").send({
                     email: user.email,
                     password: "Pass1234",
                     verificationCode: user.verificationCode.code,
                 });
-                expect(response.statusCode).toBe(errorCodes[319][1]);
+                expect(response.statusCode).toBe(errorCodes[319].code);
             });
 
-            test(`message be : ${errorCodes[319][0]}`, () => {
+            test(`message be : ${errorCodes[319].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[319][0])
+                    expect.stringContaining(errorCodes[319].message)
                 );
             });
         });
@@ -208,17 +208,17 @@ describe("/login.POST", () => {
         describe("wrong email or password", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[317][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[317].code}`, async () => {
                 response = await request(app).post("/api/v1/login").send({
                     email: "invalid@email.com",
                     password: "Pass12dd34",
                 });
-                expect(response.statusCode).toBe(errorCodes[317][1]);
+                expect(response.statusCode).toBe(errorCodes[317].code);
             });
 
-            test(`message be : ${errorCodes[317][0]}`, () => {
+            test(`message be : ${errorCodes[317].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[317][0])
+                    expect.stringContaining(errorCodes[317].message)
                 );
             });
         });
@@ -246,15 +246,15 @@ describe("/generate_token.POST", () => {
         describe("wrong token", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[315][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[315].code}`, async () => {
                 response = await request(app).post("/api/v1/generate_token");
 
-                expect(response.statusCode).toBe(errorCodes[315][1]);
+                expect(response.statusCode).toBe(errorCodes[315].code);
             });
 
-            test(`message be : ${errorCodes[315][0]}`, () => {
+            test(`message be : ${errorCodes[315].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[315][0])
+                    expect.stringContaining(errorCodes[315].message)
                 );
             });
         });
@@ -273,9 +273,9 @@ describe("/logout.POST", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[131]}`, async () => {
+        test(`message be : ${messageCodes[131].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[131])
+                expect.stringContaining(messageCodes[131].message)
             );
         });
     });
@@ -284,15 +284,15 @@ describe("/logout.POST", () => {
         describe("wrong token", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[315][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[315].code}`, async () => {
                 response = await request(app).post("/api/v1/logout");
 
-                expect(response.statusCode).toBe(errorCodes[315][1]);
+                expect(response.statusCode).toBe(errorCodes[315].code);
             });
 
-            test(`message be : ${errorCodes[315][0]}`, async () => {
+            test(`message be : ${errorCodes[315].message}`, async () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[315][0])
+                    expect.stringContaining(errorCodes[315].message)
                 );
             });
         });
@@ -314,9 +314,9 @@ describe("/disable_account.POST", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[118]}`, async () => {
+        test(`message be : ${messageCodes[118].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[118])
+                expect.stringContaining(messageCodes[118].message)
             );
         });
     });
@@ -325,19 +325,19 @@ describe("/disable_account.POST", () => {
         describe("wrong email or password", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[317][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[317].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/disable_account")
                     .send({
                         email: "invalid@email.com",
                         password: "Pass12dd34",
                     });
-                expect(response.statusCode).toBe(errorCodes[317][1]);
+                expect(response.statusCode).toBe(errorCodes[317].code);
             });
 
-            test(`message be : ${errorCodes[317][0]}`, () => {
+            test(`message be : ${errorCodes[317].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[317][0])
+                    expect.stringContaining(errorCodes[317].message)
                 );
             });
         });
@@ -363,9 +363,9 @@ describe("/verification_code.POST", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[121]}`, async () => {
+        test(`message be : ${messageCodes[121].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[121])
+                expect.stringContaining(messageCodes[121].message)
             );
         });
     });
@@ -374,19 +374,19 @@ describe("/verification_code.POST", () => {
         describe("wrong email or password", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[317][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[317].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/verification_code")
                     .send({
                         email: "invalid@email.com",
                         password: "Pass12dd34",
                     });
-                expect(response.statusCode).toBe(errorCodes[317][1]);
+                expect(response.statusCode).toBe(errorCodes[317].code);
             });
 
-            test(`message be : ${errorCodes[317][0]}`, () => {
+            test(`message be : ${errorCodes[317].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[317][0])
+                    expect.stringContaining(errorCodes[317].message)
                 );
             });
         });
@@ -394,19 +394,19 @@ describe("/verification_code.POST", () => {
         describe("Too many request", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[321][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[321].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/verification_code")
                     .send({
                         email: user.email,
                         password: "Pass1234",
                     });
-                expect(response.statusCode).toBe(errorCodes[321][1]);
+                expect(response.statusCode).toBe(errorCodes[321].code);
             });
 
-            test(`message be : ${errorCodes[321][0]}`, () => {
+            test(`message be : ${errorCodes[321].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[321][0])
+                    expect.stringContaining(errorCodes[321].message)
                 );
             });
         });
@@ -427,9 +427,9 @@ describe("/forget_password.POST", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[124]}`, async () => {
+        test(`message be : ${messageCodes[124].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[124])
+                expect.stringContaining(messageCodes[124].message)
             );
         });
     });
@@ -438,18 +438,18 @@ describe("/forget_password.POST", () => {
         describe("wrong email", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[300][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[300].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/forget_password")
                     .send({
                         email: "invalid@email.com",
                     });
-                expect(response.statusCode).toBe(errorCodes[300][1]);
+                expect(response.statusCode).toBe(errorCodes[300].code);
             });
 
-            test(`message be : ${errorCodes[300][0]}`, () => {
+            test(`message be : ${errorCodes[300].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[300][0])
+                    expect.stringContaining(errorCodes[300].message)
                 );
             });
         });
@@ -457,19 +457,19 @@ describe("/forget_password.POST", () => {
         describe("Too many request", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[321][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[321].code}`, async () => {
                 response = await request(app)
                     .post("/api/v1/forget_password")
                     .send({
                         email: user.email,
                     });
                 await user.deleteOne();
-                expect(response.statusCode).toBe(errorCodes[321][1]);
+                expect(response.statusCode).toBe(errorCodes[321].code);
             });
 
-            test(`message be : ${errorCodes[321][0]}`, () => {
+            test(`message be : ${errorCodes[321].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[321][0])
+                    expect.stringContaining(errorCodes[321].message)
                 );
             });
         });
@@ -488,9 +488,9 @@ describe("/users.GET", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[100]}`, async () => {
+        test(`message be : ${messageCodes[100].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[100])
+                expect.stringContaining(messageCodes[100].message)
             );
         });
     });
@@ -508,9 +508,9 @@ describe("/profile.GET", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[100]}`, async () => {
+        test(`message be : ${messageCodes[100].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[100])
+                expect.stringContaining(messageCodes[100].message)
             );
         });
     });
@@ -519,14 +519,14 @@ describe("/profile.GET", () => {
         describe("not authenticated", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[328][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[328].code}`, async () => {
                 response = await request(app).get("/api/v1/profile");
-                expect(response.statusCode).toBe(errorCodes[328][1]);
+                expect(response.statusCode).toBe(errorCodes[328].code);
             });
 
-            test(`message be : ${errorCodes[328][0]}`, () => {
+            test(`message be : ${errorCodes[328].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[328][0])
+                    expect.stringContaining(errorCodes[328].message)
                 );
             });
         });
@@ -548,9 +548,9 @@ describe("/profile.PATCH", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[122]}`, async () => {
+        test(`message be : ${messageCodes[122].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[122])
+                expect.stringContaining(messageCodes[122].message)
             );
         });
     });
@@ -559,16 +559,16 @@ describe("/profile.PATCH", () => {
         describe("not authenticated", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[328][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[328].code}`, async () => {
                 response = await request(app).patch("/api/v1/profile").send({
                     firstName: "Test",
                 });
-                expect(response.statusCode).toBe(errorCodes[328][1]);
+                expect(response.statusCode).toBe(errorCodes[328].code);
             });
 
-            test(`message be : ${errorCodes[328][0]}`, () => {
+            test(`message be : ${errorCodes[328].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[328][0])
+                    expect.stringContaining(errorCodes[328].message)
                 );
             });
         });
@@ -576,19 +576,19 @@ describe("/profile.PATCH", () => {
         describe("Alpha regex error", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app)
                     .patch("/api/v1/profile")
                     .send({
                         firstName: "Te!st",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -596,7 +596,7 @@ describe("/profile.PATCH", () => {
         describe("phone number regex error", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app)
                     .patch("/api/v1/profile")
                     .send({
@@ -604,12 +604,12 @@ describe("/profile.PATCH", () => {
                         phoneNumber: "01251",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -633,9 +633,9 @@ describe("/profile/change_password.PATCH", () => {
             expect(response.statusCode).toBe(200);
         });
 
-        test(`message be : ${messageCodes[123]}`, async () => {
+        test(`message be : ${messageCodes[123].message}`, async () => {
             expect(response.body.message).toEqual(
-                expect.stringContaining(messageCodes[123])
+                expect.stringContaining(messageCodes[123].message)
             );
         });
     });
@@ -644,7 +644,7 @@ describe("/profile/change_password.PATCH", () => {
         describe("not authenticated", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[328][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[328].code}`, async () => {
                 response = await request(app)
                     .patch("/api/v1/profile/change_password")
                     .send({
@@ -652,12 +652,12 @@ describe("/profile/change_password.PATCH", () => {
                         newPass: "Pass1234",
                         newPassRepeat: "Pass1234",
                     });
-                expect(response.statusCode).toBe(errorCodes[328][1]);
+                expect(response.statusCode).toBe(errorCodes[328].code);
             });
 
-            test(`message be : ${errorCodes[328][0]}`, () => {
+            test(`message be : ${errorCodes[328].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[328][0])
+                    expect.stringContaining(errorCodes[328].message)
                 );
             });
         });
@@ -665,7 +665,7 @@ describe("/profile/change_password.PATCH", () => {
         describe("password regex error", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[306][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[306].code}`, async () => {
                 response = await request(app)
                     .patch("/api/v1/profile/change_password")
                     .send({
@@ -674,12 +674,12 @@ describe("/profile/change_password.PATCH", () => {
                         newPassRepeat: "www",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[306][1]);
+                expect(response.statusCode).toBe(errorCodes[306].code);
             });
 
-            test(`message be : ${errorCodes[306][0]}`, () => {
+            test(`message be : ${errorCodes[306].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[306][0])
+                    expect.stringContaining(errorCodes[306].message)
                 );
             });
         });
@@ -687,7 +687,7 @@ describe("/profile/change_password.PATCH", () => {
         describe("wrong repeat password", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[323][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[323].code}`, async () => {
                 response = await request(app)
                     .patch("/api/v1/profile/change_password")
                     .send({
@@ -696,12 +696,12 @@ describe("/profile/change_password.PATCH", () => {
                         newPassRepeat: "Pass123411",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[323][1]);
+                expect(response.statusCode).toBe(errorCodes[323].code);
             });
 
-            test(`message be : ${errorCodes[323][0]}`, () => {
+            test(`message be : ${errorCodes[323].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[323][0])
+                    expect.stringContaining(errorCodes[323].message)
                 );
             });
         });
@@ -709,7 +709,7 @@ describe("/profile/change_password.PATCH", () => {
         describe("incorrect current password", () => {
             let response;
 
-            test(`statusCode be : ${errorCodes[322][1]}`, async () => {
+            test(`statusCode be : ${errorCodes[322].code}`, async () => {
                 response = await request(app)
                     .patch("/api/v1/profile/change_password")
                     .send({
@@ -718,12 +718,12 @@ describe("/profile/change_password.PATCH", () => {
                         newPassRepeat: "www",
                     })
                     .set({ Authorization: await accessToken });
-                expect(response.statusCode).toBe(errorCodes[322][1]);
+                expect(response.statusCode).toBe(errorCodes[322].code);
             });
 
-            test(`message be : ${errorCodes[322][0]}`, () => {
+            test(`message be : ${errorCodes[322].message}`, () => {
                 expect(response.body.message).toEqual(
-                    expect.stringContaining(errorCodes[322][0])
+                    expect.stringContaining(errorCodes[322].message)
                 );
             });
         });
