@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
-const validator = require("validator");
-
-const Schema = mongoose.Schema;
+import { Schema, InferSchemaType, model, Document } from "mongoose";
+import validator from "validator";
 
 const userSchema = new Schema(
     {
@@ -16,7 +14,7 @@ const userSchema = new Schema(
             lowercase: true,
             unique: true,
             required: true,
-            validate(value) {
+            validate(value: string) {
                 if (!validator.isEmail(value)) {
                     throw new Error("Email is invalid");
                 }
@@ -55,5 +53,6 @@ const userSchema = new Schema(
     }
 );
 
-const User = mongoose.model("User", userSchema);
-export default User;
+export type UserType = Document & InferSchemaType<typeof userSchema>;
+
+export const User = model("User", userSchema);

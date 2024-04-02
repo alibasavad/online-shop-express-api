@@ -1,4 +1,4 @@
-import User from "../models/user";
+import {User} from "../models/user";
 import env from "../configs/env.json";
 import auth from "../utils/auth";
 import { sendEmailConfirmation, sendTemporaryPassword } from "../utils/smtp";

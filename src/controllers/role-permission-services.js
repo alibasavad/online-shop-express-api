@@ -1,6 +1,6 @@
 import Role from "../models/role";
 import Permission from "../models/permission";
-import User from "../models/user";
+import {User} from "../models/user";
 import validation from "../utils/data-validation";
 import { mapperPermissions } from "../utils/mapper";
 import { AppError } from "../handlers/error-handler";

@@ -35,7 +35,9 @@
         "@babel/preset-env": "^7.23.2",
         "@types/cors": "^2.8.17",
         "@types/express": "^4.17.21",
+        "@types/jsonwebtoken": "^9.0.6",
         "@types/node": "^20.11.30",
+        "@types/validator": "^13.11.9",
         "typescript": "^5.4.3"
     },
     "babel": {
