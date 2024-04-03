@@ -1,19 +1,25 @@
 import mongoose from "mongoose";
-import Order from "../models/order";
-import Invoice from "../models/invoice";
-import Wallet from "../models/wallet";
-import { AppError } from "../handlers/error-handler";
-import {Product} from "../models/product";
+import {
+    InvoiceType,
+    OrderProductsType,
+    OrderType,
+    ProductType,
+    WalletType,
+} from "../interfaces/index";
+import { Invoice } from "../models/invoice";
+import { Order } from "../models/order";
+import { Product } from "../models/product";
+import { Wallet } from "../models/wallet";
 
 /**
  * @description return specefic orders info
  * @param {String} Id
  * @returns Order (mongoose model)
  */
-export const orderData = async (Id) => {
-    const order = await Order.findById(Id);
+export const orderData = async (Id: string): Promise<any> => {
+    const order: OrderType | null = await Order.findById(Id);
 
-    const result = await Order.aggregate([
+    const result: any = await Order.aggregate([
         {
             $match: {
                 $or: [{ result: false }, { result: true }],
@@ -52,10 +58,10 @@ export const orderData = async (Id) => {
     ]);
 
     for (let product of result[0].products) {
-        let orderProduct = order.products.find(
-            ({ _id }) => _id.toString() === product._id.toString()
+        let orderProduct = order?.products.find(
+            ({ _id }: any) => _id.toString() === product._id.toString()
         );
-        product.qty = orderProduct.qty;
+        product.qty = orderProduct?.qty;
     }
 
     return result;
@@ -66,12 +72,12 @@ export const orderData = async (Id) => {
  * @param {String} Id
  * @returns Order (mongoose model)
  */
-export const checkOrderData = async (Id) => {
-    const order = await Order.findById(Id);
+export const checkOrderData = async (Id: string): Promise<any> => {
+    const order: OrderType | null = await Order.findById(Id);
 
-    const invoice = await Invoice.findOne({ orderId: Id });
+    const invoice: InvoiceType | null = await Invoice.findOne({ orderId: Id });
 
-    const result = await Order.aggregate([
+    const result: any = await Order.aggregate([
         {
             $match: {
                 $or: [{ result: false }, { result: true }],
@@ -110,10 +116,10 @@ export const checkOrderData = async (Id) => {
     ]);
 
     for (let product of result[0].products) {
-        let orderProduct = order.products.find(
-            ({ _id }) => _id.toString() === product._id.toString()
+        let orderProduct = order?.products.find(
+            ({ _id }: any) => _id.toString() === product._id.toString()
         );
-        product.qty = orderProduct.qty;
+        product.qty = orderProduct?.qty;
     }
 
     result[0].invoice = invoice;
@@ -126,8 +132,8 @@ export const checkOrderData = async (Id) => {
  * @param {String} Id
  * @returns Order (mongoose model)
  */
-export const checkOrdersData = async (Id) => {
-    const result = await Order.aggregate([
+export const checkOrdersData = async (Id: string): Promise<any> => {
+    const result: any = await Order.aggregate([
         {
             $match: {
                 $or: [{ result: false }, { result: true }],
@@ -166,16 +172,18 @@ export const checkOrdersData = async (Id) => {
     ]);
 
     for (let item of result) {
-        const order = await Order.findById(item._id);
+        const order: OrderType | null = await Order.findById(item._id);
 
         for (let product of item.products) {
-            let orderProduct = order.products.find(
-                ({ _id }) => _id.toString() === product._id.toString()
+            let orderProduct = order?.products.find(
+                ({ _id }: any) => _id.toString() === product._id.toString()
             );
-            product.qty = orderProduct.qty;
+            product.qty = orderProduct?.qty;
         }
 
-        const invoice = await Invoice.findOne({ orderId: order._id });
+        const invoice: InvoiceType | null = await Invoice.findOne({
+            orderId: order?._id,
+        });
 
         item.invoice = invoice;
     }
@@ -188,8 +196,8 @@ export const checkOrdersData = async (Id) => {
  * @param {String} Id
  * @returns Order (mongoose model)
  */
-export const ordersData = async (Id) => {
-    const result = await Order.aggregate([
+export const ordersData = async (Id: string): Promise<any> => {
+    const result: any = await Order.aggregate([
         {
             $match: {
                 $or: [{ result: false }, { result: true }],
@@ -228,13 +236,13 @@ export const ordersData = async (Id) => {
     ]);
 
     for (let item of result) {
-        const order = await Order.findById(item._id);
+        const order: OrderType | null = await Order.findById(item._id);
 
         for (let product of item.products) {
-            let orderProduct = order.products.find(
-                ({ _id }) => _id.toString() === product._id.toString()
+            let orderProduct = order?.products.find(
+                ({ _id }: any) => _id.toString() === product._id.toString()
             );
-            product.qty = orderProduct.qty;
+            product.qty = orderProduct?.qty;
         }
     }
 
@@ -245,8 +253,8 @@ export const ordersData = async (Id) => {
  * @description retuen not checked orders (admin)
  * @returns Order (mongoose model)
  */
-export const notCheckedOrdersData = async () => {
-    const result = await Order.aggregate([
+export const notCheckedOrdersData = async (): Promise<any> => {
+    const result: any = await Order.aggregate([
         {
             $match: {
                 result: true,
@@ -285,16 +293,16 @@ export const notCheckedOrdersData = async () => {
     ]);
 
     for (let item of result) {
-        const order = await Order.findById(item._id);
+        const order: OrderType | null = await Order.findById(item._id);
 
         for (let product of item.products) {
-            let orderProduct = order.products.find(
-                ({ _id }) => _id.toString() === product._id.toString()
+            let orderProduct = order?.products.find(
+                ({ _id }: any) => _id.toString() === product._id.toString()
             );
-            product.qty = orderProduct.qty;
+            product.qty = orderProduct?.qty;
         }
 
-        const invoice = await Invoice.findOne({ orderId: order._id });
+        const invoice = await Invoice.findOne({ orderId: order?._id });
 
         item.invoice = invoice;
     }
@@ -306,8 +314,8 @@ export const notCheckedOrdersData = async () => {
  * @description retuen pending orders (admin)
  * @returns Order (mongoose model)
  */
-export const pendingOrdersData = async () => {
-    const result = await Order.aggregate([
+export const pendingOrdersData = async (): Promise<any> => {
+    const result: any = await Order.aggregate([
         {
             $match: {
                 result: true,
@@ -346,16 +354,18 @@ export const pendingOrdersData = async () => {
     ]);
 
     for (let item of result) {
-        const order = await Order.findById(item._id);
+        const order: OrderType | null = await Order.findById(item._id);
 
         for (let product of item.products) {
-            let orderProduct = order.products.find(
-                ({ _id }) => _id.toString() === product._id.toString()
+            let orderProduct = order?.products.find(
+                ({ _id }: any) => _id.toString() === product._id.toString()
             );
-            product.qty = orderProduct.qty;
+            product.qty = orderProduct?.qty;
         }
 
-        const invoice = await Invoice.findOne({ orderId: order._id });
+        const invoice: InvoiceType | null = await Invoice.findOne({
+            orderId: order?._id,
+        });
 
         item.invoice = invoice;
     }
@@ -367,8 +377,8 @@ export const pendingOrdersData = async () => {
  * @description retuen delivered orders (admin)
  * @returns Order (mongoose model)
  */
-export const deliveredOrdersData = async () => {
-    const result = await Order.aggregate([
+export const deliveredOrdersData = async (): Promise<any> => {
+    const result: any = await Order.aggregate([
         {
             $match: {
                 status: "delivered",
@@ -406,16 +416,18 @@ export const deliveredOrdersData = async () => {
     ]);
 
     for (let item of result) {
-        const order = await Order.findById(item._id);
+        const order: OrderType | null = await Order.findById(item._id);
 
         for (let product of item.products) {
-            let orderProduct = order.products.find(
-                ({ _id }) => _id.toString() === product._id.toString()
+            let orderProduct = order?.products.find(
+                ({ _id }: any) => _id.toString() === product._id.toString()
             );
-            product.qty = orderProduct.qty;
+            product.qty = orderProduct?.qty;
         }
 
-        const invoice = await Invoice.findOne({ orderId: order._id });
+        const invoice: InvoiceType | null = await Invoice.findOne({
+            orderId: order?._id,
+        });
 
         item.invoice = invoice;
     }
@@ -429,12 +441,15 @@ export const deliveredOrdersData = async () => {
  * @param {Number} amount
  * @returns Boolean
  */
-export const walletPayment = async (userId, amount) => {
-    const wallet = await Wallet.findOne({ user: userId });
+export const walletPayment = async (
+    userId: string,
+    amount: number
+): Promise<Boolean> => {
+    let wallet: WalletType | null = await Wallet.findOne({ user: userId });
 
-    if (!wallet) {
-        wallet = new Wallet({ user: req.user._id });
-        wallet = wallet.save();
+    if (wallet === null) {
+        let wallet: WalletType = new Wallet({ user: userId });
+        wallet = await wallet.save();
         return false;
     } else if (wallet.credit < amount) return false;
 
@@ -448,9 +463,13 @@ export const walletPayment = async (userId, amount) => {
  * @description reserve products until order result
  * @param {Array} products
  */
-export const reserveProducts = async (products) => {
+export const reserveProducts = async (
+    products: OrderProductsType
+): Promise<void> => {
     for (let item of products) {
-        let product = await Product.findById(item._id);
+        let product: ProductType | null = await Product.findById(item._id);
+        if (product === null) return;
+
         product.reserved += item.qty;
         await product.save();
     }
@@ -460,9 +479,13 @@ export const reserveProducts = async (products) => {
  * @description unreserve products
  * @param {Array} products
  */
-export const unreserveProducts = async (products) => {
+export const unreserveProducts = async (
+    products: OrderProductsType
+): Promise<void> => {
     for (let item of products) {
-        let product = await Product.findById(item._id);
+        let product: ProductType | null = await Product.findById(item._id);
+        if (product === null) return;
+
         product.reserved -= item.qty;
         await product.save();
     }

@@ -2,7 +2,7 @@
  * @description generate password for users that forget their password
  * @returns String
  */
-function generatePassword() {
+function generatePassword(): string {
     var length = 10,
         charset =
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",

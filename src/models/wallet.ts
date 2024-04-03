@@ -1,8 +1,6 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const walletSchema = new Schema(
+export const walletSchema = new Schema(
     {
         user: {
             type: Schema.Types.ObjectId,
@@ -20,6 +18,4 @@ const walletSchema = new Schema(
     }
 );
 
-const Wallet = mongoose.model("Wallet", walletSchema);
-
-export default Wallet;
+export const Wallet = model("Wallet", walletSchema);

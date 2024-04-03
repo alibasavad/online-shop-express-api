@@ -1,8 +1,8 @@
-import Wallet from "../models/wallet";
+import {Wallet} from "../models/wallet";
 import { AppError } from "../handlers/error-handler";
 import ZarinPal from "zarinpal-checkout";
 import env from "../configs/env.json";
-import Invoice from "../models/invoice";
+import {Invoice} from "../models/invoice";
 
 const Response = require("../handlers/response");
 

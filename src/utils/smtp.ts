@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 import env from "../configs/env.json";
 import { AppError } from "../handlers/error-handler";
 import * as constants from "../constants/index";
@@ -18,7 +18,10 @@ const transporter = nodemailer.createTransport({
  * @param {String} confirmationCode
  * @param {String} email
  */
-export const sendEmailConfirmation = (confirmationCode, email) => {
+export const sendEmailConfirmation = (
+    confirmationCode: string,
+    email: string
+) => {
     const mailOption = {
         from: env.EMAIL, // sender address
         to: email, // list of receivers
@@ -26,7 +29,7 @@ export const sendEmailConfirmation = (confirmationCode, email) => {
         text: `This is Your Confirmation Code : ${confirmationCode}`, // plain text body
     };
 
-    transporter.sendMail(mailOption, (err, info) => {
+    transporter.sendMail(mailOption, (err) => {
         if (err) {
             throw new AppError(324);
         } else {
@@ -40,7 +43,7 @@ export const sendEmailConfirmation = (confirmationCode, email) => {
  * @param {String} temporaryPass
  * @param {String} email
  */
-export const sendTemporaryPassword = (temporaryPass, email) => {
+export const sendTemporaryPassword = (temporaryPass: string, email: string) => {
     const mailOption = {
         from: env.EMAIL, // sender address
         to: email, // list of receivers
@@ -48,7 +51,7 @@ export const sendTemporaryPassword = (temporaryPass, email) => {
         text: `This is Your Temporary Password : ${temporaryPass}`, // plain text body
     };
 
-    transporter.sendMail(mailOption, (err, info) => {
+    transporter.sendMail(mailOption, (err) => {
         if (err) {
             throw new AppError(324);
         } else {

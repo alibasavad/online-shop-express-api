@@ -8,6 +8,9 @@ import { categorySchema } from "../models/category";
 import { roleSchema } from "../models/role";
 import { productSchema } from "../models/product";
 import { tokenSchema } from "../models/token";
+import { invoiceSchema } from "../models/invoice";
+import { orderSchema } from "../models/order";
+import { walletSchema } from "../models/wallet";
 
 //  Global
 
@@ -25,11 +28,22 @@ export type RequestType = Request & {
 
 export type JwtType = jwt.JwtPayload & { user: UserType };
 
+export type OrderProductsType = {
+    _id: string;
+    qty: number;
+}[];
+
 // Models
 
 export type CartType = Document & InferSchemaType<typeof cartSchema>;
 
+export type InvoiceType = Document & InferSchemaType<typeof invoiceSchema>;
+
 export type UserType = Document & InferSchemaType<typeof userSchema>;
+
+export type WalletType = Document & InferSchemaType<typeof walletSchema>;
+
+export type OrderType = Document & InferSchemaType<typeof orderSchema>;
 
 export type CategoryType = Document & InferSchemaType<typeof categorySchema>;
 

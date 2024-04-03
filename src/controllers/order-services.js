@@ -1,9 +1,9 @@
 import { AppError } from "../handlers/error-handler";
 import {Cart} from "../models/cart";
-import Order from "../models/order";
+import {Order} from "../models/order";
 import ZarinPal from "zarinpal-checkout";
 import env from "../configs/env.json";
-import Invoice from "../models/invoice";
+import {Invoice} from "../models/invoice";
 import { createCart, refreshCart } from "../utils/cart";
 import {Product} from "../models/product";
 import {
