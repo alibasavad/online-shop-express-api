@@ -3,7 +3,7 @@ import Order from "../models/order";
 import Invoice from "../models/invoice";
 import Wallet from "../models/wallet";
 import { AppError } from "../handlers/error-handler";
-import Product from "../models/product";
+import {Product} from "../models/product";
 
 /**
  * @description return specefic orders info

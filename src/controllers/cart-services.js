@@ -1,7 +1,7 @@
 import { Cart } from "../models/cart";
 import { AppError } from "../handlers/error-handler";
 import { activeCart, createCart, refreshCart } from "../utils/cart";
-import Product from "../models/product";
+import { Product } from "../models/product";
 
 const Response = require("../handlers/response");
 

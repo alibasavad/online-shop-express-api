@@ -3,12 +3,18 @@ import jwt from "jsonwebtoken";
 import { Document, InferSchemaType } from "mongoose";
 import { cartSchema } from "../models/cart";
 import { userSchema } from "../models/user";
+import { permissionSchema } from "../models/permission";
 import { categorySchema } from "../models/category";
+import { roleSchema } from "../models/role";
+import { productSchema } from "../models/product";
 
 //  Global
 
 export type CategoryIdsType = { _id: string }[];
 
+export type PermissionListType = { name: string }[];
+
+export type ProductImagesListType = { imageURL: string; isMain: Boolean }[];
 
 export type RequestType = Request & {
     isAuthenticated: boolean;
@@ -25,6 +31,13 @@ export type CartType = Document & InferSchemaType<typeof cartSchema>;
 export type UserType = Document & InferSchemaType<typeof userSchema>;
 
 export type CategoryType = Document & InferSchemaType<typeof categorySchema>;
+
+export type PermissionType = Document &
+    InferSchemaType<typeof permissionSchema>;
+
+export type RoleType = Document & InferSchemaType<typeof roleSchema>;
+
+export type ProductType = Document & InferSchemaType<typeof productSchema>;
 
 // Constants
 

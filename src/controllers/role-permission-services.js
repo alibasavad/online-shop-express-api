@@ -1,5 +1,5 @@
-import Role from "../models/role";
-import Permission from "../models/permission";
+import {Role} from "../models/role";
+import {Permission} from "../models/permission";
 import {User} from "../models/user";
 import validation from "../utils/data-validation";
 import { mapperPermissions } from "../utils/mapper";

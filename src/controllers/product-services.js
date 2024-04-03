@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Product from "../models/product";
+import {Product} from "../models/product";
 import validation from "../utils/data-validation";
 import { mapperCategoryId, mapperProductImages } from "../utils/mapper";
 import { AppError } from "../handlers/error-handler";

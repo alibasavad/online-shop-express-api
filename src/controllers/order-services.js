@@ -5,7 +5,7 @@ import ZarinPal from "zarinpal-checkout";
 import env from "../configs/env.json";
 import Invoice from "../models/invoice";
 import { createCart, refreshCart } from "../utils/cart";
-import Product from "../models/product";
+import {Product} from "../models/product";
 import {
     checkOrderData,
     checkOrdersData,

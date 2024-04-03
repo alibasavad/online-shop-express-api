@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { AppError } from "../handlers/error-handler";
 import { RequestType } from "../interfaces/index";
-import Role from "../models/role";
+import { Role } from "../models/role";
 
 // Check permission for a user
 export const checkPermission = async (

@@ -1,9 +1,8 @@
 import { Cart } from "../models/cart";
 import mongoose from "mongoose";
-import Product from "../models/product";
-import { CartType } from "../interfaces/index";
+import { Product } from "../models/product";
+import { CartType, ProductType } from "../interfaces/index";
 import { remove } from "./global";
-// removing a value from array
 
 /**
  * @description creat cart for user
@@ -33,7 +32,7 @@ export const refreshCart = async (userId: string): Promise<any[]> => {
     let totalQty = 0;
 
     for (let productId of cart.products) {
-        let product: any | null = await Product.findById(productId._id);
+        let product: ProductType | null = await Product.findById(productId._id);
         if (!productId || !product) return [];
 
         if (

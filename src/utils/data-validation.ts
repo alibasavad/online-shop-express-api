@@ -3,7 +3,7 @@ import { AppError } from "../handlers/error-handler";
 // validate given parameters
 const validation = {
     // password validation
-    password: (password) => {
+    password: (password: string): Boolean => {
         const passwordPattern =
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.{8,})(?!.*[ ])/g;
 
@@ -13,7 +13,7 @@ const validation = {
     },
 
     // alphaNumeric validation
-    alphaNumeric: (name) => {
+    alphaNumeric: (name: string): Boolean => {
         const namePattern = /^[a-zA-Z](\w|[ ])*$/g;
 
         let result = namePattern.test(name);
@@ -22,7 +22,7 @@ const validation = {
     },
 
     // phoneNumber validation
-    phoneNumber: (PhoneNumber) => {
+    phoneNumber: (PhoneNumber: string): Boolean => {
         const phoneNumberPatttern = /^09\d{9}$/g;
 
         let result = phoneNumberPatttern.test(PhoneNumber);
@@ -31,7 +31,7 @@ const validation = {
     },
 
     // alpha validation
-    alpha: (familyName) => {
+    alpha: (familyName: string): Boolean => {
         const familyNamePatttern = /^[a-zA-Z][a-zA-Z ]+$/g;
 
         let result = familyNamePatttern.test(familyName);
@@ -40,4 +40,4 @@ const validation = {
     },
 };
 
-module.exports = validation;
+export default validation;

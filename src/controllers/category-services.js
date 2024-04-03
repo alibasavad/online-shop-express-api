@@ -1,6 +1,6 @@
 import {Category} from "../models/category";
 import mongoose from "mongoose";
-import Product from "../models/product";
+import {Product} from "../models/product";
 import validation from "../utils/data-validation";
 import { unlinkSync, existsSync } from "fs";
 import { AppError } from "../handlers/error-handler";
