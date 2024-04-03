@@ -1,11 +1,12 @@
 import multer from "multer";
+import { NextFunction, Response } from "express";
 import { AppError } from "../handlers/error-handler";
+import { normalizer } from "../handlers/response";
+import { RequestType } from "../interfaces/index";
 import { checkImageSize, checkImages, deleteImages } from "../utils/uploader";
 
-const Response = require("../handlers/response");
-
 // images storage
-const imageStorage = multer.diskStorage({
+const imageStorage: multer.StorageEngine = multer.diskStorage({
     destination: `${__dirname}/../../public/images`,
     filename: (req, file, cb) => {
         cb(null, Date.now() + "-" + file.originalname);
@@ -13,12 +14,16 @@ const imageStorage = multer.diskStorage({
 });
 
 // product image uploader function
-const imageUploader = multer({
+const imageUploader: multer.Multer = multer({
     storage: imageStorage,
 });
 
 // product image uploader service
-export const uploadImages = async (req, res, next) => {
+export const uploadImages = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     // product image uploader function
     imageUploader.any()(req, res, async (error) => {
         try {
@@ -32,14 +37,15 @@ export const uploadImages = async (req, res, next) => {
             // check uploaded file size
             checkImageSize(req.files);
 
-            const images = [];
+            const images: string[] = [];
 
             // add image names to images list
-            req.files.forEach((file) => {
-                images.push(file.filename);
-            });
+            if (req.files instanceof Array)
+                req.files.forEach((file) => {
+                    images.push(file.filename);
+                });
 
-            Response.normalizer(req, res, {
+            normalizer(req, res, {
                 result: images,
                 messageCode: 130,
                 type: "multi",

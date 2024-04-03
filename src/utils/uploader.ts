@@ -2,10 +2,8 @@ import env from "../configs/env.json";
 import { unlinkSync } from "fs";
 import { AppError } from "../handlers/error-handler";
 
-const Response = require("../handlers/response");
-
 // check format of uplodaed file
-export const checkImages = (list) => {
+export const checkImages = (list: any) => {
     // accepted image formats
     const mimetype = ["image/png", "image/jpg", "image/jpeg"];
 
@@ -16,7 +14,7 @@ export const checkImages = (list) => {
 };
 
 // check size of uplodaed image
-export const checkImageSize = (list) => {
+export const checkImageSize = (list: any) => {
     const maxSize = 1000000 * env.MAX_IMAGE_SIZE_MEGEBYTE;
     for (let image of list) {
         if (image.size > maxSize) throw new AppError(307);
@@ -24,7 +22,7 @@ export const checkImageSize = (list) => {
 };
 
 // delete images given in a list of paths's
-export const deleteImages = (images) => {
+export const deleteImages = (images: any) => {
     for (let image of images) {
         unlinkSync(image.path);
     }

@@ -1,8 +1,6 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const tokenSchema = Schema(
+export const tokenSchema = new Schema(
     {
         token: {
             accessToken: { type: String },
@@ -18,5 +16,4 @@ const tokenSchema = Schema(
     }
 );
 
-const Token = mongoose.model("Token", tokenSchema);
-export default Token;
+export const Token = model("Token", tokenSchema);

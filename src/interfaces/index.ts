@@ -7,6 +7,7 @@ import { permissionSchema } from "../models/permission";
 import { categorySchema } from "../models/category";
 import { roleSchema } from "../models/role";
 import { productSchema } from "../models/product";
+import { tokenSchema } from "../models/token";
 
 //  Global
 
@@ -39,6 +40,8 @@ export type RoleType = Document & InferSchemaType<typeof roleSchema>;
 
 export type ProductType = Document & InferSchemaType<typeof productSchema>;
 
+export type TokenType = Document & InferSchemaType<typeof tokenSchema>;
+
 // Constants
 
 export type ErrorCodeType = {
@@ -61,7 +64,7 @@ export class MessageCodeClass {
 // Handlers
 
 export type MessageType = {
-    result?: string;
+    result?: string[] | string;
     messageCode: number;
     type?: "single" | "multi" | "multi/pagination";
     status?: number;
