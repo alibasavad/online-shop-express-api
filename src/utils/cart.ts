@@ -1,57 +1,52 @@
-import Cart from "../models/cart";
+import { Cart } from "../models/cart";
 import mongoose from "mongoose";
 import Product from "../models/product";
+import { CartType } from "../interfaces/index";
 
 // removing a value from array
-Array.prototype.remove = function () {
-    var what,
-        a = arguments,
-        L = a.length,
-        ax;
-    while (L && this.length) {
-        what = a[--L];
-        while ((ax = this.indexOf(what)) !== -1) {
-            this.splice(ax, 1);
-        }
-    }
-    return this;
-};
+export function remove<T>(arr: T[], val: T) {
+    return arr.filter((x) => {
+        if (x !== val) return x;
+    });
+}
 
 /**
  * @description creat cart for user
- * @param {String} userId  
+ * @param {String} userId
  * @returns Cart (mongoose model)
  */
-export const createCart = async (userId) => {
-    const newCart = new Cart({
+export const createCart = async (userId: string): Promise<CartType> => {
+    const newCart: CartType = new Cart({
         user: userId,
     });
 
-    const cart = await newCart.save();
+    const cart: CartType = await newCart.save();
     return cart;
-    
 };
 
 /**
  * @description refresh cart and its product informations
- * @param {String} userId 
+ * @param {String} userId
  * @returns Cart (mongoose model)
  */
-export const refreshCart = async (userId) => {
-    let cart = await Cart.findOne({ user: userId });
+export const refreshCart = async (userId: string): Promise<any[]> => {
+    let cart: CartType | null = await Cart.findOne({ user: userId });
+
+    if (!cart) return [];
 
     let totalPrice = 0;
     let totalQty = 0;
 
     for (let productId of cart.products) {
-        let product = await Product.findById(productId._id);
+        let product: any | null = await Product.findById(productId._id);
+        if (!productId || !product) return [];
 
         if (
             product === null ||
             product.isDisable === true ||
             productId.qty === 0
         )
-            cart.products.remove(productId);
+            remove(cart.products, productId);
         else {
             if (product.quantity - product.reserved >= productId.qty)
                 productId.isAvailable = true;
@@ -66,7 +61,7 @@ export const refreshCart = async (userId) => {
 
     await cart.save();
 
-    let result = await Cart.aggregate([
+    let result: any[] = await Cart.aggregate([
         {
             $match: {
                 user: new mongoose.Types.ObjectId(userId),
@@ -100,8 +95,8 @@ export const refreshCart = async (userId) => {
         let cartProduct = cart.products.find(
             ({ _id }) => _id.toString() === product._id.toString()
         );
-        product.qty = cartProduct.qty;
-        product.isAvailable = cartProduct.isAvailable;
+        product.qty = cartProduct?.qty;
+        product.isAvailable = cartProduct?.isAvailable;
     }
 
     return result;
@@ -111,8 +106,8 @@ export const refreshCart = async (userId) => {
  * @description read carts that have at least 1 product in it (admin)
  * @returns Cart (mongoose model)
  */
-export const activeCart = async () => {
-    let result = await Cart.aggregate([
+export const activeCart = async (): Promise<any[]> => {
+    let result: any[] = await Cart.aggregate([
         {
             $lookup: {
                 from: "products",
@@ -139,11 +134,11 @@ export const activeCart = async () => {
     ]);
 
     for (let cart of result) {
-        if (cart.products.length <= 0) result.remove(cart);
+        if (cart.products.length === 0) remove(result, cart);
 
         for (let product of cart.product) {
             let cartProduct = cart.products.find(
-                ({ _id }) => _id.toString() === product._id.toString()
+                ({ _id }: any) => _id.toString() === product._id.toString()
             );
 
             product.qty = cartProduct.qty;

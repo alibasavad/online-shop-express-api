@@ -1,5 +1,6 @@
-import User from "../models/user";
-const Bcrypt = require("bcryptjs");
+import { User } from "../models/user";
+import Bcrypt from "bcryptjs";
+import { UserType } from "../interfaces/index";
 
 /**
  * @description authenticate user using email and password
@@ -7,8 +8,11 @@ const Bcrypt = require("bcryptjs");
  * @param {string} password type : string
  * @returns User (mongoose model) Or null
  */
-const auth = async (email, password) => {
-    let user = await User.findOne({ email: email });
+const auth = async (
+    email: string,
+    password: string
+): Promise<UserType | null> => {
+    let user: UserType | null = await User.findOne({ email: email });
     if (user === null) return user;
     let passwordcheck = await Bcrypt.compare(password, user.password);
     if (passwordcheck) return user;

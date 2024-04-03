@@ -1,11 +1,4 @@
-type ErrorCodeType = {
-    message: string;
-    code: number;
-};
-
-class ErrorCodeClass {
-    [errorID: number]: ErrorCodeType;
-}
+import { ErrorCodeClass } from "../interfaces/index";
 
 export let errorCodes = new ErrorCodeClass();
 

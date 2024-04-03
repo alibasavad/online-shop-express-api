@@ -1,4 +1,4 @@
-import Cart from "../models/cart";
+import { Cart } from "../models/cart";
 import { AppError } from "../handlers/error-handler";
 import { activeCart, createCart, refreshCart } from "../utils/cart";
 import Product from "../models/product";
@@ -17,7 +17,6 @@ export const readCart = async (req, res, next) => {
         if (cart === null) {
             cart = await createCart(req.user._id);
         }
-
         Response.normalizer(req, res, {
             result: await refreshCart(req.user._id),
             messageCode: 100,

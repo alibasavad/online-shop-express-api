@@ -1,22 +1,16 @@
-import { Request, Response, NextFunction } from "express";
-import { errorHandler, notFound, AppError } from "./error-handler";
+import { Request, Response } from "express";
 import * as constants from "../constants/index";
-
-type Message = {
-    result?: string;
-    messageCode: number;
-    type?: "single" | "multi" | "multi/pagination";
-    status?: number;
-};
+import { MessageType } from "../interfaces/index";
 
 // set a responce normalizer
 export const normalizer = (
     req: Request,
     res: Response,
-    { result = "", messageCode, type = "single", status = 200 }: Message
+    { result = "", messageCode, type = "single", status = 200 }: MessageType
 ): Response => {
     // take page for pagination format
     const page: number = req.query?.page ? +req.query?.page : 1;
+    
     // take size for pagination format
     let size: number = req.query?.size ? +req.query?.size : 5;
     if (size > 10) size = 10;

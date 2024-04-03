@@ -1,7 +1,7 @@
-import { Schema, InferSchemaType, model, Document } from "mongoose";
+import { Schema, model } from "mongoose";
 import validator from "validator";
 
-const userSchema = new Schema(
+export const userSchema = new Schema(
     {
         firstName: {
             type: String,
@@ -52,7 +52,5 @@ const userSchema = new Schema(
         timestamps: true,
     }
 );
-
-export type UserType = Document & InferSchemaType<typeof userSchema>;
 
 export const User = model("User", userSchema);

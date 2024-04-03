@@ -1,10 +1,4 @@
-type MessageCodeType = {
-    message: string;
-};
-
-class MessageCodeClass {
-    [errorID: number]: MessageCodeType;
-}
+import { MessageCodeClass } from "../interfaces/index";
 
 export let messageCodes = new MessageCodeClass();
 messageCodes = {

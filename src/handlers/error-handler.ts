@@ -1,5 +1,5 @@
+import { NextFunction, Request, Response } from "express";
 import * as constants from "../constants/index";
-import { Request, Response, NextFunction } from "express";
 
 // throw not found error for not defined end points
 export const notFound = (

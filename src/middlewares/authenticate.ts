@@ -1,17 +1,10 @@
+import { NextFunction, Response } from "express";
+import jwt from "jsonwebtoken";
 import env from "../configs/env.json";
 import { AppError } from "../handlers/error-handler";
+import { JwtType, RequestType } from "../interfaces/index";
+import { User } from "../models/user";
 import { checkToken } from "../utils/token";
-import jwt from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
-import { UserType, User } from "../models/user";
-
-export type RequestType = Request & {
-    isAuthenticated: boolean;
-    token: string;
-    user: UserType | null;
-};
-
-export type JwtType = jwt.JwtPayload & { user: UserType };
 
 // Check permission for a user
 export const authenticate = async (
