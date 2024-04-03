@@ -2,13 +2,8 @@ import { Cart } from "../models/cart";
 import mongoose from "mongoose";
 import Product from "../models/product";
 import { CartType } from "../interfaces/index";
-
+import { remove } from "./global";
 // removing a value from array
-export function remove<T>(arr: T[], val: T) {
-    return arr.filter((x) => {
-        if (x !== val) return x;
-    });
-}
 
 /**
  * @description creat cart for user

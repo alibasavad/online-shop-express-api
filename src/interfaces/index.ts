@@ -3,8 +3,12 @@ import jwt from "jsonwebtoken";
 import { Document, InferSchemaType } from "mongoose";
 import { cartSchema } from "../models/cart";
 import { userSchema } from "../models/user";
+import { categorySchema } from "../models/category";
 
 //  Global
+
+export type CategoryIdsType = { _id: string }[];
+
 
 export type RequestType = Request & {
     isAuthenticated: boolean;
@@ -19,6 +23,8 @@ export type JwtType = jwt.JwtPayload & { user: UserType };
 export type CartType = Document & InferSchemaType<typeof cartSchema>;
 
 export type UserType = Document & InferSchemaType<typeof userSchema>;
+
+export type CategoryType = Document & InferSchemaType<typeof categorySchema>;
 
 // Constants
 

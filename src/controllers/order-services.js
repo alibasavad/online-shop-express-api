@@ -1,5 +1,5 @@
 import { AppError } from "../handlers/error-handler";
-import Cart from "../models/cart";
+import {Cart} from "../models/cart";
 import Order from "../models/order";
 import ZarinPal from "zarinpal-checkout";
 import env from "../configs/env.json";
