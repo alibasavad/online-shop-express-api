@@ -1,31 +1,22 @@
-import {Category} from "../models/category";
+import { NextFunction, Response } from "express";
+import { existsSync, unlinkSync } from "fs";
 import mongoose from "mongoose";
-import {Product} from "../models/product";
-import validation from "../utils/data-validation";
-import { unlinkSync, existsSync } from "fs";
 import { AppError } from "../handlers/error-handler";
-
-const Response = require("../handlers/response");
-
-// removing a value from array
-Array.prototype.remove = function () {
-    var what,
-        a = arguments,
-        L = a.length,
-        ax;
-    while (L && this.length) {
-        what = a[--L];
-        while ((ax = this.indexOf(what)) !== -1) {
-            this.splice(ax, 1);
-        }
-    }
-    return this;
-};
+import { normalizer } from "../handlers/response";
+import { CategoryType, ProductType, RequestType } from "../interfaces/index";
+import { Category } from "../models/category";
+import { Product } from "../models/product";
+import validation from "../utils/data-validation";
+import { remove } from "../utils/global";
 
 // reading all categories in database
-export const readAllCategories = async (req, res, next) => {
+export const readAllCategories = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const categories = await Category.aggregate([
+        const categories: any = await Category.aggregate([
             {
                 $match: {
                     isDisable: false,
@@ -43,7 +34,7 @@ export const readAllCategories = async (req, res, next) => {
             },
         ]);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: categories,
             messageCode: 100,
             type: "multi/pagination",
@@ -54,9 +45,13 @@ export const readAllCategories = async (req, res, next) => {
 };
 
 // read one category in database by its id
-export const readCategoryById = async (req, res, next) => {
+export const readCategoryById = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const category = await Category.aggregate([
+        const category: any = await Category.aggregate([
             {
                 $match: {
                     _id: new mongoose.Types.ObjectId(req.params.Id),
@@ -77,7 +72,7 @@ export const readCategoryById = async (req, res, next) => {
 
         if (category.length === 0) throw new AppError(300);
 
-        const products = await Category.aggregate([
+        const products: any = await Category.aggregate([
             {
                 $match: {
                     _id: new mongoose.Types.ObjectId(req.params.Id),
@@ -106,12 +101,12 @@ export const readCategoryById = async (req, res, next) => {
             },
         ]);
 
-        products[0].products.forEach((product) => {
+        products[0].products.forEach((product: any) => {
             // add category and products to a list
             category.push(product);
         });
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: category,
             messageCode: 100,
             type: "multi/pagination",
@@ -122,11 +117,15 @@ export const readCategoryById = async (req, res, next) => {
 };
 
 // Create a new category
-export const createCategory = async (req, res, next) => {
+export const createCategory = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
         validation.alphaNumeric(req.body.name);
 
-        const newCategory = new Category({
+        const newCategory: CategoryType = new Category({
             name: req.body.name,
             thumbnail: req.body.thumbnail,
             description: req.body.description,
@@ -134,7 +133,7 @@ export const createCategory = async (req, res, next) => {
 
         let category = await newCategory.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: category,
             messageCode: 101,
         });
@@ -144,18 +143,25 @@ export const createCategory = async (req, res, next) => {
 };
 
 // disable category (instead of deleting)
-export const disableCategory = async (req, res, next) => {
+export const disableCategory = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const category = await Category.findById(req.params.Id);
+        const category: CategoryType | null = await Category.findById(
+            req.params.Id
+        );
 
-        if (category.isDisable === true) throw new AppError(325);
+        if (category === null || category.isDisable === true)
+            throw new AppError(325);
 
-        const products = await Product.find({
+        const products: ProductType[] | null = await Product.find({
             categoryId: { _id: category._id },
         });
 
         for (let product of products) {
-            product.categoryId.remove(category._id);
+            product.categoryId = remove(product.categoryId, category._id);
             await product.save();
         }
 
@@ -163,7 +169,7 @@ export const disableCategory = async (req, res, next) => {
 
         category.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             messageCode: 102,
         });
     } catch (error) {
@@ -172,28 +178,36 @@ export const disableCategory = async (req, res, next) => {
 };
 
 // Update a category
-export const updateCategory = async (req, res, next) => {
+export const updateCategory = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const category = await Category.findById(req.params.Id);
+        const category: CategoryType | null = await Category.findById(
+            req.params.Id
+        );
 
-        let name = req.body.name ? req.body.name : category.name;
+        let name: string = req.body.name ? req.body.name : category?.name;
 
-        let description = req.body.description
+        let description: string = req.body.description
             ? req.body.description
-            : category.description;
+            : category?.description;
 
         validation.alphaNumeric(name);
 
-        await category.updateOne(
+        await category?.updateOne(
             {
                 name: name,
                 description: description,
             },
             { new: true, useFindAndModify: false }
         );
-        const updatedCategory = await Category.findById(req.params.Id);
+        const updatedCategory: CategoryType | null = await Category.findById(
+            req.params.Id
+        );
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: updatedCategory,
             messageCode: 103,
         });
@@ -203,11 +217,19 @@ export const updateCategory = async (req, res, next) => {
 };
 
 // Update a category's thumbnail
-export const updateCategoryThumbnail = async (req, res, next) => {
+export const updateCategoryThumbnail = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        let thumbnail = req.body.thumbnail;
+        let thumbnail: string = req.body.thumbnail;
 
-        const category = await Category.findById(req.params.Id);
+        const category: CategoryType | null = await Category.findById(
+            req.params.Id
+        );
+
+        if (category == null) throw new AppError(300);
 
         if (
             category.thumbnail &&
@@ -222,7 +244,7 @@ export const updateCategoryThumbnail = async (req, res, next) => {
 
         await category.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: category,
             messageCode: 103,
         });
@@ -232,9 +254,16 @@ export const updateCategoryThumbnail = async (req, res, next) => {
 };
 
 // Delete a category's thumbnail
-export const deleteCategoryThumbnail = async (req, res, next) => {
+export const deleteCategoryThumbnail = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const category = await Category.findById(req.params.Id);
+        const category: CategoryType | null = await Category.findById(
+            req.params.Id
+        );
+        if (category === null) throw new AppError(300);
 
         if (
             !existsSync(
@@ -254,7 +283,7 @@ export const deleteCategoryThumbnail = async (req, res, next) => {
 
         category.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             messageCode: 104,
         });
     } catch (error) {
@@ -263,9 +292,17 @@ export const deleteCategoryThumbnail = async (req, res, next) => {
 };
 
 // Enable a disabled category
-export const enableCategory = async (req, res, next) => {
+export const enableCategory = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const category = await Category.findById(req.params.Id);
+        const category: CategoryType | null = await Category.findById(
+            req.params.Id
+        );
+
+        if (category === null) throw new AppError(300);
 
         if (category.isDisable === false) throw new AppError(326);
 
@@ -273,7 +310,7 @@ export const enableCategory = async (req, res, next) => {
 
         category.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: category,
             messageCode: 105,
         });
@@ -283,9 +320,13 @@ export const enableCategory = async (req, res, next) => {
 };
 
 // Read all disabled categories
-export const readDisabledCategories = async (req, res, next) => {
+export const readDisabledCategories = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const categories = await Category.aggregate([
+        const categories: any = await Category.aggregate([
             {
                 $match: {
                     isDisable: true,
@@ -303,7 +344,7 @@ export const readDisabledCategories = async (req, res, next) => {
             },
         ]);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: categories,
             messageCode: 100,
             type: "multi/pagination",
@@ -314,9 +355,17 @@ export const readDisabledCategories = async (req, res, next) => {
 };
 
 // force delete a category
-export const forceDelete = async (req, res, next) => {
+export const forceDelete = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const category = await Category.findById(req.params.Id);
+        const category: CategoryType | null = await Category.findById(
+            req.params.Id
+        );
+
+        if (category === null) throw new AppError(300);
 
         if (
             existsSync(`${__dirname}/../../public/images/${category.thumbnail}`)
@@ -331,13 +380,13 @@ export const forceDelete = async (req, res, next) => {
         });
 
         for (let product of products) {
-            product.categoryId.remove(category._id);
+            product.categoryId = remove(product.categoryId, category._id);
             await product.save();
         }
 
         await category.deleteOne();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: category,
             messageCode: 132,
         });

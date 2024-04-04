@@ -78,7 +78,7 @@ export class MessageCodeClass {
 // Handlers
 
 export type MessageType = {
-    result?: string[] | string;
+    result?: any;
     messageCode: number;
     type?: "single" | "multi" | "multi/pagination";
     status?: number;

@@ -36,7 +36,7 @@ export const addProduct = async (
     req: RequestType,
     res: Response,
     next: NextFunction
-) => {
+): Promise<void> => {
     try {
         if (req.isAuthenticated === false) {
             throw new AppError(328);
@@ -91,7 +91,7 @@ export const subtractProduct = async (
     req: RequestType,
     res: Response,
     next: NextFunction
-) => {
+): Promise<void> => {
     try {
         if (req.isAuthenticated === false) {
             throw new AppError(328);
@@ -140,7 +140,7 @@ export const activeCarts = async (
     req: RequestType,
     res: Response,
     next: NextFunction
-) => {
+): Promise<void> => {
     try {
         normalizer(req, res, {
             result: await activeCart(),
