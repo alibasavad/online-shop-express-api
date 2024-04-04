@@ -40,7 +40,7 @@ export const refreshCart = async (userId: string): Promise<any[]> => {
             product.isDisable === true ||
             productId.qty === 0
         )
-            remove(cart.products, productId);
+            cart.products = remove(cart.products, productId);
         else {
             if (product.quantity - product.reserved >= productId.qty)
                 productId.isAvailable = true;

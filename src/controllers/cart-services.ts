@@ -1,24 +1,29 @@
-import { Cart } from "../models/cart";
+import { NextFunction, Response } from "express";
 import { AppError } from "../handlers/error-handler";
-import { activeCart, createCart, refreshCart } from "../utils/cart";
+import { normalizer } from "../handlers/response";
+import { CartType, ProductType, RequestType } from "../interfaces/index";
+import { Cart } from "../models/cart";
 import { Product } from "../models/product";
-
-const Response = require("../handlers/response");
+import { activeCart, createCart, refreshCart } from "../utils/cart";
 
 // show cart items
-export const readCart = async (req, res, next) => {
+export const readCart = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
         if (req.isAuthenticated === false) {
             throw new AppError(328);
         }
 
-        let cart = await Cart.findOne({ user: req.user._id });
+        let cart: CartType | null = await Cart.findOne({ user: req.user?._id });
 
         if (cart === null) {
-            cart = await createCart(req.user._id);
+            cart = await createCart(req.user?._id);
         }
-        Response.normalizer(req, res, {
-            result: await refreshCart(req.user._id),
+        normalizer(req, res, {
+            result: await refreshCart(req.user?._id),
             messageCode: 100,
         });
     } catch (error) {
@@ -27,19 +32,25 @@ export const readCart = async (req, res, next) => {
 };
 
 // add a product to cart
-export const addProduct = async (req, res, next) => {
+export const addProduct = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         if (req.isAuthenticated === false) {
             throw new AppError(328);
         }
 
-        let cart = await Cart.findOne({ user: req.user._id });
+        let cart: CartType | null = await Cart.findOne({ user: req.user?._id });
 
         if (cart === null) {
-            cart = createCart(req.user._id);
+            cart = await createCart(req.user?._id);
         }
 
-        var product = await Product.findOne({ _id: req.body.product });
+        var product: ProductType | null = await Product.findOne({
+            _id: req.body.product,
+        });
 
         if (product === null) throw new AppError(300);
 
@@ -55,15 +66,19 @@ export const addProduct = async (req, res, next) => {
         }
 
         if (!isExist) {
-            cart.products.push({ _id: req.body.product, qty: 1 });
+            cart.products.push({
+                _id: req.body.product,
+                qty: 1,
+                isAvailable: true,
+            });
             cart.totalQty += 1;
             cart.totalPrice += product.price;
         }
 
         await cart.save();
 
-        Response.normalizer(req, res, {
-            result: await refreshCart(req.user._id),
+        normalizer(req, res, {
+            result: await refreshCart(req.user?._id),
             messageCode: 100,
         });
     } catch (error) {
@@ -72,19 +87,25 @@ export const addProduct = async (req, res, next) => {
 };
 
 // dubstract a product from cart
-export const subtractProduct = async (req, res, next) => {
+export const subtractProduct = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         if (req.isAuthenticated === false) {
             throw new AppError(328);
         }
 
-        let cart = await Cart.findOne({ user: req.user._id });
+        let cart: CartType | null = await Cart.findOne({ user: req.user?._id });
 
         if (cart === null) {
-            cart = createCart(req.user._id);
+            cart = await createCart(req.user?._id);
         }
 
-        var product = await Product.findOne({ _id: req.body.product });
+        var product: ProductType | null = await Product.findOne({
+            _id: req.body.product,
+        });
 
         if (product === null) throw new AppError(300);
 
@@ -105,8 +126,8 @@ export const subtractProduct = async (req, res, next) => {
 
         await cart.save();
 
-        Response.normalizer(req, res, {
-            result: await refreshCart(req.user._id),
+        normalizer(req, res, {
+            result: await refreshCart(req.user?._id),
             messageCode: 100,
         });
     } catch (error) {
@@ -115,9 +136,13 @@ export const subtractProduct = async (req, res, next) => {
 };
 
 // returns list of carts that have at least 1 product in them
-export const activeCarts = async (req, res, next) => {
+export const activeCarts = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+) => {
     try {
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: await activeCart(),
             messageCode: 100,
         });
