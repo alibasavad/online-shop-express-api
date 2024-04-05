@@ -444,7 +444,7 @@ export const deliveredOrdersData = async (): Promise<any> => {
 export const walletPayment = async (
     userId: string,
     amount: number
-): Promise<Boolean> => {
+): Promise<boolean> => {
     let wallet: WalletType | null = await Wallet.findOne({ user: userId });
 
     if (wallet === null) {

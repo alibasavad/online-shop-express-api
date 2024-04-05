@@ -1,11 +1,21 @@
-import { AppError } from "../handlers/error-handler";
-import {Cart} from "../models/cart";
-import {Order} from "../models/order";
+import { NextFunction, Response } from "express";
 import ZarinPal from "zarinpal-checkout";
 import env from "../configs/env.json";
-import {Invoice} from "../models/invoice";
+import { AppError } from "../handlers/error-handler";
+import { normalizer } from "../handlers/response";
+import {
+    CartType,
+    InvoiceType,
+    OrderProductsType,
+    OrderType,
+    ProductType,
+    RequestType,
+} from "../interfaces/index";
+import { Cart } from "../models/cart";
+import { Invoice } from "../models/invoice";
+import { Order } from "../models/order";
+import { Product } from "../models/product";
 import { createCart, refreshCart } from "../utils/cart";
-import {Product} from "../models/product";
 import {
     checkOrderData,
     checkOrdersData,
@@ -19,19 +29,21 @@ import {
     walletPayment,
 } from "../utils/order";
 
-const Response = require("../handlers/response");
-
 // payment for order
-export const payment = async (req, res, next) => {
+export const payment = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         if (req.isAuthenticated === false) {
             throw new AppError(328);
         }
 
-        let cart = await Cart.findOne({ user: req.user._id });
+        let cart: CartType | null = await Cart.findOne({ user: req.user?._id });
 
         if (cart === null) {
-            cart = createCart(req.user._id);
+            cart = await createCart(req.user?._id);
             throw new AppError(331);
         }
 
@@ -39,27 +51,27 @@ export const payment = async (req, res, next) => {
 
         let shippingPrice = env.SHIPPING_PRICE;
 
-        refreshCart(req.user._id);
+        refreshCart(req.user?._id);
 
-        let products = [];
+        let products: OrderProductsType = [];
 
         cart.products.forEach((product) => {
             if (product.isAvailable === false)
                 throw new AppError(333, `PRODUCT ID  : ${product._id}`);
-            products.push({ _id: product._id, qty: product.qty });
+            products.push({ _id: product._id.toString(), qty: product.qty });
         });
 
-        const newOrder = new Order({
-            user: req.user._id,
+        const newOrder: OrderType = new Order({
+            user: req.user?._id,
             products: products,
             merchantId: env.MERCHANT_ID,
             transfereeInfo: {
                 country: req.body.country,
                 city: req.body.city,
                 address: req.body.address,
-                phone: req.user.phoneNumber,
+                phone: req.user?.phoneNumber,
                 postalCode: req.body.postalCode,
-                email: req.user.email,
+                email: req.user?.email,
             },
             paymentType: req.body.paymentType || "paymentGateway",
             shippingPrice: shippingPrice,
@@ -71,7 +83,10 @@ export const payment = async (req, res, next) => {
 
         // pay by wallet
         if (newOrder.paymentType === "wallet") {
-            let result = await walletPayment(req.user._id, newOrder.totalPrice);
+            let result: boolean = await walletPayment(
+                req.user?._id,
+                newOrder.totalPrice
+            );
 
             if (result === false) throw new AppError(335);
 
@@ -80,7 +95,10 @@ export const payment = async (req, res, next) => {
             await newOrder.save();
 
             for (let item of cart.products) {
-                let product = await Product.findById(item._id);
+                let product: ProductType | null = await Product.findById(
+                    item._id
+                );
+                if (product === null) throw new AppError(300);
                 product.quantity -= item.qty;
                 product.save();
             }
@@ -88,7 +106,7 @@ export const payment = async (req, res, next) => {
             cart.products = [];
             cart.save();
 
-            return Response.normalizer(req, res, {
+            return normalizer(req, res, {
                 result: await orderData(newOrder._id),
                 messageCode: 133,
             });
@@ -104,13 +122,13 @@ export const payment = async (req, res, next) => {
                 Amount: newOrder.totalPrice,
                 CallbackURL: "http://127.0.0.1:8000/api/v1/verify_payment",
                 Description: "Sandbox Test",
-                Email: req.user.email,
-                Mobile: req.user.phoneNumber,
+                Email: req.user?.email,
+                Mobile: req.user?.phoneNumber,
             })
-            .then(async (response) => {
+            .then(async (response: any) => {
                 if (response.status == 100) {
                     await new Invoice({
-                        user: req.user._id,
+                        user: req.user?._id,
                         orderId: newOrder._id,
                         authority: response.authority,
                         amount: newOrder.totalPrice,
@@ -124,14 +142,23 @@ export const payment = async (req, res, next) => {
     }
 };
 
-// verify if user pay the order 
-export const verifyOrder = async (req, res, next) => {
+// verify if user pay the order
+export const verifyOrder = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        let invoice = await Invoice.findOne({ authority: req.query.Authority });
+        let invoice: InvoiceType | null = await Invoice.findOne({
+            authority: req.query.Authority,
+        });
 
-        let order = await Order.findById(invoice.orderId);
+        let order: OrderType | null = await Order.findById(invoice?.orderId);
 
-        let cart = await Cart.findOne({ user: order.user });
+        let cart: CartType | null = await Cart.findOne({ user: order?.user });
+
+        if (invoice === null || order === null || cart === null)
+            throw new AppError(300);
 
         const zarinpal = ZarinPal.create(env.MERCHANT_ID, true);
 
@@ -141,13 +168,15 @@ export const verifyOrder = async (req, res, next) => {
 
         let refId = await zarinpal
             .PaymentVerification({
-                Amount: invoice.amount,
-                Authority: req.query.Authority,
+                Amount: invoice.amount || 0,
+                Authority: req.query.Authority?.toString() || "",
             })
-            .then(function (response) {
+            .then(function (response: any) {
                 if (response.status == 100) {
+                    if (invoice === null) throw new AppError(300);
                     invoice.result = true;
                 } else {
+                    if (invoice === null) throw new AppError(300);
                     invoice.result = false;
                 }
                 return response.RefID;
@@ -165,7 +194,8 @@ export const verifyOrder = async (req, res, next) => {
         if (!invoice.result) throw new AppError(332);
 
         for (let item of cart.products) {
-            let product = await Product.findById(item._id);
+            let product: ProductType | null = await Product.findById(item._id);
+            if (product === null) throw new AppError(300);
             product.quantity -= item.qty;
             product.save();
         }
@@ -173,7 +203,7 @@ export const verifyOrder = async (req, res, next) => {
         cart.products = [];
         cart.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: await orderData(order._id),
             messageCode: 133,
         });
@@ -183,14 +213,18 @@ export const verifyOrder = async (req, res, next) => {
 };
 
 // return all user's orders
-export const readOrders = async (req, res, next) => {
+export const readOrders = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
         if (req.isAuthenticated === false) {
             throw new AppError(328);
         }
 
-        Response.normalizer(req, res, {
-            result: await ordersData(req.user._id),
+        normalizer(req, res, {
+            result: await ordersData(req.user?._id),
             messageCode: 100,
             type: "multi/pagination",
         });
@@ -200,18 +234,22 @@ export const readOrders = async (req, res, next) => {
 };
 
 // return specefic order
-export const readOrderById = async (req, res, next) => {
+export const readOrderById = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
         if (req.isAuthenticated === false) {
             throw new AppError(328);
         }
 
-        const order = await Order.findById(req.params.Id);
+        const order: OrderType | null = await Order.findById(req.params.Id);
 
-        if (order.user.toString() !== req.user._id.toString())
+        if (order?.user?.toString() !== req.user?._id.toString())
             throw new AppError(316);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: await orderData(req.params.Id),
             messageCode: 100,
         });
@@ -221,9 +259,13 @@ export const readOrderById = async (req, res, next) => {
 };
 
 // return all orders (admin)
-export const checkOrders = async (req, res, next) => {
+export const checkOrders = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: await checkOrdersData(req.body.userId),
             messageCode: 100,
             type: "multi/pagination",
@@ -234,14 +276,20 @@ export const checkOrders = async (req, res, next) => {
 };
 
 // return specefic order (admin)
-export const checkOrder = async (req, res, next) => {
+export const checkOrder = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const order = await Order.findById(req.body.Id);
+        const order: OrderType | null = await Order.findById(req.body.Id);
+
+        if (order === null) throw new AppError(300);
 
         order.isChecked = true;
         await order.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: await checkOrderData(req.body.Id),
             messageCode: 100,
         });
@@ -251,9 +299,13 @@ export const checkOrder = async (req, res, next) => {
 };
 
 // return orders that not checked by admin (admin)
-export const notCheckedOrders = async (req, res, next) => {
+export const notCheckedOrders = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: await notCheckedOrdersData(),
             messageCode: 100,
             type: "multi/pagination",
@@ -264,9 +316,13 @@ export const notCheckedOrders = async (req, res, next) => {
 };
 
 // return pending Orders (admin)
-export const pendingOrders = async (req, res, next) => {
+export const pendingOrders = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: await pendingOrdersData(),
             messageCode: 100,
             type: "multi/pagination",
@@ -277,9 +333,13 @@ export const pendingOrders = async (req, res, next) => {
 };
 
 // return delivered Orders (admin)
-export const deliveredOrders = async (req, res, next) => {
+export const deliveredOrders = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: await deliveredOrdersData(),
             messageCode: 100,
             type: "multi/pagination",
@@ -290,16 +350,22 @@ export const deliveredOrders = async (req, res, next) => {
 };
 
 // deliver an order (admin)
-export const deliver = async (req, res, next) => {
+export const deliver = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const order = await Order.findById(req.body.Id);
+        const order: OrderType | null = await Order.findById(req.body.Id);
+
+        if (order === null) throw new AppError(300);
 
         if (order.result === false) throw new AppError(334);
 
         order.status = "delivered";
         await order.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: await checkOrderData(req.body.Id),
             messageCode: 100,
         });

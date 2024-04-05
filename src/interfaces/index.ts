@@ -1,6 +1,6 @@
 import { Request } from "express";
 import jwt from "jsonwebtoken";
-import { Document, InferSchemaType } from "mongoose";
+import { Document, InferSchemaType, Types } from "mongoose";
 import { cartSchema } from "../models/cart";
 import { userSchema } from "../models/user";
 import { permissionSchema } from "../models/permission";
@@ -14,11 +14,11 @@ import { walletSchema } from "../models/wallet";
 
 //  Global
 
-export type CategoryIdsType = { _id: string }[];
+export type CategoryIdsType = { _id: string | Types.ObjectId }[];
 
 export type PermissionListType = { name: string }[];
 
-export type ProductImagesListType = { imageURL: string; isMain: Boolean }[];
+export type ProductImagesListType = { imageURL: string; isMain: boolean }[];
 
 export type RequestType = Request & {
     isAuthenticated: boolean;
@@ -29,7 +29,7 @@ export type RequestType = Request & {
 export type JwtType = jwt.JwtPayload & { user: UserType };
 
 export type OrderProductsType = {
-    _id: string;
+    _id: Types.ObjectId | string;
     qty: number;
 }[];
 

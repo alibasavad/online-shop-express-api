@@ -14,10 +14,12 @@ export const orderSchema = new Schema(
         products: [
             {
                 _id: {
+                    required: true,
                     type: Schema.Types.ObjectId,
                     ref: "productSchema",
                 },
                 qty: {
+                    required: true,
                     type: Number,
                 },
             },

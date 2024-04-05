@@ -41,6 +41,7 @@
         "@types/node": "^20.11.30",
         "@types/nodemailer": "^6.4.14",
         "@types/validator": "^13.11.9",
+        "@types/zarinpal-checkout": "^0.2.4",
         "typescript": "^5.4.3"
     },
     "babel": {

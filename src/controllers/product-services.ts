@@ -1,17 +1,26 @@
+import { NextFunction, Response } from "express";
+import { existsSync, unlinkSync } from "fs";
 import mongoose from "mongoose";
-import {Product} from "../models/product";
-import validation from "../utils/data-validation";
-import { mapperCategoryId, mapperProductImages } from "../utils/mapper";
 import { AppError } from "../handlers/error-handler";
-import { unlinkSync, existsSync } from "fs";
+import { normalizer } from "../handlers/response";
+import {
+    ProductImagesListType,
+    ProductType,
+    RequestType,
+} from "../interfaces/index";
+import { Product } from "../models/product";
+import validation from "../utils/data-validation";
 import { checkCategoryId } from "../utils/global";
-
-const Response = require("../handlers/response");
+import { mapperCategoryId, mapperProductImages } from "../utils/mapper";
 
 // Read all products
-export const readAllProducts = async (req, res, next) => {
+export const readAllProducts = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const products = await Product.aggregate([
+        const products: any = await Product.aggregate([
             {
                 $match: {
                     isDisable: false,
@@ -45,7 +54,7 @@ export const readAllProducts = async (req, res, next) => {
             },
         ]);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: products,
             messageCode: 100,
             type: "multi/pagination",
@@ -56,9 +65,13 @@ export const readAllProducts = async (req, res, next) => {
 };
 
 // Read a product by its ID
-export const readProductById = async (req, res, next) => {
+export const readProductById = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const product = await Product.aggregate([
+        const product: any = await Product.aggregate([
             {
                 $match: {
                     _id: new mongoose.Types.ObjectId(req.params.Id),
@@ -97,7 +110,7 @@ export const readProductById = async (req, res, next) => {
 
         if (product.length === 0) throw new AppError(300);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: product,
             messageCode: 100,
         });
@@ -107,17 +120,23 @@ export const readProductById = async (req, res, next) => {
 };
 
 // Create a new product
-export const createProduct = async (req, res, next) => {
+export const createProduct = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        let images = mapperProductImages(req.body.images);
+        let images: ProductImagesListType = mapperProductImages(
+            req.body.images
+        );
 
-        let thumbnail = images.find(({ isMain }) => isMain === true).imageURL;
+        let thumbnail = images.find(({ isMain }) => isMain === true)?.imageURL;
 
         req.body.categoryId = mapperCategoryId(req.body.categoryId);
 
         validation.alphaNumeric(req.body.name);
 
-        const newProduct = new Product({
+        const newProduct: ProductType = new Product({
             name: req.body.name,
             categoryId: req.body.categoryId,
             price: req.body.price,
@@ -131,7 +150,7 @@ export const createProduct = async (req, res, next) => {
 
         let product = await newProduct.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: product,
             messageCode: 106,
         });
@@ -141,9 +160,17 @@ export const createProduct = async (req, res, next) => {
 };
 
 // Disable a product by its ID
-export const disableProduct = async (req, res, next) => {
+export const disableProduct = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const product = await Product.findById(req.params.Id);
+        const product: ProductType | null = await Product.findById(
+            req.params.Id
+        );
+
+        if (product === null) throw new AppError(300);
 
         if (product.isDisable === true) throw new AppError(325);
 
@@ -151,7 +178,7 @@ export const disableProduct = async (req, res, next) => {
 
         product.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             messageCode: 107,
         });
     } catch (error) {
@@ -160,9 +187,17 @@ export const disableProduct = async (req, res, next) => {
 };
 
 // Update a product by its ID
-export const updateProduct = async (req, res, next) => {
+export const updateProduct = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const product = await Product.findById(req.params.Id);
+        const product: ProductType | null = await Product.findById(
+            req.params.Id
+        );
+
+        if (product === null) throw new AppError(300);
 
         let name = req.body.name ? req.body.name : product.name;
         let categoryId = req.body.categoryId
@@ -188,9 +223,11 @@ export const updateProduct = async (req, res, next) => {
             },
             { new: true, useFindAndModify: false }
         );
-        const updatedProduct = await Product.findById(req.params.Id);
+        const updatedProduct: ProductType | null = await Product.findById(
+            req.params.Id
+        );
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: updatedProduct,
             messageCode: 108,
         });
@@ -200,21 +237,29 @@ export const updateProduct = async (req, res, next) => {
 };
 
 // Update a product's images
-export const updateProductImages = async (req, res, next) => {
+export const updateProductImages = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        let images = mapperProductImages(req.body.images);
+        let images: ProductImagesListType = mapperProductImages(
+            req.body.images
+        );
 
-        let thumbnail = images.find(({ isMain }) => isMain === true).imageURL;
+        let thumbnail = images.find(({ isMain }) => isMain === true)?.imageURL;
 
-        let product = await Product.findById(req.params.Id);
+        let product: ProductType | null = await Product.findById(req.params.Id);
 
-        const oldImages = [];
+        if (product === null) throw new AppError(300);
+
+        const oldImages: string[] = [];
         for (let image of product.images) {
-            image.path = `${__dirname}/../../public/images/${image.imageURL}`;
-            oldImages.push(image);
+            let path: string = `${__dirname}/../../public/images/${image.imageURL}`;
+            oldImages.push(path);
         }
-        for (let image of oldImages) {
-            if (existsSync(image.path)) unlinkSync(image.path);
+        for (let path of oldImages) {
+            if (existsSync(path)) unlinkSync(path);
         }
 
         product.images = images;
@@ -222,7 +267,7 @@ export const updateProductImages = async (req, res, next) => {
 
         await product.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: product,
             messageCode: 108,
         });
@@ -232,26 +277,34 @@ export const updateProductImages = async (req, res, next) => {
 };
 
 // Delete a product's images
-export const deleteProductImages = async (req, res, next) => {
+export const deleteProductImages = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const product = await Product.findById(req.params.Id);
+        const product: ProductType | null = await Product.findById(
+            req.params.Id
+        );
 
-        const images = [];
+        if (product === null) throw new AppError(300);
+
+        const images: string[] = [];
         for (let image of product.images) {
-            image.path = `${__dirname}/../../public/images/${image.imageURL}`;
-            images.push(image);
+            let path = `${__dirname}/../../public/images/${image.imageURL}`;
+            images.push(path);
         }
-        for (let image of images) {
-            if (existsSync(image.path)) unlinkSync(image.path);
+        for (let path of images) {
+            if (existsSync(path)) unlinkSync(path);
             else throw new AppError(309);
         }
 
-        product.images = undefined;
+        product.images = [];
         product.thumbnail = undefined;
 
         product.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             messageCode: 109,
         });
     } catch (error) {
@@ -260,9 +313,17 @@ export const deleteProductImages = async (req, res, next) => {
 };
 
 // Enable a disabled product
-export const enableProduct = async (req, res, next) => {
+export const enableProduct = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const product = await Product.findById(req.params.Id);
+        const product: ProductType | null = await Product.findById(
+            req.params.Id
+        );
+
+        if (product === null) throw new AppError(300);
 
         if (product.isDisable === false) throw new AppError(326);
 
@@ -270,7 +331,7 @@ export const enableProduct = async (req, res, next) => {
 
         product.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: product,
             messageCode: 110,
         });
@@ -280,9 +341,13 @@ export const enableProduct = async (req, res, next) => {
 };
 
 // Read all disabled products
-export const readDisabledProducts = async (req, res, next) => {
+export const readDisabledProducts = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const products = await Product.aggregate([
+        const products: any = await Product.aggregate([
             {
                 $match: {
                     isDisable: true,
@@ -316,7 +381,7 @@ export const readDisabledProducts = async (req, res, next) => {
             },
         ]);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: products,
             messageCode: 100,
             type: "multi/pagination",
@@ -327,9 +392,17 @@ export const readDisabledProducts = async (req, res, next) => {
 };
 
 // Force delete a product
-export const forceDelete = async (req, res, next) => {
+export const forceDelete = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const product = await Product.findById(req.params.Id);
+        const product: ProductType | null = await Product.findById(
+            req.params.Id
+        );
+
+        if (product === null) throw new AppError(300);
 
         for (let image of product.images) {
             if (
@@ -343,7 +416,7 @@ export const forceDelete = async (req, res, next) => {
 
         await product.deleteOne();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: product,
             messageCode: 132,
         });
