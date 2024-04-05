@@ -26,12 +26,26 @@ export type RequestType = Request & {
     user: UserType | null;
 };
 
+export type PermissionNamesType = {
+    _id: Types.ObjectId;
+    name: string;
+};
+
 export type JwtType = jwt.JwtPayload & { user: UserType };
 
 export type OrderProductsType = {
     _id: Types.ObjectId | string;
     qty: number;
 }[];
+
+export type UserResponseType = {
+    _id: Types.ObjectId;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    createdAt: string;
+};
 
 // Models
 

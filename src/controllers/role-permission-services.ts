@@ -1,20 +1,31 @@
-import {Role} from "../models/role";
-import {Permission} from "../models/permission";
-import {User} from "../models/user";
+import { NextFunction, Response } from "express";
+import { AppError } from "../handlers/error-handler";
+import { normalizer } from "../handlers/response";
+import {
+    PermissionListType,
+    PermissionNamesType,
+    PermissionType,
+    RequestType,
+    RoleType,
+    UserType,
+} from "../interfaces/index";
+import { Permission } from "../models/permission";
+import { Role } from "../models/role";
+import { User } from "../models/user";
 import validation from "../utils/data-validation";
 import { mapperPermissions } from "../utils/mapper";
-import { AppError } from "../handlers/error-handler";
-
-const Response = require("../handlers/response");
-
-const jwt = require("jsonwebtoken");
 
 // Read all permissions
-export const readAllPermissions = async (req, res, next) => {
+export const readAllPermissions = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const permissions = await Permission.find().select(["name"]);
+        const permissions: PermissionNamesType[] =
+            await Permission.find().select(["name"]);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: permissions,
             messageCode: 100,
             type: "multi/pagination",
@@ -25,9 +36,13 @@ export const readAllPermissions = async (req, res, next) => {
 };
 
 // Read all roles
-export const readAllRoles = async (req, res, next) => {
+export const readAllRoles = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const roles = await Role.aggregate([
+        const roles: any = await Role.aggregate([
             {
                 $match: {
                     isDisable: false,
@@ -46,7 +61,7 @@ export const readAllRoles = async (req, res, next) => {
             },
         ]);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: roles,
             messageCode: 100,
             type: "multi/pagination",
@@ -57,25 +72,31 @@ export const readAllRoles = async (req, res, next) => {
 };
 
 // Create a role
-export const createRole = async (req, res, next) => {
+export const createRole = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
         req.body.permissions = mapperPermissions(req.body.permissions);
 
         validation.alphaNumeric(req.body.name);
 
-        const newrole = new Role({
+        const newrole: RoleType = new Role({
             name: req.body.name,
             permissions: req.body.permissions,
         });
 
         for (let permission of newrole.permissions) {
-            let check = await Permission.findOne({ name: permission.name });
+            let check: PermissionType | null = await Permission.findOne({
+                name: permission.name,
+            });
             if (check === null) throw new AppError(310);
         }
 
-        const role = await newrole.save();
+        const role: RoleType = await newrole.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: role,
             messageCode: 111,
         });
@@ -85,11 +106,17 @@ export const createRole = async (req, res, next) => {
 };
 
 // Change a user's role
-export const changeUserRole = async (req, res, next) => {
+export const changeUserRole = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const user = await User.findById(req.body.userId);
+        const user: UserType | null = await User.findById(req.body.userId);
 
-        const role = await Role.findOne({ name: req.body.role });
+        const role: RoleType | null = await Role.findOne({
+            name: req.body.role,
+        });
 
         if (role === null || user === null || role.isDisable === true) {
             throw new AppError(311);
@@ -97,9 +124,9 @@ export const changeUserRole = async (req, res, next) => {
 
         user.role = [role.name];
 
-        let updatedUser = await user.save();
+        let updatedUser: UserType = await user.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: updatedUser,
             messageCode: 112,
         });
@@ -109,11 +136,17 @@ export const changeUserRole = async (req, res, next) => {
 };
 
 // Add a role to a user
-export const addUserRole = async (req, res, next) => {
+export const addUserRole = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const user = await User.findById(req.body.userId);
+        const user: UserType | null = await User.findById(req.body.userId);
 
-        const role = await Role.findOne({ name: req.body.role });
+        const role: RoleType | null = await Role.findOne({
+            name: req.body.role,
+        });
 
         if (role === null || user === null || role.isDisable === true) {
             throw new AppError(311);
@@ -121,9 +154,9 @@ export const addUserRole = async (req, res, next) => {
 
         user.role.push(role.name);
 
-        let updatedUser = await user.save();
+        let updatedUser: UserType = await user.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: updatedUser,
             messageCode: 113,
         });
@@ -133,24 +166,32 @@ export const addUserRole = async (req, res, next) => {
 };
 
 // Update a role
-export const updateRole = async (req, res, next) => {
+export const updateRole = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
         req.body.permissions = mapperPermissions(req.body.permissions);
 
-        const role = await Role.findById(req.params.Id);
+        const role: RoleType | null = await Role.findById(req.params.Id);
 
         const uneditableRoles = ["normalUser", "superUser", "limitedUser"];
+
+        if (role === null) throw new AppError(300);
 
         if (uneditableRoles.includes(role.name)) {
             throw new AppError(312);
         }
 
-        let permissions = req.body.permissions
+        let permissions: PermissionListType = req.body.permissions
             ? req.body.permissions
             : role.permissions;
 
         for (let permission of permissions) {
-            let check = await Permission.findOne({ name: permission.name });
+            let check: PermissionType | null = await Permission.findOne({
+                name: permission.name,
+            });
             if (check === null) throw new AppError(310);
         }
 
@@ -161,9 +202,9 @@ export const updateRole = async (req, res, next) => {
             { new: true, useFindAndModify: false }
         );
 
-        const updatedRole = await Role.findById(req.params.Id);
+        const updatedRole: RoleType | null = await Role.findById(req.params.Id);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: updatedRole,
             messageCode: 114,
         });
@@ -173,13 +214,17 @@ export const updateRole = async (req, res, next) => {
 };
 
 // Read a role by its ID
-export const readRoleById = async (req, res, next) => {
+export const readRoleById = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const role = await Role.findById(req.params.Id);
+        const role: RoleType | null = await Role.findById(req.params.Id);
 
-        if (role.isDisable === true) throw new AppError(300);
+        if (role?.isDisable === true) throw new AppError(300);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: role,
             messageCode: 100,
         });
@@ -189,9 +234,13 @@ export const readRoleById = async (req, res, next) => {
 };
 
 // Disable a role by its ID
-export const disableRole = async (req, res, next) => {
+export const disableRole = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const role = await Role.findById(req.params.Id);
+        const role: RoleType | null = await Role.findById(req.params.Id);
 
         const indelibleRoles = [
             "normalUser",
@@ -215,7 +264,7 @@ export const disableRole = async (req, res, next) => {
 
         await role.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: role,
             messageCode: 115,
         });
@@ -225,9 +274,13 @@ export const disableRole = async (req, res, next) => {
 };
 
 // Read disabled roles
-export const readDisabledRoles = async (req, res, next) => {
+export const readDisabledRoles = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const roles = await Role.aggregate([
+        const roles: any[] = await Role.aggregate([
             {
                 $match: {
                     isDisable: true,
@@ -246,7 +299,7 @@ export const readDisabledRoles = async (req, res, next) => {
             },
         ]);
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: roles,
             messageCode: 100,
             type: "multi/pagination",
@@ -257,9 +310,15 @@ export const readDisabledRoles = async (req, res, next) => {
 };
 
 // Enable a role by its ID
-export const enableRole = async (req, res, next) => {
+export const enableRole = async (
+    req: RequestType,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     try {
-        const role = await Role.findById(req.params.Id);
+        const role: RoleType | null = await Role.findById(req.params.Id);
+
+        if (role === null) throw new AppError(300);
 
         if (role.isDisable === false) {
             throw new AppError(326);
@@ -268,7 +327,7 @@ export const enableRole = async (req, res, next) => {
         role.isDisable = false;
         await role.save();
 
-        Response.normalizer(req, res, {
+        normalizer(req, res, {
             result: role,
             messageCode: 116,
         });
