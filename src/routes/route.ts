@@ -8,10 +8,9 @@ import * as rolePermission from "../controllers/role-permission-services";
 import * as uploader from "../middlewares/uploader";
 import { checkPermission } from "../middlewares/check-permission";
 import { authenticate } from "../middlewares/authenticate";
+import express from "express";
 
-const express = require("express");
-
-const router = express.Router();
+const router: any = express.Router();
 
 // __________________________Upload Services___________________________________
 
